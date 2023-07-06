@@ -48,7 +48,7 @@ Pero si quiere ejecutar la app en un dispositivo específico use el output del c
 ```
 sdk gphone64 arm64 (mobile) • emulator-5554     • android-arm64     • Android 13 (API 33) (emulator)
 iPhone 14 Pro Max (mobile)  • 833FEF07-C34F-4BE9-944C-DE01BF091C7C  • ios   • com.apple.CoreSimulator.SimRuntime.iOS-16-4 (simulator)
-macOS (desktop)             • macos     • darwin-arm64      • macOS 13.2 22D49 darwin-arm64
+macOS (desktop)             • macos             • darwin-arm64      • macOS 13.2 22D49 darwin-arm64
 ```
 En este output el segundo parámetro es el ID del dispositivo. Entonces puede usar por ejemplo
 ```
