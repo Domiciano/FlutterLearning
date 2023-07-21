@@ -2,7 +2,7 @@
 
 # Flutter
 
-##App
+## App
 ```
 import 'package:flutter/material.dart';
 import 'ui/start_screen.dart';
@@ -39,6 +39,8 @@ Provider -> es un widget
 Recuerda que si estás utilizando el patrón BloC en conjunto con StreamBuilder, el StreamBuilder se encarga automáticamente de cerrar el StreamController cuando se desconecta del Stream. Sin embargo, es importante cerrar explícitamente el StreamController cuando ya no lo necesites para liberar los recursos adecuadamente.
 
 
+
+
 ## Usando StreamController.add() y StreamBuilder
 
 ### BloC
@@ -67,6 +69,7 @@ class StartScreenBloc{
 }
 ```
 Para agregar datos se puede usar o bien _countController.add(_count); o _countController.sink.add(_count);. Es lo mismo
+Para poner un valor inicial puede usar el constructor del bloc
 
 ### Vista
 ```
