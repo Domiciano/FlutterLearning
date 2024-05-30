@@ -110,7 +110,12 @@ void main() {
   for (int i = 0; i < lista.length; i++) {
     var element = lista[i];
     print("Index: $i, Value: $element");
-  } 
+  }
+
+  // Where filtra los elementos de acuerdo a una condición. Map trasnforma los elementos filtrados de acuerdo al retorno
+  List<int> evenSizeList = lista.where((element) => lista.indexOf(element) % 2 == 0).map((evenElement) => evenElement.length).toList();
+  print(evenSizeList);
+  
 }
 ```
 
