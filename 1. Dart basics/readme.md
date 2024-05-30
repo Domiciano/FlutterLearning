@@ -22,13 +22,17 @@ var gamma = 4.8;
 
 # 3. Estructuras
 ```dart
-//Arreglo
+//Arreglo. List<String>
 var flybyObjects = ['Jupiter', 'Saturn', 'Uranus', 'Neptune'];
+//Arreglo. List<int>
+var list = [1, 2, 3, 4];
 //Mapa
 var gifts = {
   'first': 'partridge',
   'second': 'turtledoves',
   'fifth': 'golden rings'
 };
+//Set
+var halogens = {'fluorine', 'chlorine', 'bromine', 'iodine', 'astatine'};
 ```
 
