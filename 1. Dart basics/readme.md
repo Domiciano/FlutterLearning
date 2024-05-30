@@ -66,3 +66,42 @@ Map<String,String> gifts = {
 //Set
 Set<String> halogens = {'fluorine', 'chlorine', 'bromine', 'iodine', 'astatine'};
 ```
+
+# 3.1 Procesos de listas
+
+
+```dart
+void main() {
+  // Crear una lista vacía
+  List<String> lista = [];
+
+  // Añadir 3 elementos
+  lista.add("alfa");
+  lista.add("beta");
+  lista.add("gamma");
+  lista.add("delta");
+  lista.add("epsilon");
+  lista.add("zeta");
+  lista.add("eta");
+
+  // Imprimir la lista
+  print(lista);
+
+  // Iterar los elementos de la lista
+  for (var element in lista) {
+    print(element);
+  }
+
+  // Foreach a través de la lista
+  lista.forEach((element) {
+    print(element);
+  });
+
+  // Iterar la lista por medio de índices
+  for (int i = 0; i < lista.length; i++) {
+    var element = lista[i];
+    print("Index: $i, Value: $element");
+  } 
+}
+```
+
