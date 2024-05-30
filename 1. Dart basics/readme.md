@@ -87,6 +87,15 @@ void main() {
   // Imprimir la lista
   print(lista);
 
+  // Remover un elemento por valor
+  lista.remove("alfa");
+
+  // Remover un elemento por índice
+  lista.removeAt(4);
+
+  // Imprimir de nuevo la lista
+  print(lista);
+
   // Iterar los elementos de la lista
   for (var element in lista) {
     print(element);
