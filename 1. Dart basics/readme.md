@@ -208,3 +208,32 @@ void main() {
 }
 ```
 
+# 6. Clases
+Se pueden generar clases de esta forma
+```dart
+class Person{
+  String name;
+  int age;
+  Person({required this.name, required this.age});
+}
+```
+El constructor de esa forma es requerido porque name y age deben ser inicializados y no se pueden quedar sin un valor. También existe la alternativa de generar valores nullables.
+
+```dart
+class Person{
+  String? name;
+  int? age;
+}
+```
+De esta forma, al crear una instancia de Person, los valores de name y age son por defecto null. Otra alternativa final es un constructor nombrado
+
+```dart
+class Person{
+  String name;
+  int age;
+  Person.withNameAndAge({required this.name, required this.age});
+}
+```
+
+
+
