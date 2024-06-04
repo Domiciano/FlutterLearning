@@ -34,7 +34,7 @@ double gamma = 4.8;
 bool delta = true;
 ```
 # 3. Operadores
-```
+```dart
 void main() {
   // Operadores aritméticos
   var suma = 10 + 5; // 15
