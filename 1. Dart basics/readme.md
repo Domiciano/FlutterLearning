@@ -33,8 +33,95 @@ double gamma = 4.8;
 //Variable boolean
 bool delta = true;
 ```
+# 3. Operadores
+```
+void main() {
+  // Operadores aritméticos
+  var suma = 10 + 5; // 15
+  var resta = 10 - 5; // 5
+  var multiplicacion = 10 * 5; // 50
+  var division = 10 / 5; // 2.0
+  var divisionEntera = 10 ~/ 5; // 2
+  var modulo = 10 % 5; // 0
 
-# 3. Estructuras
+  // Operadores unarios
+  var positivo = 10;
+  var negativo = -positivo; // -10
+  var incremento = 10++; // 10 (incrementa después de la asignación)
+  var decremento = 10--; // 10 (decrementa después de la asignación)
+
+  // Operadores relacionales
+  var mayor = 10 > 5; // true
+  var menor = 10 < 5; // false
+  var mayorIgual = 10 >= 5; // true
+  var menorIgual = 10 <= 5; // false
+  var igual = 10 == 5; // false
+  var diferente = 10 != 5; // true
+
+  // Operadores lógicos
+  var and = 10 > 5 && 5 < 10; // true
+  var or = 10 > 5 || 5 < 10; // true
+  var not = !mayor; // false
+
+  // Operadores de asignación
+  var asignacion = 10;
+  var asignacionSuma = asignacion += 5; // 15
+  var asignacionResta = asignacion -= 5; // 10
+  var asignacionMultiplicacion = asignacion *= 5; // 50
+  var asignacionDivision = asignacion /= 5; // 10
+  var asignacionModulo = asignacion %= 5; // 0
+
+  // Operadores de tipo
+  var entero = 10;
+  var cadena = "Hola";
+  var esEntero = entero is int; // true
+  var esCadena = cadena is String; // true
+
+  // Operadores de acceso a propiedades
+  var persona = {
+    "nombre": "Juan",
+    "edad": 30
+  };
+  var nombrePersona = persona["nombre"]; // "Juan"
+  var edadPersona = persona["edad"]; // 30
+
+  // Operadores de acceso a elementos de lista
+  var lista = [1, 2, 3, 4, 5];
+  var primerElemento = lista[0]; // 1
+  var ultimoElemento = lista[lista.length - 1]; // 5
+
+  // Operadores de rango
+  var rango = 1..10; // Rango de 1 a 10 inclusive
+  for (var numero in rango) {
+    print(numero);
+  }
+
+  // Operadores nulos
+  var variableNula;
+  var esNulo = variableNula == null; // true
+  var valorNulo = variableNula ?? 0; // 0
+
+  // Operadores de interrogación
+  var condicion = 10 > 5;
+  var resultado = condicion ? "Verdadero" : "Falso"; // "Verdadero"
+
+  // Operadores de cascada
+  var personaCascada = Persona()
+    ..nombre = "Pedro"
+    ..edad = 25;
+  print(personaCascada.nombre); // "Pedro"
+  print(personaCascada.edad); // 25
+}
+
+class Persona {
+  String nombre;
+  int edad;
+}
+
+```
+
+
+# 4. Estructuras
 Las estructuras de datos típicas son
 ```dart
 //Arreglo. List<String>
