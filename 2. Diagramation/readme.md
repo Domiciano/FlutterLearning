@@ -2,7 +2,6 @@
 
 En Flutter, `Row` y `Column` son los widgets base para ubicar elementos en una **línea horizontal** o **vertical**, respectivamente.
 
----
 
 ## `Row`: Distribución horizontal
 
@@ -36,7 +35,6 @@ Row(
 )
 ```
 
----
 
 ## `Column`: Distribución vertical
 
@@ -70,9 +68,8 @@ Column(
 )
 ```
 
----
 
-## Reglas clave DomiStyle™:
+## Reglas clave
 
 - `mainAxis` = la dirección en la que fluye (`Row` → horizontal, `Column` → vertical).
 - `crossAxis` = el eje perpendicular.
