@@ -73,7 +73,6 @@ Column(
 
 - `mainAxis` = la dirección en la que fluye (`Row` → horizontal, `Column` → vertical).
 - `crossAxis` = el eje perpendicular.
-- Siempre que tengas dudas de alineación, pensá en el **flujo natural** del eje.
 
 ---
 
