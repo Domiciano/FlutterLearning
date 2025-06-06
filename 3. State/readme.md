@@ -4,7 +4,6 @@
 Flutter dibuja la interfaz como un **árbol de widgets**.  
 Cada vez que algo cambia, **reconstruye** los widgets que deben cambiar.
 
----
 
 ## 1. StatelessWidget: sin estado
 
@@ -25,7 +24,7 @@ class MiEtiqueta extends StatelessWidget {
 
 👉 Si el texto cambia, **tiene que venir de afuera**.
 
----
+
 
 ## 2. StatefulWidget: con estado interno
 
@@ -57,7 +56,7 @@ class _ContadorState extends State<Contador> {
 
 `setState` le dice a Flutter: **"redibuja desde aquí"**.
 
----
+
 
 ## 3. Paso de datos entre widgets
 
@@ -101,9 +100,8 @@ class _AppState extends State<App> {
 }
 ```
 
-👉 El estado vive en el padre (`_AppState`) y se **pasa como parámetro** al hijo (`EtiquetaConEstilo`).
+El estado vive en el padre (`_AppState`) y se **pasa como parámetro** al hijo (`EtiquetaConEstilo`).
 
----
 
 ## 4. El árbol de widgets y las actualizaciones
 
