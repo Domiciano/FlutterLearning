@@ -124,7 +124,7 @@ Row(
   ],
 )
 ```
-Se puede ajustar con flex:
+La proporción se puede ajustar con flex:
 
 ```dart
 Row(
