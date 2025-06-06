@@ -22,7 +22,7 @@ class MiEtiqueta extends StatelessWidget {
 }
 ```
 
-👉 Si el texto cambia, **tiene que venir de afuera**.
+Si el texto cambia, **tiene que venir de afuera**.
 
 
 
