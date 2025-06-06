@@ -136,7 +136,7 @@ Row(
 ```
 
 # Spacer
-`Spacer` es una forma específica de usar `Expanded` sin tener que definir un hijo.
+`Spacer` es una forma específica de usar `Expanded` sin tener que definir un hijo. Es para definir espacios entre elementos que se autocalculen
 
 ```dart
 Row(
