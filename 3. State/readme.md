@@ -118,7 +118,6 @@ Column(
 
 Esto hace que Flutter sea **eficiente**: si un widget no depende del estado, no se toca.
 
----
 
 ## 5. ¿Qué sigue?
 
@@ -128,8 +127,6 @@ Si necesitás compartir estado entre **muchos widgets**, es mejor usar herramien
 - `Provider` (recomendado por Flutter)
 - `Riverpod` (moderno y potente)
 - `Bloc / Cubit` (más estructurado, ideal en apps grandes)
-
----
 
 ## Reglas clave hasta ahora 
 
