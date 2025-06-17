@@ -1,4 +1,4 @@
-<img width="256" src="https://www.icesi.edu.co/launiversidad/images/La_universidad/logo_icesi.png">
+<img width="256" src="https://storage.googleapis.com/cms-storage-bucket/c823e53b3a1a7b0d36a9.png">
 
 # Flutter
 
