@@ -2,15 +2,13 @@
 
 # Flutter
 
-## Inicio rápido
-
-### 1. Crear un proyecto de flutter
+# 1. Crear un proyecto de flutter
 ```
 flutter create --org icesi.edu.co miapp
 ```
 Los nombres de las apps no pueden contener mayúsculas
 
-### 2. Ejecutar el emulador
+# 2. Ejecutar el emulador
 
 ### Android
 Para ejecutar un emulador de android desde la command line, use
@@ -31,7 +29,7 @@ Para abrir un emulador iOS use
 open -a simulator
 ```
 
-### 3. Ejecutar la app
+# 3. Ejecutar la app
 
 Puede escanear los dispositivos usando
 ```
