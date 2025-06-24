@@ -90,12 +90,6 @@ Center(
 ```
 
 
-
-
-
-
-
-
 # Expanded, Spacer y Flex en Flutter
 
 Estos widgets permiten controlar cómo se distribuyen los espacios dentro de un Row o Column cuando hay más de un elemento.
