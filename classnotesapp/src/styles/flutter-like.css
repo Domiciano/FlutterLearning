@@ -1,0 +1,95 @@
+/* flutter-like.css */
+
+/* Contenedor principal del bloque de código */
+.flutter-code {
+  background-color: #0B121A; /* Fondo oscuro similar a VS Code */
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto; /* Permite scroll horizontal si el código es muy largo */
+  font-family: 'Fira Code', 'Roboto Mono', monospace; /* Fuentes monoespaciadas para el código */
+  font-size: 0.95rem;
+  color: #abb2bf; /* Color de texto base */
+  text-align: left; /* Alineación del texto a la izquierda */
+}
+
+/* Estilos para las etiquetas <pre> y <code> dentro del bloque de código */
+.flutter-code pre {
+  margin: 0; /* Elimina el margen por defecto de <pre> */
+  white-space: pre; /* **CRUCIAL para la indentación:** Preserva los espacios en blanco y los saltos de línea exactamente como están. */
+  /* Si prefieres que las líneas largas se rompan en lugar de tener scroll horizontal, usa pre-wrap: */
+  /* white-space: pre-wrap; */
+}
+
+.flutter-code code {
+  display: block; /* Asegura que <code> ocupe su propio bloque */
+  /* El font-family y font-size ya se heredan del .flutter-code principal, pero podrías redefinirlos aquí si fuera necesario */
+}
+
+
+/* --- Resaltado de Sintaxis (highlight.js classes) --- */
+
+/* Variables y nombres de clases principales */
+.flutter-code .hljs-variable,
+.flutter-code .hljs-title.class_ {
+  color: #61afef; /* Azul vibrante para variables y nombres de clases */
+}
+
+/* Palabras clave (class, const, extends, return, import, etc.) */
+.flutter-code .hljs-keyword,
+.flutter-code .hljs-meta,
+.flutter-code .hljs-selector-tag {
+  color: #e06c75; /* Rojo/Magenta para palabras clave */
+}
+
+/* Tipos (Widget, BuildContext, String, int, etc.) y funciones integradas */
+.flutter-code .hljs-title,
+.flutter-code .hljs-type,
+.flutter-code .hljs-built_in {
+  color: #61afef; /* Azul para tipos y funciones integradas */
+}
+
+/* Strings (texto entre comillas simples o dobles) */
+.flutter-code .hljs-string {
+  color: #98c379; /* Verde para strings */
+}
+
+/* Propiedades, atributos, nombres de funciones/métodos (e.g., color:, style:, build(), setState()) */
+.flutter-code .hljs-attr,
+.flutter-code .hljs-property,
+.flutter-code .hljs-name,
+.flutter-code .hljs-function { /* Añadido .hljs-function para mejor cobertura de métodos */
+  color: #56b6c2; /* Cian para propiedades y atributos */
+}
+
+/* Constantes numéricas (números, booleanos como true/false) */
+.flutter-code .hljs-number,
+.flutter-code .hljs-literal {
+  color: #d19a66; /* Naranja/Amarillo para números y literales */
+}
+
+/* Comentarios en el código */
+.flutter-code .hljs-comment {
+  color: #5c6370; /* Gris para comentarios */
+  font-style: italic; /* Cursiva para comentarios */
+}
+
+/* --- Clases Personalizadas --- */
+
+/* Estilo para los nombres de Widgets de Flutter personalizados por tu CodeBlock.jsx */
+.flutter-code .hljs-widget {
+  color: #61afef; /* Usa el mismo azul que las clases/tipos para consistencia */
+  font-weight: bold; /* Hace que los nombres de los widgets resalten aún más */
+}
+
+/* Opcional: Estilo para operadores, si highlight.js los marca (a veces no lo hace por defecto) */
+.flutter-code .hljs-operator {
+  color: #c678dd; /* Por ejemplo, un morado para operadores */
+}
+
+/* Opcional: Estilo para clases/identificadores específicos que no sean palabras clave o tipos */
+.flutter-code .hljs-tag {
+  color: #e06c75;
+}
+.flutter-code .hljs-symbol {
+  color: #c678dd;
+}
