@@ -1,7 +1,7 @@
 import React from "react";
 import LessonContainer from "./LessonContainer";
 import LessonTitle from "./LessonTittle";
-import LessonSubtitle from "./LessonSubtitle";
+import LessonSubTitle from "./LessonSubTitle";
 import LessonParagraph from "./LessonParagraph";
 import CodeBlock from "./CodeBlock";
 import YouTubeEmbed from "./YouTubeEmbed";
@@ -35,9 +35,9 @@ const LessonParser = ({ content }) => {
     // --- SUBTÍTULO ---
     if (trimmedLine.startsWith("## ")) {
       elements.push(
-        <LessonSubtitle key={`subtitle-${i}`}>
+        <LessonSubTitle key={`subtitle-${i}`}>
           {parseInlineCode(trimmedLine.slice(3))}
-        </LessonSubtitle>
+        </LessonSubTitle>
       );
       continue;
     }
