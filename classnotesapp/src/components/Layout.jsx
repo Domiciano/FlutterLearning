@@ -15,6 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Link, useLocation } from "react-router-dom";
 import DrawerDivider from "./DrawerDivider";
+import images from '../assets';
 
 const drawerWidth = 240;
 
@@ -32,7 +33,7 @@ const Layout = ({ children, sections = [] }) => {
     <Box sx={{ width: drawerWidth }}>
       <Box sx={{ px: 2, pt: 2, textAlign: "center" }}>
         <img
-          src="https://www.icesi.edu.co/bioseguridad/images/logo-gris-claro.png"
+          src={images['logo.svg']}
           alt="Flutter"
           style={{ width: "100%", maxWidth: "180px", borderRadius: 8 }}
         />

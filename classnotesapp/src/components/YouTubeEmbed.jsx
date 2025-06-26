@@ -6,7 +6,7 @@ const YouTubeEmbed = ({ videoId, title = "YouTube video" }) => {
     <Box
       sx={{
         position: 'relative',
-        paddingBottom: '56.25%', // 16:9
+        paddingBottom: '66.25%', // 16:9
         height: 0,
         overflow: 'hidden',
         borderRadius: 2,
@@ -15,7 +15,7 @@ const YouTubeEmbed = ({ videoId, title = "YouTube video" }) => {
       }}
     >
       <iframe
-        src={`https://www.youtube.com/embed/${videoId}`}
+        src={`https://www.youtube.com/embed/${videoId}?vq=hd1080&rel=0`}
         title={title}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

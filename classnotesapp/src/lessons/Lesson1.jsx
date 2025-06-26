@@ -21,7 +21,7 @@ const Lesson1 = () => {
         para ubicar elementos en una <strong>línea horizontal</strong> o <strong>vertical</strong>, respectivamente.
       </LessonParagraph>
 
-      <YouTubeEmbed videoId="dQw4w9WgXcQ" title="Introducción a Flutter" />
+      <YouTubeEmbed videoId="dUMqg_JQsEc" title="Introducción a Flutter" />
 
       <ImageBlock src={images['logo.svg']} alt="Logo de Flutter" />
 
@@ -41,7 +41,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(body: Center(child: Text('Hello, World!'))),
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello, World!')
+        )
+      ),
     );
   }
 }

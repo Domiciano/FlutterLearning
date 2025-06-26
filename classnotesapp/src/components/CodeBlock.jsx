@@ -14,6 +14,8 @@ const CodeBlock = ({ children, language, className = "" }) => {
     const highlighted = hljs.highlight(children, { language }).value;
 
     const widgetNames = [
+      "Widget",
+      "BuildContext",
       "AlertDialog",
       "Align",
       "AppBar",

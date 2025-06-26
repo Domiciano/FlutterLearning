@@ -1,11 +1,12 @@
 import Lesson1 from "../lessons/Lesson1";
 import Lesson2 from "../lessons/Lesson2";
+import Lesson3 from "../lessons/Lesson3";
 
 const sections = [
   { type: 'title', id: 'instalacion', label: 'Instalación' },
   { type: 'lesson', id: '1', label: 'Instalación de Flutter', component: <Lesson1 /> },
   { type: 'lesson', id: '2', label: 'Crear aplicaciones', component: <Lesson2 /> },
-  { type: 'lesson', id: '3', label: 'Ejecutar la app', component: <Lesson1 /> },
+  { type: 'lesson', id: '3', label: 'Ejecutar la app', component: <Lesson3 /> },
   { type: 'lesson', id: '4', label: 'Configuración de dispositivos virtuales', component: <Lesson1 /> },
 
   { type: 'divider' },
