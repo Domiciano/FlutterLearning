@@ -8,6 +8,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions: # This section grants necessary permissions
+      contents: write # Allows pushing content to the repository
+      pages: write # Specifically for GitHub Pages deployments
+      id-token: write # Recommended for OIDC (OpenID Connect)
 
     steps:
       - name: Checkout 🛎️
