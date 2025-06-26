@@ -1,55 +1,64 @@
-import Lesson1 from "../lessons/Lesson1";
-import Lesson2 from "../lessons/Lesson2";
-import Lesson3 from "../lessons/Lesson3";
+import LessonParser from "../components/LessonParser";
+
+// Importa tus archivos .md como texto plano
+import lesson1 from "../lessons/lesson1.md?raw";
+// Puedes continuar agregando: lesson4, lesson5, etc.
+
+const createLesson = (id, label, rawContent) => ({
+  type: "lesson",
+  id: String(id),
+  label,
+  component: <LessonParser content={rawContent} />,
+});
 
 const sections = [
-  { type: 'title', id: 'instalacion', label: 'Instalación' },
-  { type: 'lesson', id: '1', label: 'Instalación de Flutter', component: <Lesson1 /> },
-  { type: 'lesson', id: '2', label: 'Crear aplicaciones', component: <Lesson2 /> },
-  { type: 'lesson', id: '3', label: 'Ejecutar la app', component: <Lesson3 /> },
-  { type: 'lesson', id: '4', label: 'Configuración de dispositivos virtuales', component: <Lesson1 /> },
+  { type: "title", id: "instalacion", label: "Instalación" },
+  createLesson(1, "Instalación de Flutter", lesson1),
+  createLesson(2, "Crear aplicaciones", lesson1),
+  createLesson(3, "Ejecutar la app", lesson1),
+  createLesson(4, "Configuración de dispositivos virtuales", lesson1),
 
-  { type: 'divider' },
+  { type: "divider" },
 
-  { type: 'title', id: 'dart', label: 'Dart Basics' },
-  { type: 'lesson', id: '5', label: 'Primitivos', component: <Lesson1 /> },
-  { type: 'lesson', id: '6', label: 'Operadores', component: <Lesson1 /> },
-  { type: 'lesson', id: '7', label: 'Control de flujo', component: <Lesson1 /> },
-  { type: 'lesson', id: '8', label: 'Metodos', component: <Lesson1 /> },
-  { type: 'lesson', id: '9', label: 'Lambdas', component: <Lesson1 /> },
-  { type: 'lesson', id: '10', label: 'Herencia, polimorfismo', component: <Lesson1 /> },
+  { type: "title", id: "dart", label: "Dart Basics" },
+  createLesson(5, "Primitivos", lesson1),
+  createLesson(6, "Operadores", lesson1),
+  createLesson(7, "Control de flujo", lesson1),
+  createLesson(8, "Métodos", lesson1),
+  createLesson(9, "Lambdas", lesson1),
+  createLesson(10, "Herencia, polimorfismo", lesson1),
 
-  { type: 'divider' },
+  { type: "divider" },
 
-  { type: 'title', id: 'widgets', label: 'Widgets' },
-  { type: 'lesson', id: '11', label: 'Estructura de la app', component: <Lesson1 /> },
-  { type: 'lesson', id: '12', label: 'Scaffold', component: <Lesson1 /> },
-  { type: 'lesson', id: '13', label: 'Árbol de widgets', component: <Lesson1 /> },
-  { type: 'lesson', id: '14', label: 'Container, Row y Column', component: <Lesson1 /> },
-  { type: 'lesson', id: '15', label: 'Diagramación acorde a la guía', component: <Lesson1 /> },
-  { type: 'lesson', id: '16', label: 'Agregación de imágenes: assets y network', component: <Lesson1 /> },
+  { type: "title", id: "widgets", label: "Widgets" },
+  createLesson(11, "Estructura de la app", lesson1),
+  createLesson(12, "Scaffold", lesson1),
+  createLesson(13, "Árbol de widgets", lesson1),
+  createLesson(14, "Container, Row y Column", lesson1),
+  createLesson(15, "Diagramación acorde a la guía", lesson1),
+  createLesson(16, "Agregación de imágenes: assets y network", lesson1),
 
-  { type: 'divider' },
+  { type: "divider" },
 
-  { type: 'title', id: 'diagramacion', label: 'Diagramación' },
-  { type: 'lesson', id: '17', label: 'Pantalla de Login', component: <Lesson1 /> },
-  { type: 'lesson', id: '18', label: 'Márgenes y posicionamiento', component: <Lesson1 /> },
-  { type: 'lesson', id: '19', label: 'Expanded', component: <Lesson1 /> },
-  { type: 'lesson', id: '20', label: 'ScrollView y overflows', component: <Lesson1 /> },
-  { type: 'lesson', id: '21', label: 'Creación de widgets', component: <Lesson1 /> },
-  { type: 'lesson', id: '22', label: 'Acciones como parámetro', component: <Lesson1 /> },
-  { type: 'lesson', id: '23', label: 'Widget parametrizado', component: <Lesson1 /> },
-  { type: 'lesson', id: '24', label: 'Stateful widget', component: <Lesson1 /> },
-  { type: 'lesson', id: '25', label: 'Constantes de estilo', component: <Lesson1 /> },
-  { type: 'lesson', id: '26', label: 'Funciones para estilo', component: <Lesson1 /> },
-  { type: 'lesson', id: '27', label: 'Const para widgets inmutables', component: <Lesson1 /> },
+  { type: "title", id: "diagramacion", label: "Diagramación" },
+  createLesson(17, "Pantalla de Login", lesson1),
+  createLesson(18, "Márgenes y posicionamiento", lesson1),
+  createLesson(19, "Expanded", lesson1),
+  createLesson(20, "ScrollView y overflows", lesson1),
+  createLesson(21, "Creación de widgets", lesson1),
+  createLesson(22, "Acciones como parámetro", lesson1),
+  createLesson(23, "Widget parametrizado", lesson1),
+  createLesson(24, "Stateful widget", lesson1),
+  createLesson(25, "Constantes de estilo", lesson1),
+  createLesson(26, "Funciones para estilo", lesson1),
+  createLesson(27, "Const para widgets inmutables", lesson1),
 
-  { type: 'divider' },
+  { type: "divider" },
 
-  { type: 'title', id: 'navegacion', label: 'Navegación' },
-  { type: 'lesson', id: '28', label: 'Navegación entre pantallas', component: <Lesson1 /> },
-  { type: 'lesson', id: '29', label: 'Bottom navigation bar', component: <Lesson1 /> },
-  { type: 'lesson', id: '30', label: 'Secciones condicionales', component: <Lesson1 /> },
+  { type: "title", id: "navegacion", label: "Navegación" },
+  createLesson(28, "Navegación entre pantallas", lesson1),
+  createLesson(29, "Bottom navigation bar", lesson1),
+  createLesson(30, "Secciones condicionales", lesson1),
 ];
 
 export default sections;
