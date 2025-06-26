@@ -1,16 +1,18 @@
-# Flutter
+[t] Flutter
+
+
+[st] Ejemplo de subtitulo
+
+
+[p]
+En Flutter, `Row` y `Column` son los widgets base
+pavertical, respectivamente.
 
 [p]
 Bienvenido al curso de Aplicaciones móviles
 
 
-## Ejemplo de subtitulo
 
-[p]
-En Flutter, `Row` y `Column` son los widgets base
-para ubicar elementos en una línea horizontal o vertical, respectivamente.
-para ubicar elementos en una línea horizontal o vertical, respectivamente
-para ubicar elementos en una línea horizontal o vertical, respectivamente.
 
 [i] https://innovance.com.tr/wp-content/uploads/2024/10/flutter-hero.jpg | Logo oficial
 

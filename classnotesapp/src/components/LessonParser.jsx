@@ -1,7 +1,7 @@
 import React from "react";
 import LessonContainer from "./LessonContainer";
 import LessonTitle from "./LessonTittle";
-import LessonSubTitle from "./LessonSubTitle";
+import LessonSubtitle from "./LessonSubtitle";
 import LessonParagraph from "./LessonParagraph";
 import CodeBlock from "./CodeBlock";
 import YouTubeEmbed from "./YouTubeEmbed";
@@ -23,22 +23,33 @@ const LessonParser = ({ content }) => {
     const trimmedLine = rawLine.trim();
 
     // --- TÍTULO PRINCIPAL ---
-    if (trimmedLine.startsWith("# ")) {
+    if (trimmedLine.startsWith("[t]")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       elements.push(
         <LessonTitle key={`title-${i}`}>
-          {parseInlineCode(trimmedLine.slice(2))}
+          {parseInlineCode(trimmedLine.slice(3).trim())}
         </LessonTitle>
       );
       continue;
     }
 
     // --- SUBTÍTULO ---
-    if (trimmedLine.startsWith("## ")) {
+    if (trimmedLine.startsWith("[st]")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       elements.push(
-        <LessonSubTitle key={`subtitle-${i}`}>
-          {parseInlineCode(trimmedLine.slice(3))}
-        </LessonSubTitle>
+        <LessonSubtitle key={`subtitle-${i}`}>
+          {parseInlineCode(trimmedLine.slice(4).trim())}
+        </LessonSubtitle>
       );
+      continue;
+    }
+
+    // --- INICIO DE NUEVO PÁRRAFO ---
+    if (trimmedLine === "[p]") {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       continue;
     }
 
@@ -59,10 +70,7 @@ const LessonParser = ({ content }) => {
           </CodeBlock>
         );
 
-        if (isDirective) {
-          i--; // re-procesar esta línea
-        }
-
+        if (isDirective) i--;
         continue;
       }
 
@@ -70,31 +78,10 @@ const LessonParser = ({ content }) => {
       continue;
     }
 
-    // --- PÁRRAFO ---
-    if (trimmedLine === "[p]") {
-      paragraphBuffer = "";
-      continue;
-    }
-
-    if (paragraphBuffer !== "" || lines[i - 1]?.trim() === "[p]") {
-      if (trimmedLine.startsWith("[") || i === lines.length - 1) {
-        if (i === lines.length - 1 && trimmedLine !== "") {
-          paragraphBuffer += (paragraphBuffer ? " " : "") + trimmedLine;
-        }
-        elements.push(
-          <LessonParagraph key={`p-${i}`}>
-            {parseInlineCode(paragraphBuffer)}
-          </LessonParagraph>
-        );
-        paragraphBuffer = "";
-      } else {
-        paragraphBuffer += (paragraphBuffer ? " " : "") + trimmedLine;
-        continue;
-      }
-    }
-
     // --- VIDEO EMBED ---
     if (trimmedLine.startsWith("[v]")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       const [id, title] = trimmedLine.slice(3).split("|").map((s) => s.trim());
       elements.push(
         <YouTubeEmbed key={`video-${i}`} videoId={id} title={title} />
@@ -104,6 +91,8 @@ const LessonParser = ({ content }) => {
 
     // --- IMAGEN ---
     if (trimmedLine.startsWith("[i]")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       const [imgName, altText] = trimmedLine.slice(3).split("|").map((s) => s.trim());
       const isWebImage = imgName.startsWith("http://") || imgName.startsWith("https://");
       const src = isWebImage ? imgName : images[imgName];
@@ -116,6 +105,8 @@ const LessonParser = ({ content }) => {
 
     // --- ÍCONO SIMPLE ---
     if (trimmedLine.startsWith("[icon]")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       const [iconName, altText] = trimmedLine.slice(6).split("|").map((s) => s.trim());
       const isWebImage = iconName.startsWith("http://") || iconName.startsWith("https://");
       const src = isWebImage ? iconName : images[iconName];
@@ -128,6 +119,8 @@ const LessonParser = ({ content }) => {
 
     // --- DARTPAD EMBED ---
     if (trimmedLine.startsWith("[dartpad]")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       const gistId = trimmedLine.slice(9).trim();
       elements.push(
         <DartPadEmbed key={`dartpad-${i}`} gistId={gistId} />
@@ -137,17 +130,40 @@ const LessonParser = ({ content }) => {
 
     // --- INICIO DE BLOQUE DE CÓDIGO ---
     if (trimmedLine.startsWith("[c:")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
       parsingCode = true;
       codeLang = trimmedLine.match(/\[c:(.*)\]/)[1];
       codeBuffer = "";
       continue;
+    }
+
+    // --- TEXTO CONTINUO ---
+    if (trimmedLine !== "") {
+      paragraphBuffer += (paragraphBuffer ? " " : "") + trimmedLine;
+    }
+
+    // --- FIN DEL ARCHIVO ---
+    if (i === lines.length - 1) {
+      flushParagraph(elements, paragraphBuffer, i);
     }
   }
 
   return <LessonContainer>{elements}</LessonContainer>;
 };
 
-// --- inline code: `algo` → <code className="inline-code">algo</code> ---
+// --- Renderiza párrafo si hay contenido acumulado ---
+const flushParagraph = (elements, buffer, key) => {
+  if (buffer.trim() !== "") {
+    elements.push(
+      <LessonParagraph key={`p-${key}`}>
+        {parseInlineCode(buffer.trim())}
+      </LessonParagraph>
+    );
+  }
+};
+
+// --- inline code ---
 const parseInlineCode = (text) => {
   const parts = text.split(/(`[^`]+`)/g);
   return parts.map((part, index) => {
