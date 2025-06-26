@@ -1,20 +1,16 @@
-name: Deploy Vite app from subdirectory
+name: Deploy Vite app from subfolder to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # o master, según tu rama
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: classnotesapp 
-
     steps:
-      - name: Checkout repo
+      - name: Checkout 🛎️
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -24,12 +20,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: classnotesapp
 
-      - name: Build app
+      - name: Build
         run: npm run build
+        working-directory: classnotesapp
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages 🚀
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./classnotesapp/dist
+          publish_dir: classnotesapp/dist
+          force_orphan: true
