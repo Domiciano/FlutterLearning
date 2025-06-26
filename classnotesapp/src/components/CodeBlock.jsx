@@ -1,84 +1,30 @@
 // components/CodeBlock.jsx
-import React, { useEffect, useState } from "react";
-import hljs from "highlight.js";
-import "highlight.js/lib/common";
+import React, { useEffect, useRef, useState } from "react";
+import Prism from "prismjs"; // Importa la librería principal de Prism
+import "prismjs/components/prism-dart"; // Importa específicamente el lenguaje Dart
+// Puedes elegir un tema de Prism que te guste, o no importar ninguno
+// para usar solo tus estilos personalizados. Aquí importo uno para empezar.
+import "prismjs/themes/prism-tomorrow.css"; // Un tema oscuro común de Prism
+
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import "../styles/flutter-like.css";
+import "../styles/flutter-like.css"; // Tu CSS personalizado
 
 const CodeBlock = ({ children, language, className = "" }) => {
-  const [highlightedCode, setHighlightedCode] = useState("");
+  const codeRef = useRef(null); // Usamos una referencia para el elemento <code>
+
+  // No necesitamos 'highlightedCode' en el estado si Prism.js manipula el DOM directamente
+  // o si no hacemos procesado adicional con expresiones regulares.
 
   useEffect(() => {
-    const highlighted = hljs.highlight(children, { language }).value;
-
-    const widgetNames = [
-      "Widget",
-      "BuildContext",
-      "AlertDialog",
-      "Align",
-      "AppBar",
-      "AssetImage",
-      "Box",
-      "BottomNavigationBar",
-      "Builder",
-      "Card",
-      "Center",
-      "Checkbox",
-      "CircleAvatar",
-      "Column",
-      "Container",
-      "CupertinoApp",
-      "DefaultTabController",
-      "Divider",
-      "Drawer",
-      "DropdownButton",
-      "ElevatedButton",
-      "Expanded",
-      "FloatingActionButton",
-      "FutureBuilder",
-      "GestureDetector",
-      "GridView",
-      "Icon",
-      "Image",
-      "InkWell",
-      "ListTile",
-      "ListView",
-      "MaterialApp",
-      "NetworkImage",
-      "Obx",
-      "OutlinedButton",
-      "Padding",
-      "PageView",
-      "Positioned",
-      "Provider",
-      "Radio",
-      "Row",
-      "Scaffold",
-      "SingleChildScrollView",
-      "SizedBox",
-      "Spacer",
-      "Stack",
-      "StatefulWidget",
-      "StatelessWidget",
-      "StreamBuilder",
-      "Switch",
-      "TabBar",
-      "TabBarView",
-      "Text",
-      "TextButton",
-      "TextField",
-      "Theme",
-    ];
-    const widgetRegex = new RegExp(`\\b(${widgetNames.join("|")})\\b`, "g");
-
-    const enhanced = highlighted.replace(
-      widgetRegex,
-      '<span class="hljs-widget">$1</span>'
-    );
-    setHighlightedCode(enhanced);
-  }, [children, language]);
+    // Asegúrate de que el elemento ref exista antes de intentar resaltar
+    if (codeRef.current) {
+      // Si language es 'dart', asegúrate de que Prism.js tenga el componente cargado.
+      // 'Prism.highlightElement' aplica el resaltado in-place al elemento.
+      Prism.highlightElement(codeRef.current);
+    }
+  }, [children, language]); // Vuelve a ejecutar si el código o el lenguaje cambian
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(children);
@@ -98,10 +44,11 @@ const CodeBlock = ({ children, language, className = "" }) => {
         <ContentCopyIcon fontSize="small" />
       </IconButton>
       <pre style={{ margin: 0 }}>
-        <code
-          className={`language-${language}`}
-          dangerouslySetInnerHTML={{ __html: highlightedCode }}
-        />
+        {/* Usamos 'ref' para que Prism.js pueda acceder al elemento <code> */}
+        {/* El texto va directamente dentro de <code>, Prism lo resaltará */}
+        <code className={`language-${language}`} ref={codeRef}>
+          {children}
+        </code>
       </pre>
     </Box>
   );

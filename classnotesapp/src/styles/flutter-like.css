@@ -1,4 +1,4 @@
-/* flutter-like.css */
+/* flutter-like.css (Para Prism.js sin comentarios) */
 
 .flutter-code {
   background-color: #0B121A;
@@ -14,54 +14,60 @@
 .flutter-code pre {
   margin: 0;
   white-space: pre;
+  background-color: #0B121A; /* Mismo color de fondo que .flutter-code */
 }
 
 .flutter-code code {
   display: block;
 }
 
-/* --- Highlight.js syntax colors --- */
-
-.flutter-code .hljs-keyword,
-.flutter-code .hljs-meta {
-  color: #7bdb96;
-}
-
-.flutter-code .hljs-string {
-  color: #e7617e;
-}
-
-.flutter-code .hljs-comment {
+.flutter-code .token.comment {
   color: #5c6370;
   font-style: italic;
 }
 
-.flutter-code .hljs-number,
-.flutter-code .hljs-literal {
+.flutter-code .token.string {
+  color: #e7617e;
+}
+
+.flutter-code .token.keyword,
+.flutter-code .token.important {
+  color: #7bdb96;
+}
+
+.flutter-code .token.number,
+.flutter-code .token.boolean,
+.flutter-code .token.entity {
   color: #d19a66;
 }
 
-.flutter-code .hljs-title.class_,
-.flutter-code .hljs-type,
-.flutter-code .hljs-built_in {
+.flutter-code .token.class-name {
   color: #fd8a38;
 }
 
-.flutter-code .hljs-title.function_,
-.flutter-code .hljs-function,
-.flutter-code .hljs-title:not(.class_),
-.flutter-code .hljs-name,
-.flutter-code code span:not([class]) {
+.flutter-code .token.function,
+.flutter-code .token.selector {
   color: #61afef;
 }
 
-.flutter-code .hljs-attr,
-.flutter-code .hljs-property,
-.flutter-code .hljs-variable {
+.flutter-code .token.builtin,
+.flutter-code .token.tag,
+.flutter-code .token.type-variable {
+  color: #fd8a38;
+}
+
+.flutter-code .token.property,
+.flutter-code .token.attr-name,
+.flutter-code .token.variable,
+.flutter-code .token.punctuation.attr-equals {
   color: #c678dd;
 }
 
-.flutter-code .hljs-operator {
+.flutter-code .token.operator {
+  color: #abb2bf;
+}
+
+.flutter-code .token.punctuation {
   color: #abb2bf;
 }
 
@@ -70,9 +76,18 @@
   font-weight: bold;
 }
 
-.flutter-code .hljs-tag,
-.flutter-code .hljs-symbol,
-.flutter-code .hljs-selector-id,
-.flutter-code .hljs-selector-class {
+.flutter-code .token.plain-text {
+  color: #abb2bf;
+}
+
+.flutter-code .token.meta {
+  color: #7bdb96;
+}
+
+.flutter-code .token.tag,
+.flutter-code .token.symbol,
+.flutter-code .token.selector-id,
+.flutter-code .token.selector-class {
   color: #e06c75;
 }
+
