@@ -5,6 +5,7 @@ import string from 'vite-plugin-string';
 
 
 export default defineConfig({
+  base: '/FlutterLearning/',
   plugins: [
     react(),
     string({
