@@ -15,7 +15,6 @@
     "@mui/icons-material": "^7.1.2",
     "@mui/material": "^7.1.2",
     "dedent": "^1.6.0",
-    "highlight.js": "^11.11.1",
     "prismjs": "^1.30.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
