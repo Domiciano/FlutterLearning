@@ -5,36 +5,47 @@
     <title>Redirigiendo...</title>
     <script type="text/javascript">
       // Define la base de tu repositorio en GitHub Pages.
-      // ¡Asegúrate de que este sea el nombre EXACTO de tu repositorio!
+      // ¡Es crucial que sea el nombre EXACTO de tu repositorio!
       var repoBase = "/FlutterLearning";
 
-      // Obtiene el path actual de la URL completa (ej. /FlutterLearning/lesson/1)
+      // Obtiene el pathname completo, ej. /FlutterLearning/lesson/1 o /FlutterLearning/index.html/lesson/1
       var currentPathname = window.location.pathname;
 
-      // Extrae la parte de la ruta que React Router debe manejar.
-      // Esto significa remover el `repoBase` del inicio del `currentPathname`.
+      // La URL completa a la que queremos redirigir para que GitHub Pages sirva index.html.
+      // Siempre será repoBase + "/index.html"
+      var targetBase = repoBase + "/index.html";
+
+      // Extrae la parte de la ruta que React Router debería procesar.
+      // Esto es lo que viene DESPUÉS de la base del repositorio, e incluso después de un posible "/index.html".
       var reactRouterPath = currentPathname;
+
+      // Paso 1: Eliminar la base del repositorio si está al principio.
       if (reactRouterPath.startsWith(repoBase)) {
         reactRouterPath = reactRouterPath.substring(repoBase.length);
       }
 
-      // Asegura que la `reactRouterPath` empiece con una barra,
-      // lo cual es importante para React Router.
+      // Paso 2: Eliminar cualquier segmento de "/index.html" si ya está presente en la ruta.
+      // Esto es crucial para evitar el bucle "index.html/index.html".
+      if (reactRouterPath.startsWith('/index.html')) {
+        reactRouterPath = reactRouterPath.substring('/index.html'.length);
+      }
+
+      // Asegurarse de que la ruta final para React Router comience con una barra.
       if (!reactRouterPath.startsWith('/')) {
         reactRouterPath = '/' + reactRouterPath;
       }
 
       // Construye la URL final para la redirección.
-      // GitHub Pages servirá `repoBase/index.html` (ej. /FlutterLearning/index.html).
-      // El resto de la ruta (`reactRouterPath`) será vista por React Router.
-      var redirectTo = repoBase + "/index.html" + reactRouterPath;
+      // Será: "/FlutterLearning/index.html" + "/lesson/1" (o "/")
+      var finalRedirectUrl = targetBase + reactRouterPath;
 
-      // Solo redirige si la URL actual del navegador NO es ya la URL de destino
-      // para evitar bucles infinitos.
-      // Compara la URL completa para mayor precisión.
-      if (window.location.href !== (window.location.origin + redirectTo)) {
-        window.location.replace(redirectTo);
+      // Comprueba si la URL actual del navegador ya es la URL de redirección final.
+      // Si ya lo es, no redirigimos para evitar el bucle.
+      if (window.location.href !== (window.location.origin + finalRedirectUrl)) {
+        window.location.replace(finalRedirectUrl);
       }
+      // Si la URL actual ya es la misma que la de destino, significa que index.html ya se cargó,
+      // y React Router debería estar tomando el control.
     </script>
   </head>
   <body></body>
