@@ -1,7 +1,7 @@
 import React from "react";
 import LessonContainer from "./LessonContainer";
 import LessonTitle from "./LessonTittle";
-import LessonSubtitle from "./LessonSubtitle";
+import LessonSub from "./LessonSub";
 import LessonParagraph from "./LessonParagraph";
 import CodeBlock from "./CodeBlock";
 import YouTubeEmbed from "./YouTubeEmbed";
@@ -91,9 +91,9 @@ const LessonParser = ({ content }) => {
       flushParagraph(elements, paragraphBuffer, i);
       paragraphBuffer = "";
       elements.push(
-        <LessonSubtitle key={`subtitle-${i}`}>
+        <LessonSub key={`subtitle-${i}`}>
           {parseInlineCode(trimmedLine.slice(4).trim())}
-        </LessonSubtitle>
+        </LessonSub>
       );
       continue;
     }

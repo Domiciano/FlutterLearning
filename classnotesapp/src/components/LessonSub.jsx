@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 
-const LessonSubtitle = ({ children }) => {
+const LessonSub = ({ children }) => {
   return (
     <Typography
       variant="h6"
@@ -18,4 +18,4 @@ const LessonSubtitle = ({ children }) => {
   );
 };
 
-export default LessonSubtitle;
+export default LessonSub;
