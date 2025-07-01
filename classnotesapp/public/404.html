@@ -4,11 +4,53 @@
     <meta charset="utf-8" />
     <title>Redirigiendo...</title>
     <script type="text/javascript">
-      // Redirige al index.html de tu aplicación.
-      // window.location.replace() es mejor que window.location.href para redirecciones
-      // ya que reemplaza la entrada actual en el historial del navegador.
-      var path = window.location.pathname.replace(/.*?\/(.*?)$/, "/$1");
-      window.location.replace("/FlutterLearning" + path); // Asegúrate de que '/FlutterLearning' sea el nombre de tu repositorio
+      // Define la base de tu repositorio en GitHub Pages.
+      // ¡Asegúrate de que este sea el nombre EXACTO de tu repositorio!
+      var repoBase = "/FlutterLearning";
+
+      // Obtiene el path actual de la URL completa (ej. /FlutterLearning/lesson/1)
+      var currentPathname = window.location.pathname;
+
+      // Asegúrate de que la base del repositorio esté al principio.
+      // Si el pathname ya empieza con la base + index.html, es un bucle, así que lo manejamos.
+      // Si el pathname ya empieza con la base sin index.html, lo dejamos.
+      // Si no empieza con la base, significa que estamos en la raíz del dominio
+      // o en una ruta incorrecta que no tiene la base.
+
+      // Construye la URL de destino. Siempre queremos redirigir a index.html.
+      // Y queremos que la parte del "path" que React Router debe ver sea lo que va después de la base del repo.
+
+      // 1. Elimina cualquier ocurrencia duplicada de repoBase al inicio del pathname
+      var cleanedPathname = currentPathname;
+      while (cleanedPathname.startsWith(repoBase + repoBase)) {
+        cleanedPathname = cleanedPathname.substring(repoBase.length);
+      }
+      
+      // 2. Si el pathname ya contiene index.html, significa que ya estamos en una redirección,
+      // o que la base ya fue añadida. Quitamos index.html para que React Router lo vea limpio.
+      if (cleanedPathname.includes("/index.html")) {
+          cleanedPathname = cleanedPathname.split("/index.html")[1] || "/";
+      }
+
+      // 3. Asegúrate de que el pathname resultante empiece con una barra
+      if (!cleanedPathname.startsWith('/')) {
+          cleanedPathname = '/' + cleanedPathname;
+      }
+      
+      // La URL final a la que queremos redirigir:
+      // repoBase + /index.html + la ruta limpia para React Router
+      var redirectTo = repoBase + "/index.html" + cleanedPathname;
+
+      // Si ya estamos en la URL de destino o en una URL que ya cargó el index.html, no redirigir para evitar bucles.
+      // Esto es una capa extra de seguridad.
+      if (window.location.href.endsWith(redirectTo) || 
+          window.location.href.endsWith(repoBase + cleanedPathname) && window.location.href.includes("index.html")) {
+          console.log("Ya en la URL de destino o cerca. Evitando redirección para prevenir bucle.");
+          // Opcional: Podrías hacer un window.location.reload() para forzar un reintento si realmente está atascado.
+          // Pero la lógica de abajo debería ser suficiente.
+      } else {
+          window.location.replace(redirectTo);
+      }
     </script>
   </head>
   <body></body>
