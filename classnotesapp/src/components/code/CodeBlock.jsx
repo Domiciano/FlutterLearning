@@ -2,7 +2,16 @@
 import React, { useEffect, useRef } from "react";
 import Prism from "prismjs"; 
 import "prismjs/components/prism-dart";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-java";
+import "prismjs/components/prism-sql";
 import "prismjs/themes/prism-tomorrow.css";
+
+// Importar lenguajes personalizados
+import "@/prism/languages/prism-http.js";
+import "@/prism/languages/prism-sql-enhanced.js";
+import "@/prism/languages/prism-java-enhanced.js";
 
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -13,7 +22,6 @@ const CodeBlock = ({ children, language, className = "" }) => {
   const codeRef = useRef(null);
 
   useEffect(() => {
-  
     if (codeRef.current) {
       Prism.highlightElement(codeRef.current);
     }

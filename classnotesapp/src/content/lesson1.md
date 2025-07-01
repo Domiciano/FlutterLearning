@@ -23,6 +23,27 @@ Bienvenido al curso de Aplicaciones móviles
 
 [i] logo.svg | Logo de Icesi
 
+
+[c:jsx]
+function MyButton() {
+  return (
+    <button>Soy un botón</button>
+  );
+}
+
+[c:http]
+GET /items/1
+[c:sql]
+SELECT name, age 
+FROM users 
+WHERE age > 18 
+ORDER BY name ASC;
+[c:java]
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
 [c:dart]
 import 'package:flutter/material.dart';
 

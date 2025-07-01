@@ -7,8 +7,10 @@ const LessonContainer = ({ children }) => {
       sx={{
         maxWidth: "800px",
         margin: "auto",
-        px: { xs: 0, sm: 0 },
-        py: { xs: 0, sm: 0 },
+        px: { xs: 1, sm: 2 },
+        py: { xs: 1, sm: 2 },
+        width: "100%",
+        boxSizing: "border-box",
       }}
     >
       {children}

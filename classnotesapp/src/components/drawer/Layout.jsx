@@ -146,7 +146,13 @@ const Layout = ({ children, sections = [] }) => {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: isMobile ? 1 : 2, mt: isMobile ? 7 : 0 }}
+        sx={{ 
+          flexGrow: 1, 
+          p: isMobile ? 0 : 2, 
+          mt: isMobile ? 7 : 0,
+          width: "100%",
+          boxSizing: "border-box"
+        }}
       >
         {children}
       </Box>
