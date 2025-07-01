@@ -1,4 +1,4 @@
-# Principios de Diagramación en Flutter
+[t] React Native
 
 [p]
 En Flutter, `Row` y `Column` son los widgets base

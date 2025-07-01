@@ -1,30 +1,23 @@
 // components/CodeBlock.jsx
-import React, { useEffect, useRef, useState } from "react";
-import Prism from "prismjs"; // Importa la librería principal de Prism
-import "prismjs/components/prism-dart"; // Importa específicamente el lenguaje Dart
-// Puedes elegir un tema de Prism que te guste, o no importar ninguno
-// para usar solo tus estilos personalizados. Aquí importo uno para empezar.
-import "prismjs/themes/prism-tomorrow.css"; // Un tema oscuro común de Prism
+import React, { useEffect, useRef } from "react";
+import Prism from "prismjs"; 
+import "prismjs/components/prism-dart";
+import "prismjs/themes/prism-tomorrow.css";
 
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import "../styles/flutter-like.css"; // Tu CSS personalizado
+import "@/styles/flutter-like.css"; 
 
 const CodeBlock = ({ children, language, className = "" }) => {
-  const codeRef = useRef(null); // Usamos una referencia para el elemento <code>
-
-  // No necesitamos 'highlightedCode' en el estado si Prism.js manipula el DOM directamente
-  // o si no hacemos procesado adicional con expresiones regulares.
+  const codeRef = useRef(null);
 
   useEffect(() => {
-    // Asegúrate de que el elemento ref exista antes de intentar resaltar
+  
     if (codeRef.current) {
-      // Si language es 'dart', asegúrate de que Prism.js tenga el componente cargado.
-      // 'Prism.highlightElement' aplica el resaltado in-place al elemento.
       Prism.highlightElement(codeRef.current);
     }
-  }, [children, language]); // Vuelve a ejecutar si el código o el lenguaje cambian
+  }, [children, language]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(children);

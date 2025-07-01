@@ -15,7 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Link, useLocation } from "react-router-dom";
 import DrawerDivider from "./DrawerDivider";
-import images from '../assets';
+import images from '@/assets';
 
 const drawerWidth = 240;
 

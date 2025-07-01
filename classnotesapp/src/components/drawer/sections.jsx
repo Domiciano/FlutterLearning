@@ -1,8 +1,5 @@
-import LessonParser from "../components/LessonParser";
-
-// Importa tus archivos .md como texto plano
-import lesson1 from "../lessons/lesson1.md?raw";
-// Puedes continuar agregando: lesson4, lesson5, etc.
+import LessonParser from "@/components/util/LessonParser";
+import lesson1 from "@/content/lesson1.md?raw";
 
 const createLesson = (id, label, rawContent) => ({
   type: "lesson",
@@ -11,7 +8,7 @@ const createLesson = (id, label, rawContent) => ({
   component: <LessonParser content={rawContent} />,
 });
 
-const sections = [
+export const sections = [
   { type: "title", id: "instalacion", label: "Instalación" },
   createLesson(1, "Instalación de Flutter", lesson1),
   createLesson(2, "Crear aplicaciones", lesson1),
@@ -61,4 +58,4 @@ const sections = [
   createLesson(30, "Secciones condicionales", lesson1),
 ];
 
-export default sections;
+

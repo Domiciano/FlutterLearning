@@ -1,14 +1,14 @@
 import React from "react";
-import LessonContainer from "./LessonContainer";
-import LessonTitle from "./LessonTittle";
-import LessonSub from "./LessonSub";
-import LessonParagraph from "./LessonParagraph";
-import CodeBlock from "./CodeBlock";
-import YouTubeEmbed from "./YouTubeEmbed";
-import ImageBlock from "./ImageBlock";
-import DartPadEmbed from "./DartPadEmbed";
-import IconBlock from "./IconBlock";
-import images from "../assets";
+import LessonTitle from "@/components/lesson/LessonTittle";
+import LessonSub from "@/components/lesson/LessonSub";
+import LessonParagraph from "@/components/lesson/LessonParagraph";
+import CodeBlock from "@/components/code/CodeBlock";
+import YouTubeEmbed from "@/components/embed/YouTubeEmbed";
+import ImageBlock from "@/components/lesson/ImageBlock";
+import LessonContainer from "@/components/lesson/LessonContainer";
+import DartPadEmbed from "@/components/embed/DartPadEmbed";
+import IconBlock from "@/components/lesson/IconBlock";
+import images from "@/assets";
 
 const LessonParser = ({ content }) => {
   const lines = content.split("\n");
