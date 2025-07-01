@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirigiendo...</title>
+    <script type="text/javascript">
+      // Redirige al index.html de tu aplicación.
+      // window.location.replace() es mejor que window.location.href para redirecciones
+      // ya que reemplaza la entrada actual en el historial del navegador.
+      var path = window.location.pathname.replace(/.*?\/(.*?)$/, "/$1");
+      window.location.replace("/FlutterLearning" + path); // Asegúrate de que '/FlutterLearning' sea el nombre de tu repositorio
+    </script>
+  </head>
+  <body></body>
+</html>

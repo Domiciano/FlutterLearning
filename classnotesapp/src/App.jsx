@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom'; // <--- No BrowserRouter aquí
 import '@/App.css';
 
-import Layout from '@/components/drawer/Layout'; // Correcto
-import TableOfContentsParser from '@/components/util/TableOfContentsParser'; // ¡Ruta corregida!
-import tocContent from '@/content/toc.md?raw'; // Correcto
-import LessonPage from '@/pages/LessonPage'; // Correcto
+import Layout from '@/components/drawer/Layout';
+import TableOfContentsParser from '@/components/util/TableOfContentsParser';
+import tocContent from '@/content/toc.md?raw';
+import LessonPage from '@/pages/LessonPage';
 
 function App() {
   const [sections, setSections] = useState([]);
@@ -49,18 +49,20 @@ function App() {
   }
 
   return (
-    <Layout sections={sections}>
-      <Routes>
-        <Route path="/lesson/:lessonId" element={<LessonPage sections={sections} />} />
-        <Route path="/" element={<Navigate to={`/lesson/${firstLessonId}`} replace />} />
-        <Route path="*" element={
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            <h1>404 - Página no encontrada</h1>
-            <p>La URL que buscas no existe.</p>
-          </div>
-        } />
-      </Routes>
-    </Layout>
+    // <BrowserRouter basename="/FlutterLearning"> {/* <-- ¡ELIMINA ESTO! */}
+      <Layout sections={sections}>
+        <Routes>
+          <Route path="/lesson/:lessonId" element={<LessonPage sections={sections} />} />
+          <Route path="/" element={<Navigate to={`/lesson/${firstLessonId}`} replace />} />
+          <Route path="*" element={
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h1>404 - Página no encontrada</h1>
+              <p>La URL que buscas no existe.</p>
+            </div>
+          } />
+        </Routes>
+      </Layout>
+    // </BrowserRouter> {/* <-- ¡ELIMINA ESTO! */}
   );
 }
 
