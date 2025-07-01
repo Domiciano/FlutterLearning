@@ -18,9 +18,61 @@ const LessonParser = ({ content }) => {
   let parsingCode = false;
   let codeLang = "";
 
+  // Helper function to flush the current code block
+  const flushCodeBlock = (index) => {
+    if (parsingCode) {
+      elements.push(
+        <CodeBlock key={`code-${index}`} language={codeLang}>
+          {codeBuffer}
+        </CodeBlock>
+      );
+      parsingCode = false;
+      codeBuffer = "";
+      codeLang = "";
+    }
+  };
+
+  // Helper function to flush the current paragraph buffer
+  const flushParagraph = (elements, buffer, key) => {
+    if (buffer.trim() !== "") {
+      elements.push(
+        <LessonParagraph key={`p-${key}`}>
+          {parseInlineCode(buffer.trim())}
+        </LessonParagraph>
+      );
+    }
+  };
+
+  // Helper function for inline code parsing
+  const parseInlineCode = (text) => {
+    const parts = text.split(/(`[^`]+`)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith("`") && part.endsWith("`")) {
+        const code = part.slice(1, -1);
+        return (
+          <code key={index} className="inline-code">
+            {code}
+          </code>
+        );
+      } else {
+        return part;
+      }
+    });
+  };
+
   for (let i = 0; i < lines.length; i++) {
     const rawLine = lines[i];
     const trimmedLine = rawLine.trim();
+
+    // Check if the current line is a directive *before* checking parsingCode
+    const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|c:).*\]$/);
+
+    // If we are parsing code and encounter any directive, flush the code block first
+    if (parsingCode && isDirective) {
+      flushCodeBlock(i);
+      // We don't continue here; we let the subsequent directive handling logic run
+      // on the *current* line.
+    }
 
     // --- TÍTULO PRINCIPAL ---
     if (trimmedLine.startsWith("[t]")) {
@@ -50,31 +102,6 @@ const LessonParser = ({ content }) => {
     if (trimmedLine === "[p]") {
       flushParagraph(elements, paragraphBuffer, i);
       paragraphBuffer = "";
-      continue;
-    }
-
-    // --- CIERRE DE BLOQUE DE CÓDIGO ---
-    if (parsingCode) {
-      const isDirective = trimmedLine.match(/^\[[a-z]+.*\]$/i);
-      const isLastLine = i === lines.length - 1;
-
-      if (isDirective || isLastLine) {
-        if (isLastLine && !isDirective) {
-          codeBuffer += rawLine + "\n";
-        }
-
-        parsingCode = false;
-        elements.push(
-          <CodeBlock key={`code-${i}`} language={codeLang}>
-            {codeBuffer}
-          </CodeBlock>
-        );
-
-        if (isDirective) i--;
-        continue;
-      }
-
-      codeBuffer += rawLine + "\n";
       continue;
     }
 
@@ -138,7 +165,23 @@ const LessonParser = ({ content }) => {
       continue;
     }
 
-    // --- TEXTO CONTINUO ---
+    // --- CIERRE DE BLOQUE DE CÓDIGO o CÓDIGO CONTINUO ---
+    // This logic needs to be after all other directives
+    if (parsingCode) {
+      // If the current line is a directive, it would have been caught earlier,
+      // and flushCodeBlock would have been called.
+      // So, if we are still parsing code here, it means it's a content line for the code block.
+      codeBuffer += rawLine + "\n";
+      // We don't need a specific "end of code block" directive check inside parsingCode anymore
+      // because any new directive will trigger the flush.
+      // The only remaining case to flush is the very end of the file.
+      if (i === lines.length - 1) {
+        flushCodeBlock(i);
+      }
+      continue;
+    }
+
+    // --- TEXTO CONTINUO (NOT PART OF CODE BLOCK) ---
     if (trimmedLine !== "") {
       paragraphBuffer += (paragraphBuffer ? " " : "") + trimmedLine;
     }
@@ -150,34 +193,6 @@ const LessonParser = ({ content }) => {
   }
 
   return <LessonContainer>{elements}</LessonContainer>;
-};
-
-// --- Renderiza párrafo si hay contenido acumulado ---
-const flushParagraph = (elements, buffer, key) => {
-  if (buffer.trim() !== "") {
-    elements.push(
-      <LessonParagraph key={`p-${key}`}>
-        {parseInlineCode(buffer.trim())}
-      </LessonParagraph>
-    );
-  }
-};
-
-// --- inline code ---
-const parseInlineCode = (text) => {
-  const parts = text.split(/(`[^`]+`)/g);
-  return parts.map((part, index) => {
-    if (part.startsWith("`") && part.endsWith("`")) {
-      const code = part.slice(1, -1);
-      return (
-        <code key={index} className="inline-code">
-          {code}
-        </code>
-      );
-    } else {
-      return part;
-    }
-  });
 };
 
 export default LessonParser;
