@@ -30,26 +30,38 @@ function MyButton() {
     <button>Soy un botón</button>
   );
 }
+[end]
 
 [c:http]
-GET /items/1
+GET /api/users/1
+POST /api/users
+Content-Type: application/json
+Authorization: Bearer token123
+HTTP/1.1 200 OK
+[end]
+
 [c:sql]
 SELECT name, age 
 FROM users 
 WHERE age > 18 
 ORDER BY name ASC;
+[end]
+
 [c:java]
 public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
 }
+[end]
+
 [c:dart]
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -66,6 +78,7 @@ class MyApp extends StatelessWidget {
     );
   }
 };
+[end]
 
 [dartpad] 2ce0f8a930b04533ba94b4f4f525e7fc
 
@@ -102,3 +115,4 @@ class MyApp extends StatelessWidget {
     );
   }
 };
+[end]

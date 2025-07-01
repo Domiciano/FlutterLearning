@@ -91,3 +91,25 @@
   color: #e06c75;
 }
 
+/* Estilos específicos para HTTP */
+.flutter-code .token.method {
+  color: #7bdb96;
+  font-weight: bold;
+}
+
+.flutter-code .token.url {
+  color: #61afef;
+}
+
+.flutter-code .token.header {
+  color: #c678dd;
+}
+
+.flutter-code .token.status-code {
+  color: #d19a66;
+}
+
+.flutter-code .token.version {
+  color: #e7617e;
+}
+

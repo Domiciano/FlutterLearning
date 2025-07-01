@@ -13,6 +13,7 @@ import images from "@/assets";
 const LessonParser = ({ content }) => {
   const lines = content.split("\n");
   const elements = [];
+  const subtitles = [];
   let paragraphBuffer = "";
   let codeBuffer = "";
   let parsingCode = false;
@@ -67,7 +68,13 @@ const LessonParser = ({ content }) => {
     // Check if the current line is a directive *before* checking parsingCode
     const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|c:).*\]$/);
 
-    // If we are parsing code and encounter any directive, flush the code block first
+    // If we are parsing code and encounter [end], flush the code block
+    if (parsingCode && trimmedLine === "[end]") {
+      flushCodeBlock(i);
+      continue;
+    }
+
+    // If we are parsing code and encounter any other directive, flush the code block first
     if (parsingCode && isDirective) {
       flushCodeBlock(i);
       // We don't continue here; we let the subsequent directive handling logic run
@@ -90,9 +97,19 @@ const LessonParser = ({ content }) => {
     if (trimmedLine.startsWith("[st]")) {
       flushParagraph(elements, paragraphBuffer, i);
       paragraphBuffer = "";
+      const subtitleText = trimmedLine.slice(4).trim();
+      subtitles.push({
+        id: `subtitle-${i}`,
+        text: subtitleText,
+        element: (
+          <LessonSub key={`subtitle-${i}`}>
+            {parseInlineCode(subtitleText)}
+          </LessonSub>
+        )
+      });
       elements.push(
-        <LessonSub key={`subtitle-${i}`}>
-          {parseInlineCode(trimmedLine.slice(4).trim())}
+        <LessonSub key={`subtitle-${i}`} id={`subtitle-${i}`}>
+          {parseInlineCode(subtitleText)}
         </LessonSub>
       );
       continue;
@@ -192,7 +209,10 @@ const LessonParser = ({ content }) => {
     }
   }
 
-  return <LessonContainer>{elements}</LessonContainer>;
+  return {
+    elements: <LessonContainer>{elements}</LessonContainer>,
+    subtitles: subtitles
+  };
 };
 
 export default LessonParser;

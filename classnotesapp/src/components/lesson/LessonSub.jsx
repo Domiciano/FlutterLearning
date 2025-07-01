@@ -1,16 +1,21 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
 
-const LessonSub = ({ children }) => {
+const LessonSub = ({ children, id }) => {
   return (
     <Typography
-      variant="h6"
+      id={id}
+      variant="h4"
       sx={{
-        color: "#42a5f5",
-        fontWeight: "bold",
+        color: "#0175C2",
+        fontWeight: 600,
+        fontSize: { xs: "1.5rem", md: "2rem" },
+        letterSpacing: "0.02em",
         textAlign: "left",
         mt: 3,
-        mb: 1,
+        mb: 2,
+        lineHeight: 1.2,
+        fontFamily: "'Roboto', sans-serif",
       }}
     >
       {children}

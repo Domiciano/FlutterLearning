@@ -106,23 +106,20 @@ const Layout = ({ children, sections = [] }) => {
         </AppBar>
       )}
 
+      {/* Primera columna: Nav Drawer */}
       {!isMobile && (
-        <Drawer
-          variant="permanent"
+        <Box
           sx={{
             width: drawerWidth,
             flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
-              width: drawerWidth,
-              backgroundColor: "#1e1e1e",
-              color: "#fff",
-              borderRight: "1px solid #333",
-              overflowX: "hidden",
-            },
+            backgroundColor: "#1e1e1e",
+            color: "#fff",
+            borderRight: "1px solid #333",
+            overflowX: "hidden",
           }}
         >
           {drawerContent}
-        </Drawer>
+        </Box>
       )}
 
       {isMobile && (
@@ -144,14 +141,15 @@ const Layout = ({ children, sections = [] }) => {
         </Drawer>
       )}
 
+      {/* Contenido principal */}
       <Box
         component="main"
         sx={{ 
-          flexGrow: 1, 
+          flex: 1,
           p: isMobile ? 0 : 2, 
           mt: isMobile ? 7 : 0,
           width: "100%",
-          boxSizing: "border-box"
+          boxSizing: "border-box",
         }}
       >
         {children}

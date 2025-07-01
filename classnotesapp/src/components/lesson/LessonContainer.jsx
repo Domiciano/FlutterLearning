@@ -5,8 +5,7 @@ const LessonContainer = ({ children }) => {
   return (
     <Box
       sx={{
-        maxWidth: "800px",
-        margin: "auto",
+        maxWidth: "100%",
         px: { xs: 1, sm: 2 },
         py: { xs: 1, sm: 2 },
         width: "100%",
