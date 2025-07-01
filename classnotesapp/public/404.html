@@ -8,26 +8,14 @@
       // ¡Es crucial que sea el nombre EXACTO de tu repositorio!
       var repoBase = "/FlutterLearning";
 
-      // Obtiene el pathname completo, ej. /FlutterLearning/lesson/1 o /FlutterLearning/index.html/lesson/1
+      // Obtiene el pathname completo que causó el 404, ej. /FlutterLearning/lesson/1
       var currentPathname = window.location.pathname;
 
-      // La URL completa a la que queremos redirigir para que GitHub Pages sirva index.html.
-      // Siempre será repoBase + "/index.html"
-      var targetBase = repoBase + "/index.html";
-
-      // Extrae la parte de la ruta que React Router debería procesar.
-      // Esto es lo que viene DESPUÉS de la base del repositorio, e incluso después de un posible "/index.html".
+      // Extrae la parte de la ruta que React Router debe manejar.
+      // Esto significa remover el `repoBase` del inicio del `currentPathname`.
       var reactRouterPath = currentPathname;
-
-      // Paso 1: Eliminar la base del repositorio si está al principio.
       if (reactRouterPath.startsWith(repoBase)) {
         reactRouterPath = reactRouterPath.substring(repoBase.length);
-      }
-
-      // Paso 2: Eliminar cualquier segmento de "/index.html" si ya está presente en la ruta.
-      // Esto es crucial para evitar el bucle "index.html/index.html".
-      if (reactRouterPath.startsWith('/index.html')) {
-        reactRouterPath = reactRouterPath.substring('/index.html'.length);
       }
 
       // Asegurarse de que la ruta final para React Router comience con una barra.
@@ -36,16 +24,20 @@
       }
 
       // Construye la URL final para la redirección.
-      // Será: "/FlutterLearning/index.html" + "/lesson/1" (o "/")
-      var finalRedirectUrl = targetBase + reactRouterPath;
+      // Será: "/FlutterLearning/index.html?p=/lesson/1" (o cualquier otra ruta)
+      // Usamos encodeURIComponent para asegurar que la ruta se pase correctamente.
+      var finalRedirectUrl = repoBase + "/index.html?p=" + encodeURIComponent(reactRouterPath);
 
-      // Comprueba si la URL actual del navegador ya es la URL de redirección final.
-      // Si ya lo es, no redirigimos para evitar el bucle.
-      if (window.location.href !== (window.location.origin + finalRedirectUrl)) {
-        window.location.replace(finalRedirectUrl);
+      // Comprueba si la URL actual del navegador ya es la URL de redirección final
+      // o si ya contiene el parámetro 'p' para evitar bucles.
+      // Esto es para casos donde el script se ejecuta más de una vez.
+      if (window.location.href.indexOf("?p=") === -1 || // Si no tiene ?p=, redirige.
+          decodeURIComponent(window.location.search.substring(3)) !== reactRouterPath) { // O si el path en ?p= es diferente.
+          
+          window.location.replace(finalRedirectUrl);
       }
-      // Si la URL actual ya es la misma que la de destino, significa que index.html ya se cargó,
-      // y React Router debería estar tomando el control.
+      // Si ya tiene ?p= y el path coincide, significa que index.html ya se cargó,
+      // y App.jsx se encargará de la navegación interna.
     </script>
   </head>
   <body></body>
