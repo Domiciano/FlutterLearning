@@ -24,6 +24,7 @@ void main() {
   print('Potencia: ${a * a}');    // 100
 }
 [end]
+[dartpad] 1206661f021957122df6853c5563ce6c
 
 [st] Operadores de Asignación Operadores de Asignación
 
@@ -47,6 +48,7 @@ void main() {
   print('x /= 4: $x'); // 6.0
 }
 [end]
+[dartpad] f66ca926da7e164b4179aad75e63162b
 
 [st] Operadores de Comparación
 
@@ -66,6 +68,7 @@ void main() {
   print('a <= b: ${a <= b}');  // false
 }
 [end]
+[dartpad] 6d5c735eb25b32d840907bb164ab3922
 
 [st] Operadores Lógicos
 
@@ -86,6 +89,7 @@ void main() {
   print('Resultado: $result'); // true
 }
 [end]
+[dartpad] b5ca1f76f67c65f832732523b63d0a6e
 
 [st] Operadores de Incremento y Decremento 
 
@@ -108,6 +112,7 @@ void main() {
   print('x: $x');      // 5
 }
 [end]
+[dartpad] 0596b5fa6536fe5ffd7c0fa3ea8b1276
 
 [st] Operadores de Igualdad y Identidad
 
@@ -133,6 +138,7 @@ void main() {
   print('obj1 == obj2: ${obj1 == obj2}'); // false
 }
 [end]
+[dartpad] 33f1d2f24a2bf41ee60603f601e385b6
 
 [st] Operadores de Acceso y Llamada
 
@@ -166,6 +172,7 @@ void main() {
   print('Edad: ${persona2?.edad}'); // null (no causa error)
 }
 [end]
+[dartpad] 45861184506bb9412973140878a43243
 
 [st] Operadores de Nivel de Bits
 
@@ -185,6 +192,7 @@ void main() {
   print('a >> 1: ${a >> 1}'); // 2 (desplazamiento derecha)
 }
 [end]
+[dartpad] 789b0fde092e2c1c52f447b768484442
 
 [st] Precedencia de Operadores
 
@@ -210,6 +218,7 @@ void main() {
   print('a < b && b < c: $comparacion'); // true
 }
 [end]
+[dartpad] f411cb5e8b431f7f8efbc7b1879ab318
 
 [st] Operadores de Asignación Condicional
 
@@ -238,6 +247,7 @@ void main() {
   print('Valor final: $valor'); // Juan
 }
 [end]
+[dartpad] 8b8b0e53936a38fe913023e49ba028bb
 
 [st] Resumen y Mejores Prácticas
 
@@ -270,4 +280,5 @@ void main() {
   contador += 1; // Más claro que contador = contador + 1
 }
 [end]
+[dartpad] 639643197ad14282dcbc5439222befc8
 

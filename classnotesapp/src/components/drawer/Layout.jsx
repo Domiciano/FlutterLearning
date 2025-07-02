@@ -46,7 +46,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                   px: 2,
                   py: 1,
                   fontWeight: "bold",
-                  color: theme.primaryTitle,
+                  color: theme.drawerTitle,
                   fontSize: "0.75rem",
                   textTransform: "uppercase",
                 }}
@@ -66,9 +66,9 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                   color: theme.drawerSection,
                   '&.Mui-selected': {
                     backgroundColor: 'rgba(66, 165, 245, 0.1)',
-                    color: theme.primaryTitle,
+                    color: theme.drawerTitle,
                   },
-                  '&:hover': { color: theme.primaryTitle },
+                  '&:hover': { color: theme.drawerTitle },
                 }}
                 onClick={() => setMobileOpen(false)}
               >

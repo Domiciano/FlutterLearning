@@ -2,8 +2,10 @@
 
 export const light = {
   // Títulos y textos
-  primaryTitle: '#1976D2',         // Azul Flutter para títulos
-  secondaryTitle: '#2196F3',       // Azul claro para subtítulos y acentos
+  contentTitle: '#1976D2',         // Azul Flutter para títulos de contenido
+  contentSubtitle: '#2196F3',      // Azul claro para subtítulos de contenido
+  drawerTitle: '#0D47A1',          // Azul más oscuro para títulos del drawer
+  drawerSection: '#1565C0',        // Azul intermedio para secciones del drawer
   textPrimary: '#222',             // Texto principal sobre fondo claro
   textSecondary: '#444',           // Texto secundario
 
@@ -13,14 +15,8 @@ export const light = {
   drawerBg: '#F5F7FA',             // Drawer y TOC fondo (igual que background)
 
   // Drawer y TOC
-  drawerTitle: '#222',             // Igual que tocText
-  drawerSection: '#222',           // Igual que tocText
   tocTitle: '#1976D2',             // Título TOC
   tocText: '#222',                 // Texto TOC
-
-  // AppBar
-  appBarBg: '#1976D2',             // Azul Flutter (igual que primaryTitle)
-  appBarText: '#fff',              // Texto blanco
 
   // Accentos y bordes
   accent: '#2196F3',               // Azul acento
@@ -38,12 +34,17 @@ export const light = {
   // CodeBlock
   codeBg: '#f5f5f5',
   codeText: '#222',
+
+  appBarBg: '#FFFFFF',             // Fondo AppBar claro
+  appBarText: '#000000',              // Texto AppBar claro
 };
 
 export const dark = {
   // Títulos y textos
-  primaryTitle: '#90caf9',         // Azul claro para títulos
-  secondaryTitle: '#64B5F6',       // Azul claro para subtítulos y acentos
+  contentTitle: '#fff',         // Azul claro para títulos de contenido
+  contentSubtitle: '#64B5F6',      // Azul claro para subtítulos de contenido
+  drawerTitle: '#1976D2',          // Azul más fuerte para títulos del drawer
+  drawerSection: '#fff',        // Azul intermedio para secciones del drawer
   textPrimary: '#F3F6FB',          // Texto principal sobre fondo oscuro
   textSecondary: '#AAB4BE',        // Texto secundario
 
@@ -53,14 +54,8 @@ export const dark = {
   drawerBg: '#181C23',             // Drawer y TOC fondo (igual que background)
 
   // Drawer y TOC
-  drawerTitle: '#F3F6FB',          // Igual que tocText
-  drawerSection: '#F3F6FB',        // Igual que tocText
-  tocTitle: '#90caf9',             // Título TOC
+  tocTitle: '#64B5F6',             // Título TOC
   tocText: '#F3F6FB',              // Texto TOC
-
-  // AppBar
-  appBarBg: '#11151c',             // Azul oscuro profundo, elegante y moderno
-  appBarText: '#fff',              // Texto blanco
 
   // Accentos y bordes
   accent: '#2196F3',               // Azul acento
@@ -78,6 +73,9 @@ export const dark = {
   // CodeBlock
   codeBg: '#23272e',
   codeText: '#f8f8f2',
+
+  appBarBg: '#1e1e33',             // Fondo AppBar oscuro
+  appBarText: '#ffffff',              // Texto AppBar oscuro
 };
 
 // Por defecto exportamos dark

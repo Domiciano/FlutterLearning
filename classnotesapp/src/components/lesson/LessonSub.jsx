@@ -9,7 +9,7 @@ const LessonSub = ({ children, id }) => {
       id={id}
       variant="h4"
       sx={{
-        color: theme.secondaryTitle,
+        color: theme.contentSubtitle,
         fontWeight: 600,
         fontSize: { xs: "1.5rem", md: "2rem" },
         letterSpacing: "0.02em",

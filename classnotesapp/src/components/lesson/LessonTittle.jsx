@@ -10,7 +10,7 @@ const LessonTitle = ({ children }) => {
       variant="h2"
       component="h1"
       sx={{
-        color: theme.primaryTitle,
+        color: theme.contentTitle,
         fontWeight: 800,
         fontSize: { xs: "2.5rem", md: "3.5rem" },
         letterSpacing: "0.05em",
