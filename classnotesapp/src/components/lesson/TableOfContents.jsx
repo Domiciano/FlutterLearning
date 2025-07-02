@@ -14,9 +14,11 @@ const TableOfContents = ({ subtitles = [], lessonTitle }) => {
   const scrollToSubtitle = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+      const elementTop = element.offsetTop;
+      const offset = 80; // 64px AppBar + 16px padding
+      window.scrollTo({
+        top: elementTop - offset,
+        behavior: 'smooth'
       });
     }
   };

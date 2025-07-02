@@ -20,15 +20,17 @@ const LessonParser = ({ content }) => {
   let codeBuffer = "";
   let parsingCode = false;
   let codeLang = "";
+  let pendingCodeBlock = null;
 
   // Helper function to flush the current code block
   const flushCodeBlock = (index) => {
     if (parsingCode) {
-      elements.push(
+      const codeBlock = (
         <CodeBlock key={`code-${index}`} language={codeLang}>
           {codeBuffer}
         </CodeBlock>
       );
+      pendingCodeBlock = codeBlock;
       parsingCode = false;
       codeBuffer = "";
       codeLang = "";
@@ -201,18 +203,27 @@ const LessonParser = ({ content }) => {
       paragraphBuffer = "";
       const gistId = trimmedLine.slice(9).trim();
       elements.push(
-        <TryCodeButton key={`trycode-${i}`} gistId={gistId} />
+        <TryCodeButton key={`trycode-${i}`} gistId={gistId} codeBlock={pendingCodeBlock} />
       );
+      pendingCodeBlock = null;
       continue;
     }
 
     // --- TEXTO CONTINUO (NOT PART OF CODE BLOCK) ---
     if (trimmedLine !== "") {
+      if (pendingCodeBlock) {
+        elements.push(pendingCodeBlock);
+        pendingCodeBlock = null;
+      }
       paragraphBuffer += (paragraphBuffer ? " " : "") + trimmedLine;
     }
 
     // --- FIN DEL ARCHIVO ---
     if (i === lines.length - 1) {
+      if (pendingCodeBlock) {
+        elements.push(pendingCodeBlock);
+        pendingCodeBlock = null;
+      }
       flushParagraph(elements, paragraphBuffer, i);
     }
   }

@@ -13,9 +13,9 @@ const DartPadEmbed = ({ gistId, height = '800px' }) => {
       height={height}
       sx={{
         border: 'none',
-        borderRadius: 2,
-        my: 3,
-        boxShadow: 2,
+        borderRadius: 0,
+        my: 0,
+        boxShadow: 'none',
       }}
       title="DartPad Embed"
     />
