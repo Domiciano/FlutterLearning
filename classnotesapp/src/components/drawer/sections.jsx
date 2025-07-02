@@ -1,4 +1,4 @@
-import LessonParser from "@/components/util/LessonParser";
+import LessonParser from "@/components/lesson/LessonParser";
 import lesson1 from "@/content/lesson1.md?raw";
 
 const createLesson = (id, label, rawContent) => ({

@@ -1,15 +1,20 @@
 // src/pages/LessonPage.jsx
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { useParams } from 'react-router-dom';
-import LessonParser from '@/components/util/LessonParser';
-import allLessonRawContents from '@/components/util/lessonImporter';
+import Box from '@mui/material/Box';
+import LessonParser from '@/components/lesson/LessonParser';
+import allLessonRawContents from '@/utils/lessonImporter';
 import TableOfContents from '@/components/lesson/TableOfContents';
+import { useThemeMode } from '@/theme/ThemeContext';
+import CloseIcon from '@mui/icons-material/Close';
 
-const LessonPage = ({ sections }) => {
+const LessonPage = forwardRef(({ sections }, ref) => {
   const { lessonId } = useParams();
   const [loading, setLoading] = useState(true);
-  const [parsedContent, setParsedContent] = useState({ elements: null, subtitles: [] });
+  const [parsedContent, setParsedContent] = useState({ elements: null, subtitles: [], lessonTitle: '' });
+  const [showMobileToc, setShowMobileToc] = useState(false);
+  const { theme } = useThemeMode();
 
   const lessonMap = useMemo(() => {
     const map = new Map();
@@ -41,20 +46,62 @@ const LessonPage = ({ sections }) => {
     setLoading(false);
   }, [lessonId, lessonMap]);
 
+  useImperativeHandle(ref, () => ({
+    openMobileToc: () => setShowMobileToc(true),
+    closeMobileToc: () => setShowMobileToc(false),
+  }));
+
   if (loading) {
     return <div>Cargando contenido de la lección...</div>;
   }
 
   return (
-    <div style={{ display: 'flex', width: '100%' }}>
-      <div style={{ flex: 1 }}>
+    <Box sx={{ 
+      display: 'flex', 
+      width: '100%', 
+      flexDirection: { xs: 'column', lg: 'row' } 
+    }}>
+      <Box sx={{ flex: 1, width: '100%' }}>
         {parsedContent.elements}
-      </div>
-      <div style={{ width: '280px', flexShrink: 0, display: { xs: 'none', lg: 'block' } }}>
-        <TableOfContents subtitles={parsedContent.subtitles} />
-      </div>
-    </div>
+      </Box>
+      {/* TOC en desktop */}
+      <Box sx={{ 
+        width: { lg: '280px' }, 
+        flexShrink: 0, 
+        display: { xs: 'none', lg: 'block' } 
+      }}>
+        <TableOfContents subtitles={parsedContent.subtitles} lessonTitle={parsedContent.lessonTitle} />
+      </Box>
+      {/* TOC en mobile: Drawer temporal */}
+      {showMobileToc && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            width: '85vw',
+            maxWidth: 320,
+            height: '100vh',
+            backgroundColor: theme.background,
+            zIndex: 2000,
+            boxShadow: 6,
+            p: 2,
+            display: { xs: 'block', lg: 'none' },
+          }}
+        >
+          {/* Botón de cerrar fijo arriba a la derecha */}
+          <Box sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2100 }}>
+            <button onClick={() => setShowMobileToc(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }} aria-label="Cerrar TOC">
+              <CloseIcon sx={{ color: theme.primaryTitle, fontSize: 28 }} />
+            </button>
+          </Box>
+          <Box sx={{ pt: 4 }}>
+            <TableOfContents subtitles={parsedContent.subtitles} lessonTitle={parsedContent.lessonTitle} />
+          </Box>
+        </Box>
+      )}
+    </Box>
   );
-};
+});
 
 export default LessonPage;

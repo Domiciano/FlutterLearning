@@ -1,17 +1,20 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'; // Importa useLocation y useNavigate
 import '@/App.css';
 
 import Layout from '@/components/drawer/Layout';
-import TableOfContentsParser from '@/components/util/TableOfContentsParser';
+import TableOfContentsParser from '@/utils/tableOfContentsParser';
 import tocContent from '@/content/toc.md?raw';
 import LessonPage from '@/pages/LessonPage';
+import AppBarGlobal from '@/components/AppBarGlobal';
 
 function App() {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation(); // Hook para acceder al objeto location
   const navigate = useNavigate(); // Hook para navegar programáticamente
+  const lessonPageRef = useRef();
+  const layoutNavRef = useRef();
 
   useEffect(() => {
     const loadSections = async () => {
@@ -72,26 +75,29 @@ function App() {
   }
 
   return (
-    // BrowserRouter está en main.jsx, NO aquí
-    <Layout sections={sections}>
-      <Routes>
-        <Route path="/lesson/:lessonId" element={<LessonPage sections={sections} />} />
-        {/* La ruta raíz ahora se manejará principalmente por el useEffect anterior.
-            Este Route puede ser un placeholder o un componente de inicio. */}
-        <Route path="/" element={
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            <h1>Iniciando curso...</h1>
-            <p>Si esta página persiste, por favor recarga o contacta al administrador.</p>
-          </div>
-        } />
-        <Route path="*" element={
-          <div style={{ padding: '20px', textAlign: 'center' }}>
-            <h1>404 - Página no encontrada</h1>
-            <p>La URL que buscas no existe.</p>
-          </div>
-        } />
-      </Routes>
-    </Layout>
+    <>
+      <AppBarGlobal 
+        onOpenMobileToc={() => lessonPageRef.current?.openMobileToc()} 
+        onOpenMobileNav={() => layoutNavRef.current?.()} 
+      />
+      <Layout sections={sections} onOpenMobileNav={layoutNavRef}>
+        <Routes>
+          <Route path="/lesson/:lessonId" element={<LessonPage ref={lessonPageRef} sections={sections} />} />
+          <Route path="/" element={
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h1>Iniciando curso...</h1>
+              <p>Si esta página persiste, por favor recarga o contacta al administrador.</p>
+            </div>
+          } />
+          <Route path="*" element={
+            <div style={{ padding: '20px', textAlign: 'center' }}>
+              <h1>404 - Página no encontrada</h1>
+              <p>La URL que buscas no existe.</p>
+            </div>
+          } />
+        </Routes>
+      </Layout>
+    </>
   );
 }
 

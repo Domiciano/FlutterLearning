@@ -1,13 +1,15 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
+import { useThemeMode } from '@/theme/ThemeContext';
 
 const LessonSub = ({ children, id }) => {
+  const { theme } = useThemeMode();
   return (
     <Typography
       id={id}
       variant="h4"
       sx={{
-        color: "#0175C2",
+        color: theme.secondaryTitle,
         fontWeight: 600,
         fontSize: { xs: "1.5rem", md: "2rem" },
         letterSpacing: "0.02em",

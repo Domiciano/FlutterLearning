@@ -34,11 +34,22 @@ const CodeBlock = ({ children, language, className = "" }) => {
   return (
     <Box
       className={`flutter-code ${className}`}
-      sx={{ position: "relative", my: 3 }}
+      sx={{ 
+        position: "relative", 
+        my: 3,
+        '& pre': {
+          border: 'none !important',
+          boxShadow: 'none !important',
+        },
+        '& code': {
+          border: 'none !important',
+          boxShadow: 'none !important',
+        },
+      }}
     >
       <IconButton
         onClick={copyToClipboard}
-        sx={{ position: "absolute", top: 8, right: 8, color: "#fff" }}
+        sx={{ position: "absolute", top: 8, right: 8, color: "#fff", background: 'rgba(0,0,0,0.18)', '&:hover': { background: 'rgba(0,0,0,0.32)' } }}
         size="small"
         aria-label="Copiar código"
       >

@@ -1,6 +1,6 @@
 [t] Operadores Básicos en Dart
 
-[st] Introducción a los Operadores
+[st] Introducción a los operadores
 
 [p]
 Los operadores en Dart son símbolos especiales que realizan operaciones específicas en operandos. Dart soporta una amplia variedad de operadores que se pueden clasificar en diferentes categorías según su funcionalidad.
@@ -25,7 +25,7 @@ void main() {
 }
 [end]
 
-[st] Operadores de Asignación
+[st] Operadores de Asignación Operadores de Asignación
 
 [p]
 Los operadores de asignación se utilizan para asignar valores a variables:
@@ -87,7 +87,7 @@ void main() {
 }
 [end]
 
-[st] Operadores de Incremento y Decremento
+[st] Operadores de Incremento y Decremento 
 
 [p]
 Dart proporciona operadores especiales para incrementar y decrementar valores:

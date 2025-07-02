@@ -5,10 +5,11 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import Paper from '@mui/material/Paper';
+import { useThemeMode } from '@/theme/ThemeContext';
 
-const TableOfContents = ({ subtitles = [] }) => {
+const TableOfContents = ({ subtitles = [], lessonTitle }) => {
   const [activeSubtitle, setActiveSubtitle] = useState('');
+  const { theme } = useThemeMode();
 
   const scrollToSubtitle = (id) => {
     const element = document.getElementById(id);
@@ -77,82 +78,71 @@ const TableOfContents = ({ subtitles = [] }) => {
     <Box
       sx={{
         width: '100%',
-        height: '100vh',
-        overflowY: 'auto',
         position: 'sticky',
-        top: 0,
+        top: { xs: '56px', sm: '64px' },
         pt: 2,
+        pl: { lg: 3 },
+        background: { lg: theme.background, xs: 'none' },
       }}
     >
-      <Paper
-        elevation={3}
+      <Typography
+        variant="h6"
         sx={{
-          p: 2,
-          backgroundColor: 'rgba(30, 30, 30, 0.95)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: theme.textPrimary,
+          fontWeight: 700,
+          mb: 2,
+          fontSize: '1.1rem',
+          textTransform: 'none',
+          letterSpacing: '0.01em',
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{
-            color: '#0175C2',
-            fontWeight: 600,
-            mb: 2,
-            fontSize: '1rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-          }}
-        >
-          Contenido
-        </Typography>
-        
-        <List dense sx={{ p: 0 }}>
-          {subtitles.map((subtitle) => (
-            <ListItem key={subtitle.id} sx={{ p: 0, mb: 0.5 }}>
-              <ListItemButton
-                onClick={() => scrollToSubtitle(subtitle.id)}
-                sx={{
-                  borderRadius: 1,
-                  py: 0.5,
-                  px: 1,
+        {lessonTitle}
+      </Typography>
+      <List dense sx={{ p: 0 }}>
+        {subtitles.map((subtitle) => (
+          <ListItem key={subtitle.id} sx={{ p: 0, mb: 0.5 }}>
+            <ListItemButton
+              onClick={() => scrollToSubtitle(subtitle.id)}
+              sx={{
+                borderRadius: 1,
+                py: 0.5,
+                px: 1,
+                backgroundColor: activeSubtitle === subtitle.id 
+                  ? 'rgba(66, 165, 245, 0.15)' // accent con opacidad
+                  : 'transparent',
+                border: activeSubtitle === subtitle.id 
+                  ? `1px solid ${theme.accent}`
+                  : '1px solid transparent',
+                '&:hover': {
                   backgroundColor: activeSubtitle === subtitle.id 
-                    ? 'rgba(1, 117, 194, 0.2)' 
-                    : 'transparent',
-                  border: activeSubtitle === subtitle.id 
-                    ? '1px solid rgba(1, 117, 194, 0.5)' 
-                    : '1px solid transparent',
-                  '&:hover': {
-                    backgroundColor: activeSubtitle === subtitle.id 
-                      ? 'rgba(1, 117, 194, 0.3)' 
-                      : 'rgba(1, 117, 194, 0.1)',
-                  },
-                  transition: 'all 0.2s ease-in-out',
-                }}
-              >
-                <ListItemText
-                  primary={
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: activeSubtitle === subtitle.id 
-                          ? '#0175C2' 
-                          : '#e0e0e0',
-                        fontSize: '0.875rem',
-                        fontWeight: activeSubtitle === subtitle.id ? 600 : 400,
-                        lineHeight: 1.3,
-                        transition: 'all 0.2s ease-in-out',
-                      }}
-                    >
-                      {subtitle.text}
-                    </Typography>
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
+                    ? 'rgba(66, 165, 245, 0.22)'
+                    : 'rgba(66, 165, 245, 0.08)',
+                },
+                transition: 'all 0.2s ease-in-out',
+              }}
+            >
+              <ListItemText
+                primary={
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: activeSubtitle === subtitle.id 
+                        ? theme.primaryTitle
+                        : theme.textSecondary,
+                      fontSize: '0.875rem',
+                      fontWeight: activeSubtitle === subtitle.id ? 600 : 400,
+                      lineHeight: 1.3,
+                      transition: 'all 0.2s ease-in-out',
+                    }}
+                  >
+                    {subtitle.text}
+                  </Typography>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
 };

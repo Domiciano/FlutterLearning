@@ -14,6 +14,7 @@ const LessonParser = ({ content }) => {
   const lines = content.split("\n");
   const elements = [];
   const subtitles = [];
+  let lessonTitleText = null;
   let paragraphBuffer = "";
   let codeBuffer = "";
   let parsingCode = false;
@@ -66,7 +67,7 @@ const LessonParser = ({ content }) => {
     const trimmedLine = rawLine.trim();
 
     // Check if the current line is a directive *before* checking parsingCode
-    const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|c:).*\]$/);
+    const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|c:).*"]$/);
 
     // If we are parsing code and encounter [end], flush the code block
     if (parsingCode && trimmedLine === "[end]") {
@@ -85,9 +86,11 @@ const LessonParser = ({ content }) => {
     if (trimmedLine.startsWith("[t]")) {
       flushParagraph(elements, paragraphBuffer, i);
       paragraphBuffer = "";
+      const titleText = trimmedLine.slice(3).trim();
+      if (!lessonTitleText) lessonTitleText = titleText;
       elements.push(
         <LessonTitle key={`title-${i}`}>
-          {parseInlineCode(trimmedLine.slice(3).trim())}
+          {parseInlineCode(titleText)}
         </LessonTitle>
       );
       continue;
@@ -102,7 +105,7 @@ const LessonParser = ({ content }) => {
         id: `subtitle-${i}`,
         text: subtitleText,
         element: (
-          <LessonSub key={`subtitle-${i}`}>
+          <LessonSub key={`subtitle-${i}`} id={`subtitle-${i}`}>
             {parseInlineCode(subtitleText)}
           </LessonSub>
         )
@@ -183,15 +186,8 @@ const LessonParser = ({ content }) => {
     }
 
     // --- CIERRE DE BLOQUE DE CÓDIGO o CÓDIGO CONTINUO ---
-    // This logic needs to be after all other directives
     if (parsingCode) {
-      // If the current line is a directive, it would have been caught earlier,
-      // and flushCodeBlock would have been called.
-      // So, if we are still parsing code here, it means it's a content line for the code block.
       codeBuffer += rawLine + "\n";
-      // We don't need a specific "end of code block" directive check inside parsingCode anymore
-      // because any new directive will trigger the flush.
-      // The only remaining case to flush is the very end of the file.
       if (i === lines.length - 1) {
         flushCodeBlock(i);
       }
@@ -211,7 +207,8 @@ const LessonParser = ({ content }) => {
 
   return {
     elements: <LessonContainer>{elements}</LessonContainer>,
-    subtitles: subtitles
+    subtitles: subtitles,
+    lessonTitle: lessonTitleText,
   };
 };
 

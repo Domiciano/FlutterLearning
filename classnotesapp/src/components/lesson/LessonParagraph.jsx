@@ -1,19 +1,18 @@
 // components/LessonParagraph.jsx
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import { useThemeMode } from '@/theme/ThemeContext';
 
 const LessonParagraph = ({ children }) => {
+  const { theme } = useThemeMode();
   return (
     <Typography
-      variant="body1"
       sx={{
-        fontFamily: 'Roboto, sans-serif',
-        fontWeight: 300,
-        fontSize: '1.1rem',
-        mt: 1,
+        color: theme.textPrimary,
+        fontSize: { xs: '1rem', md: '1.1rem' },
         mb: 2,
-        color: '#fff',
-        textAlign: 'left'
+        lineHeight: 1.7,
+        fontFamily: 'Roboto, Arial, sans-serif',
       }}
     >
       {children}

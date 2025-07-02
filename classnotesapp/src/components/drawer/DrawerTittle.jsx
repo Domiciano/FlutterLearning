@@ -1,25 +1,26 @@
 // components/DrawerTitle.jsx
 import React from 'react';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { useThemeMode } from '@/theme/ThemeContext';
 
-const DrawerTitle = ({ label }) => {
+const DrawerTittle = ({ children }) => {
+  const { theme } = useThemeMode();
   return (
-    <Box
+    <Typography
+      variant="subtitle2"
       sx={{
-        px: 2,
-        py: 1,
-        fontWeight: 'bold',
-        color: '#42a5f5', // Un color vibrante para el título de la sección
-        fontSize: '0.75rem',
+        color: theme.drawerTitle,
+        fontWeight: 700,
+        fontSize: '1rem',
+        letterSpacing: '0.08em',
         textTransform: 'uppercase',
+        mb: 1,
+        mt: 2,
       }}
     >
-      <Typography variant="overline" display="block">
-        {label}
-      </Typography>
-    </Box>
+      {children}
+    </Typography>
   );
 };
 
-export default DrawerTitle;
+export default DrawerTittle;

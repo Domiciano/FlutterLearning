@@ -1,5 +1,5 @@
 // components/Layout.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -14,34 +14,30 @@ import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Link, useLocation } from "react-router-dom";
-import DrawerDivider from "./DrawerDivider";
-import images from '@/assets';
+import { useThemeMode } from '@/theme/ThemeContext';
 
 const drawerWidth = 240;
 
-const Layout = ({ children, sections = [] }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+const Layout = ({ children, sections = [], onOpenMobileNav }) => {
+  const muiTheme = useTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { theme } = useThemeMode();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  useEffect(() => {
+    if (!onOpenMobileNav) return;
+    onOpenMobileNav.current = () => setMobileOpen(true);
+  }, [onOpenMobileNav]);
+
   const drawerContent = (
-    <Box sx={{ width: drawerWidth }}>
-      <Box sx={{ px: 2, pt: 2, textAlign: "center" }}>
-        <img
-          src={images['logo.svg']}
-          alt="Flutter"
-          style={{ width: "100%", maxWidth: "180px", borderRadius: 8 }}
-        />
-      </Box>
-      <Divider sx={{ my: 1, backgroundColor: '#333' }} />
+    <Box sx={{ width: drawerWidth, backgroundColor: theme.background, height: '100vh' }}>
       <List>
         {sections.map((sec, index) => {
-          if (sec.type === "divider") return <DrawerDivider key={`divider-${index}`} />;
           if (sec.type === "title") {
             return (
               <Box
@@ -50,7 +46,7 @@ const Layout = ({ children, sections = [] }) => {
                   px: 2,
                   py: 1,
                   fontWeight: "bold",
-                  color: "#42a5f5",
+                  color: theme.primaryTitle,
                   fontSize: "0.75rem",
                   textTransform: "uppercase",
                 }}
@@ -67,12 +63,12 @@ const Layout = ({ children, sections = [] }) => {
                 to={`/lesson/${sec.id}`}
                 selected={location.pathname === `/lesson/${sec.id}`}
                 sx={{
-                  color: "#e0e0e0",
+                  color: theme.drawerSection,
                   '&.Mui-selected': {
                     backgroundColor: 'rgba(66, 165, 245, 0.1)',
-                    color: '#42a5f5',
+                    color: theme.primaryTitle,
                   },
-                  '&:hover': { color: '#42a5f5' },
+                  '&:hover': { color: theme.primaryTitle },
                 }}
                 onClick={() => setMobileOpen(false)}
               >
@@ -88,68 +84,67 @@ const Layout = ({ children, sections = [] }) => {
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      {isMobile && (
-        <AppBar position="fixed" sx={{ backgroundColor: "#1e1e1e" }}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              Flutter Lecciones
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      )}
-
       {/* Primera columna: Nav Drawer */}
       {!isMobile && (
         <Box
           sx={{
             width: drawerWidth,
             flexShrink: 0,
-            backgroundColor: "#1e1e1e",
-            color: "#fff",
-            borderRight: "1px solid #333",
-            overflowX: "hidden",
+            backgroundColor: theme.background,
+            color: '#fff',
+            overflowX: 'hidden',
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            height: '100vh',
+            zIndex: 1201,
+            display: 'flex',
+            flexDirection: 'column',
+            pt: '64px',
           }}
         >
           {drawerContent}
         </Box>
       )}
-
       {isMobile && (
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
+          ModalProps={{ 
+            keepMounted: true,
+            disableScrollLock: false,
+          }}
           sx={{
             [`& .MuiDrawer-paper`]: {
-              width: drawerWidth,
-              backgroundColor: "#1e1e1e",
-              color: "#fff",
-              borderRight: "1px solid #333",
+              width: "85%",
+              maxWidth: drawerWidth,
+              backgroundColor: theme.background,
+              color: theme.textPrimary,
+              borderRight: `1px solid ${theme.border}`,
+              boxShadow: "4px 0 20px rgba(0,0,0,0.5)",
+              paddingTop: '64px',
             },
+            '& .MuiBackdrop-root': {
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }
           }}
         >
           {drawerContent}
         </Drawer>
       )}
-
       {/* Contenido principal */}
       <Box
         component="main"
         sx={{ 
           flex: 1,
-          p: isMobile ? 0 : 2, 
-          mt: isMobile ? 7 : 0,
+          p: isMobile ? 1 : 2, 
+          pt: isMobile ? 8 : 2, // Más espacio arriba en móvil para el AppBar
           width: "100%",
           boxSizing: "border-box",
+          backgroundColor: theme.background,
+          minHeight: "100vh",
+          ml: !isMobile ? `${drawerWidth}px` : 0,
         }}
       >
         {children}
