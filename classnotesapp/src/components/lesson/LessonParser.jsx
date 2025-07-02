@@ -9,6 +9,7 @@ import LessonContainer from "@/components/lesson/LessonContainer";
 import DartPadEmbed from "@/components/embed/DartPadEmbed";
 import IconBlock from "@/components/lesson/IconBlock";
 import images from "@/assets";
+import TryCodeButton from './TryCodeButton';
 
 const LessonParser = ({ content }) => {
   const lines = content.split("\n");
@@ -67,7 +68,7 @@ const LessonParser = ({ content }) => {
     const trimmedLine = rawLine.trim();
 
     // Check if the current line is a directive *before* checking parsingCode
-    const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|c:).*"]$/);
+    const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|trycode|c:).*"]$/);
 
     // If we are parsing code and encounter [end], flush the code block
     if (parsingCode && trimmedLine === "[end]") {
@@ -191,6 +192,17 @@ const LessonParser = ({ content }) => {
       if (i === lines.length - 1) {
         flushCodeBlock(i);
       }
+      continue;
+    }
+
+    // --- TRY CODE BUTTON ---
+    if (trimmedLine.startsWith('[trycode]')) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
+      const gistId = trimmedLine.slice(9).trim();
+      elements.push(
+        <TryCodeButton key={`trycode-${i}`} gistId={gistId} />
+      );
       continue;
     }
 

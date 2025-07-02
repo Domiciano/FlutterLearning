@@ -24,7 +24,7 @@ void main() {
   print('Potencia: ${a * a}');    // 100
 }
 [end]
-[dartpad] 0b724266b8c3b41729324393b1770bf3
+[trycode] 0b724266b8c3b41729324393b1770bf3
 
 [st] Operadores de Asignación Operadores de Asignación
 
@@ -48,7 +48,7 @@ void main() {
   print('x /= 4: $x'); // 6.0
 }
 [end]
-[dartpad] e6c00b23687660a44f959f591dff34a4
+[trycode] e6c00b23687660a44f959f591dff34a4
 
 [st] Operadores de Comparación
 
@@ -68,7 +68,7 @@ void main() {
   print('a <= b: ${a <= b}');  // false
 }
 [end]
-[dartpad] a501a06d10cb1e0a852d138191943569
+[trycode] a501a06d10cb1e0a852d138191943569
 
 [st] Operadores Lógicos
 
@@ -89,7 +89,7 @@ void main() {
   print('Resultado: $result'); // true
 }
 [end]
-[dartpad] 9d90271cdc58be19cac8482d9581e22a
+[trycode] 9d90271cdc58be19cac8482d9581e22a
 
 [st] Operadores de Incremento y Decremento 
 
@@ -112,7 +112,7 @@ void main() {
   print('x: $x');      // 5
 }
 [end]
-[dartpad] 0dcf52d36c752ab408e09b514b206a41
+[trycode] 0dcf52d36c752ab408e09b514b206a41
 
 [st] Operadores de Igualdad y Identidad
 
@@ -138,7 +138,7 @@ void main() {
   print('obj1 == obj2: ${obj1 == obj2}'); // false
 }
 [end]
-[dartpad] 7c1540896728de891caaf280333b4a50
+[trycode] 7c1540896728de891caaf280333b4a50
 
 [st] Operadores de Acceso y Llamada
 
@@ -172,7 +172,7 @@ void main() {
   print('Edad: ${persona2?.edad}'); // null (no causa error)
 }
 [end]
-[dartpad] d2362a1617c688dd0e41d2b097024173
+[trycode] d2362a1617c688dd0e41d2b097024173
 
 [st] Operadores de Nivel de Bits
 
@@ -192,7 +192,7 @@ void main() {
   print('a >> 1: ${a >> 1}'); // 2 (desplazamiento derecha)
 }
 [end]
-[dartpad] c4cecc98652965da30d5705d8ce34a94
+[trycode] c4cecc98652965da30d5705d8ce34a94
 
 [st] Precedencia de Operadores
 
@@ -218,7 +218,7 @@ void main() {
   print('a < b && b < c: $comparacion'); // true
 }
 [end]
-[dartpad] dda81dd026287263a4e8059c103b09ae
+[trycode] dda81dd026287263a4e8059c103b09ae
 
 [st] Operadores de Asignación Condicional
 
@@ -247,7 +247,7 @@ void main() {
   print('Valor final: $valor'); // Juan
 }
 [end]
-[dartpad] 6688ea34bdc820d157139b3018089694
+[trycode] 6688ea34bdc820d157139b3018089694
 
 [st] Resumen y Mejores Prácticas
 
@@ -280,5 +280,5 @@ void main() {
   contador += 1; // Más claro que contador = contador + 1
 }
 [end]
-[dartpad] 8c2b854a4dd01d8381ec7f44d46335d4
+[trycode] 8c2b854a4dd01d8381ec7f44d46335d4
 

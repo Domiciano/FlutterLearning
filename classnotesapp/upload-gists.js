@@ -125,7 +125,7 @@ async function createOrUpdateGist(filename, code, description, gists) {
     }
   }
 
-  // Ahora, modificar el markdown para insertar/reemplazar [dartpad] <id> después de cada [end]
+  // Ahora, modificar el markdown para insertar/reemplazar [trycode] <id> después de cada [end]
   const lines = markdown.split(/\r?\n/);
   let blockIndex = 0;
   let i = 0;
@@ -133,12 +133,12 @@ async function createOrUpdateGist(filename, code, description, gists) {
   while (i < lines.length) {
     newLines.push(lines[i]);
     if (lines[i].trim() === '[end]' && blockIndex < gistIds.length) {
-      // Si la siguiente línea es [dartpad] ... la reemplazamos
-      if (lines[i + 1] && lines[i + 1].trim().startsWith('[dartpad]')) {
-        newLines.push(`[dartpad] ${gistIds[blockIndex]}`);
-        i += 2; // saltar la línea [dartpad] existente
+      // Si la siguiente línea es [trycode] ... o [dartpad] ... la reemplazamos
+      if (lines[i + 1] && (lines[i + 1].trim().startsWith('[trycode]') || lines[i + 1].trim().startsWith('[dartpad]'))) {
+        newLines.push(`[trycode] ${gistIds[blockIndex]}`);
+        i += 2; // saltar la línea existente
       } else {
-        newLines.push(`[dartpad] ${gistIds[blockIndex]}`);
+        newLines.push(`[trycode] ${gistIds[blockIndex]}`);
         i++;
       }
       blockIndex++;
@@ -147,5 +147,5 @@ async function createOrUpdateGist(filename, code, description, gists) {
     }
   }
   fs.writeFileSync(markdownFile, newLines.join('\n'), 'utf8');
-  console.log('Archivo markdown actualizado con los IDs de gist.');
+  console.log('Archivo markdown actualizado con los IDs de gist usando [trycode].');
 })(); 
