@@ -1,6 +1,6 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
-import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
 
 if (process.argv.length < 3) {
   console.error('Uso: node upload-gists.js <archivo-markdown>');
@@ -15,6 +15,7 @@ if (!GITHUB_TOKEN) {
 
 const markdownFile = process.argv[2];
 const markdown = fs.readFileSync(markdownFile, 'utf8');
+const baseName = path.basename(markdownFile, path.extname(markdownFile));
 
 // Extrae todos los bloques [c:dart] ... [end]
 const codeBlocks = [];
@@ -29,44 +30,122 @@ if (codeBlocks.length === 0) {
   process.exit(0);
 }
 
-async function uploadGist(code, index) {
-  const filename = `${uuidv4()}.dart`;
-  const body = {
-    description: `Snippet Dart extraído de ${markdownFile} (bloque ${index + 1})`,
-    public: true,
-    files: {
-      [filename]: {
-        content: code
+async function getAllGists() {
+  let page = 1;
+  let gists = [];
+  while (true) {
+    const res = await fetch(`https://api.github.com/gists?per_page=100&page=${page}`, {
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github+json',
       }
-    }
-  };
-
-  const res = await fetch('https://api.github.com/gists', {
-    method: 'POST',
-    headers: {
-      'Authorization': `token ${GITHUB_TOKEN}`,
-      'Accept': 'application/vnd.github+json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (!res.ok) {
-    const error = await res.text();
-    throw new Error(`Error al crear gist: ${error}`);
+    });
+    if (!res.ok) throw new Error('No se pudieron obtener los gists');
+    const data = await res.json();
+    gists = gists.concat(data);
+    if (data.length < 100) break;
+    page++;
   }
+  return gists;
+}
 
-  const data = await res.json();
-  return data.html_url;
+async function findGistByFilename(filename, gists) {
+  for (const gist of gists) {
+    if (gist.files && gist.files[filename]) {
+      return gist;
+    }
+  }
+  return null;
+}
+
+async function createOrUpdateGist(filename, code, description, gists) {
+  const existingGist = await findGistByFilename(filename, gists);
+  if (existingGist) {
+    // Actualizar gist existente
+    const res = await fetch(`https://api.github.com/gists/${existingGist.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        description,
+        files: {
+          [filename]: { content: code }
+        },
+        public: true
+      })
+    });
+    if (!res.ok) {
+      const error = await res.text();
+      throw new Error(`Error al actualizar gist: ${error}`);
+    }
+    const data = await res.json();
+    return { url: data.html_url, id: data.id };
+  } else {
+    // Crear nuevo gist
+    const res = await fetch('https://api.github.com/gists', {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        description,
+        public: true,
+        files: {
+          [filename]: { content: code }
+        }
+      })
+    });
+    if (!res.ok) {
+      const error = await res.text();
+      throw new Error(`Error al crear gist: ${error}`);
+    }
+    const data = await res.json();
+    return { url: data.html_url, id: data.id };
+  }
 }
 
 (async () => {
+  const gists = await getAllGists();
+  const gistIds = [];
   for (let i = 0; i < codeBlocks.length; i++) {
+    const filename = `${baseName}code${i + 1}.dart`;
+    const description = `Snippet Dart extraído de ${markdownFile} (${filename})`;
     try {
-      const url = await uploadGist(codeBlocks[i], i);
-      console.log(`Gist creado para bloque ${i + 1}: ${url}`);
+      const result = await createOrUpdateGist(filename, codeBlocks[i], description, gists);
+      gistIds.push(result.id);
+      console.log(`Gist para bloque ${i + 1} (${filename}): ${result.url}`);
     } catch (err) {
-      console.error(`Error en bloque ${i + 1}:`, err.message);
+      gistIds.push(null);
+      console.error(`Error en bloque ${i + 1} (${filename}):`, err.message);
     }
   }
+
+  // Ahora, modificar el markdown para insertar/reemplazar [dartpad] <id> después de cada [end]
+  const lines = markdown.split(/\r?\n/);
+  let blockIndex = 0;
+  let i = 0;
+  const newLines = [];
+  while (i < lines.length) {
+    newLines.push(lines[i]);
+    if (lines[i].trim() === '[end]' && blockIndex < gistIds.length) {
+      // Si la siguiente línea es [dartpad] ... la reemplazamos
+      if (lines[i + 1] && lines[i + 1].trim().startsWith('[dartpad]')) {
+        newLines.push(`[dartpad] ${gistIds[blockIndex]}`);
+        i += 2; // saltar la línea [dartpad] existente
+      } else {
+        newLines.push(`[dartpad] ${gistIds[blockIndex]}`);
+        i++;
+      }
+      blockIndex++;
+    } else {
+      i++;
+    }
+  }
+  fs.writeFileSync(markdownFile, newLines.join('\n'), 'utf8');
+  console.log('Archivo markdown actualizado con los IDs de gist.');
 })(); 
