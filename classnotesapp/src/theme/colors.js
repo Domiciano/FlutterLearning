@@ -35,8 +35,8 @@ export const light = {
   codeBg: '#f5f5f5',
   codeText: '#222',
 
-  appBarBg: '#FFFFFF',             // Fondo AppBar claro
-  appBarText: '#000000',              // Texto AppBar claro
+  appBarBg: '#0D47A1',             // Fondo AppBar claro - Azul muy oscuro
+  appBarText: '#FFFFFF',              // Texto AppBar claro - Blanco para contraste
 };
 
 export const dark = {
@@ -74,8 +74,8 @@ export const dark = {
   codeBg: '#23272e',
   codeText: '#f8f8f2',
 
-  appBarBg: '#1e1e33',             // Fondo AppBar oscuro
-  appBarText: '#ffffff',              // Texto AppBar oscuro
+  appBarBg: '#0D47A1',             // Fondo AppBar oscuro - Azul muy oscuro
+  appBarText: '#ffffff',              // Texto AppBar oscuro - Blanco para contraste
 };
 
 // Por defecto exportamos dark
