@@ -8,6 +8,7 @@ import allLessonRawContents from '@/utils/lessonImporter';
 import TableOfContents from '@/components/lesson/TableOfContents';
 import { useThemeMode } from '@/theme/ThemeContext';
 import CloseIcon from '@mui/icons-material/Close';
+import { useContentSpy } from '@/hooks/useContentSpy';
 
 const LessonPage = forwardRef(({ sections }, ref) => {
   const { lessonId } = useParams();
@@ -15,6 +16,9 @@ const LessonPage = forwardRef(({ sections }, ref) => {
   const [parsedContent, setParsedContent] = useState({ elements: null, subtitles: [], lessonTitle: '' });
   const [showMobileToc, setShowMobileToc] = useState(false);
   const { theme } = useThemeMode();
+  
+  // Use content spy to track active section
+  const { activeSection } = useContentSpy(parsedContent.subtitles);
 
   const lessonMap = useMemo(() => {
     const map = new Map();
@@ -70,7 +74,11 @@ const LessonPage = forwardRef(({ sections }, ref) => {
         flexShrink: 0, 
         display: { xs: 'none', lg: 'block' } 
       }}>
-        <TableOfContents subtitles={parsedContent.subtitles} lessonTitle={parsedContent.lessonTitle} />
+        <TableOfContents 
+          subtitles={parsedContent.subtitles} 
+          lessonTitle={parsedContent.lessonTitle}
+          activeSection={activeSection}
+        />
       </Box>
       {/* TOC en mobile: Drawer temporal */}
       {showMobileToc && (
@@ -96,7 +104,11 @@ const LessonPage = forwardRef(({ sections }, ref) => {
             </button>
           </Box>
           <Box sx={{ pt: 4 }}>
-            <TableOfContents subtitles={parsedContent.subtitles} lessonTitle={parsedContent.lessonTitle} />
+            <TableOfContents 
+              subtitles={parsedContent.subtitles} 
+              lessonTitle={parsedContent.lessonTitle}
+              activeSection={activeSection}
+            />
           </Box>
         </Box>
       )}

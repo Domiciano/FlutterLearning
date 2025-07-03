@@ -92,6 +92,7 @@ const LessonParser = ({ content }) => {
       paragraphBuffer = "";
       const titleText = trimmedLine.slice(3).trim();
       if (!lessonTitleText) lessonTitleText = titleText;
+      
       elements.push(
         <LessonTitle key={`title-${i}`}>
           {parseInlineCode(titleText)}
@@ -107,12 +108,7 @@ const LessonParser = ({ content }) => {
       const subtitleText = trimmedLine.slice(4).trim();
       subtitles.push({
         id: `subtitle-${i}`,
-        text: subtitleText,
-        element: (
-          <LessonSub key={`subtitle-${i}`} id={`subtitle-${i}`}>
-            {parseInlineCode(subtitleText)}
-          </LessonSub>
-        )
+        text: subtitleText
       });
       elements.push(
         <LessonSub key={`subtitle-${i}`} id={`subtitle-${i}`}>

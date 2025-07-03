@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
@@ -7,8 +7,19 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { useThemeMode } from '@/theme/ThemeContext';
 
-const TableOfContents = ({ subtitles = [], lessonTitle }) => {
-  const [activeSubtitle, setActiveSubtitle] = useState('');
+// Función para convertir texto a slug válido para URL
+const createSlug = (text) => {
+  return text
+    .toLowerCase()
+    .normalize('NFD') // Normaliza caracteres acentuados
+    .replace(/[\u0300-\u036f]/g, '') // Remueve diacríticos
+    .replace(/[^a-z0-9\s-]/g, '') // Solo letras, números, espacios y guiones
+    .replace(/\s+/g, '-') // Reemplaza espacios con guiones
+    .replace(/-+/g, '-') // Reemplaza múltiples guiones con uno solo
+    .trim('-'); // Remueve guiones al inicio y final
+};
+
+const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '' }) => {
   const { theme } = useThemeMode();
 
   const scrollToSubtitle = (id) => {
@@ -20,57 +31,15 @@ const TableOfContents = ({ subtitles = [], lessonTitle }) => {
         top: elementTop - offset,
         behavior: 'smooth'
       });
-    }
-  };
-
-  // Función para detectar qué subtítulo está visible
-  const updateActiveSubtitle = () => {
-    if (subtitles.length === 0) return;
-
-    const scrollPosition = window.scrollY + 100; // Offset para mejor detección
-
-    // Encontrar el subtítulo más cercano a la posición del scroll
-    let currentActive = '';
-    
-    for (let i = subtitles.length - 1; i >= 0; i--) {
-      const subtitle = subtitles[i];
-      const element = document.getElementById(subtitle.id);
       
-      if (element) {
-        const elementTop = element.offsetTop;
-        
-        if (scrollPosition >= elementTop) {
-          currentActive = subtitle.id;
-          break;
-        }
+      // Find subtitle text and create slug for URL
+      const subtitle = subtitles.find(sub => sub.id === id);
+      if (subtitle) {
+        const slug = createSlug(subtitle.text);
+        window.history.replaceState(null, null, `#${slug}`);
       }
     }
-
-    // Si no encontramos ninguno, usar el primero
-    if (!currentActive && subtitles.length > 0) {
-      currentActive = subtitles[0].id;
-    }
-
-    setActiveSubtitle(currentActive);
   };
-
-  // Efecto para manejar el scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      updateActiveSubtitle();
-    };
-
-    // Actualizar al montar el componente
-    updateActiveSubtitle();
-
-    // Agregar listener de scroll
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [subtitles]);
 
   if (subtitles.length === 0) {
     return null;
@@ -109,14 +78,14 @@ const TableOfContents = ({ subtitles = [], lessonTitle }) => {
                 borderRadius: 1,
                 py: 0.5,
                 px: 1,
-                backgroundColor: activeSubtitle === subtitle.id 
+                backgroundColor: activeSection === subtitle.id
                   ? 'rgba(66, 165, 245, 0.15)' // accent con opacidad
                   : 'transparent',
-                border: activeSubtitle === subtitle.id 
+                border: activeSection === subtitle.id
                   ? `1px solid ${theme.accent}`
                   : '1px solid transparent',
                 '&:hover': {
-                  backgroundColor: activeSubtitle === subtitle.id 
+                  backgroundColor: activeSection === subtitle.id
                     ? 'rgba(66, 165, 245, 0.22)'
                     : 'rgba(66, 165, 245, 0.08)',
                 },
@@ -128,11 +97,11 @@ const TableOfContents = ({ subtitles = [], lessonTitle }) => {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: activeSubtitle === subtitle.id 
+                      color: activeSection === subtitle.id
                         ? theme.primaryTitle
                         : theme.textSecondary,
                       fontSize: '0.875rem',
-                      fontWeight: activeSubtitle === subtitle.id ? 600 : 400,
+                      fontWeight: activeSection === subtitle.id ? 600 : 400,
                       lineHeight: 1.3,
                       transition: 'all 0.2s ease-in-out',
                     }}
