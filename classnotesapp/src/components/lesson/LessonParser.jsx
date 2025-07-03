@@ -8,6 +8,7 @@ import ImageBlock from "@/components/lesson/ImageBlock";
 import LessonContainer from "@/components/lesson/LessonContainer";
 import DartPadEmbed from "@/components/embed/DartPadEmbed";
 import IconBlock from "@/components/lesson/IconBlock";
+import Link from "@/components/lesson/Link";
 import images from "@/assets";
 import TryCodeButton from './TryCodeButton';
 
@@ -70,7 +71,7 @@ const LessonParser = ({ content }) => {
     const trimmedLine = rawLine.trim();
 
     // Check if the current line is a directive *before* checking parsingCode
-    const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|trycode|c:).*"]$/);
+    const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|trycode|c:|link).*"]$/);
 
     // If we are parsing code and encounter [end], flush the code block
     if (parsingCode && trimmedLine === "[end]") {
@@ -206,6 +207,23 @@ const LessonParser = ({ content }) => {
         <TryCodeButton key={`trycode-${i}`} gistId={gistId} codeBlock={pendingCodeBlock} />
       );
       pendingCodeBlock = null;
+      continue;
+    }
+
+    // --- LINK ELEGANTE ---
+    if (trimmedLine.startsWith("[link]")) {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
+      // Sintaxis: [link] displayname url
+      const rest = trimmedLine.slice(6).trim();
+      const firstSpace = rest.indexOf(" ");
+      if (firstSpace > 0) {
+        const displayname = rest.slice(0, firstSpace).trim();
+        const url = rest.slice(firstSpace + 1).trim();
+        elements.push(
+          <Link key={`link-${i}`} displayname={displayname} url={url} />
+        );
+      }
       continue;
     }
 
