@@ -1,118 +1,58 @@
-[t] Flutter
-
-
-[st] Ejemplo de subtitulo
-
+[t] Primeros pasos con Dart
 
 [p]
-En Flutter, `Row` y `Column` son los widgets base
-pavertical, respectivamente.
+Todo programa en Dart comienza con la función `main`. Es el punto de entrada de la aplicación y donde se ejecuta el código por primera vez.
 
-[p]
-Bienvenido al curso de Aplicaciones móviles
-
-
-
-
-[i] https://innovance.com.tr/wp-content/uploads/2024/10/flutter-hero.jpg | Logo oficial
-
-[icon] https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Google-flutter-logo.svg/2560px-Google-flutter-logo.svg.png | Logo sin bordes
-
-
-[v] dUMqg_JQsEc | Introducción a Flutter
-
-[i] logo.svg | Logo de Icesi
-
-
-[c:jsx]
-function MyButton() {
-  return (
-    <button>Soy un botón</button>
-  );
-}
-[end]
-
-[c:http]
-GET /api/users/1
-POST /api/users
-Content-Type: application/json
-Authorization: Bearer token123
-HTTP/1.1 200 OK
-[end]
-
-[c:sql]
-SELECT name, age 
-FROM users 
-WHERE age > 18 
-ORDER BY name ASC;
-[end]
-
-[c:java]
-public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}
-[end]
+[st] ¿Cómo luce el método main?
 
 [c:dart]
-import 'package:flutter/material.dart';
-
 void main() {
-  runApp(const MyApp());
+  print('Hola, Dart!');
 }
-
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello, World!')
-        )
-      ),
-    );
-  }
-};
 [end]
-
-[dartpad] 2ce0f8a930b04533ba94b4f4f525e7fc
-
+[trycode] 70ea035e72b031116992afc88dfb63ae
 
 [p]
-En Flutter, `Row` y `Column` son los widgets base
-para ubicar elementos en una línea horizontal o vertical, respectivamente.
+El código anterior imprime en consola el texto `Hola, Dart!`. Puedes ejecutar este programa en cualquier entorno que soporte Dart, como DartPad o tu terminal si tienes Dart instalado.
 
-[v] dUMqg_JQsEc | Introducción a Flutter
+[st] Declaración de variables y tipos básicos
 
-[i] logo.svg | Logo de Flutter
-
-[dartpad] 2ce0f8a930b04533ba94b4f4f525e7fc
+[p]
+Dart es un lenguaje tipado, pero permite declarar variables de forma explícita o usando `var` y `dynamic`.
 
 [c:dart]
-import 'package:flutter/material.dart';
-
 void main() {
-  runApp(const MyApp());
+  int edad = 25;
+  double altura = 1.75;
+  String nombre = 'Ana';
+  bool esEstudiante = true;
+  var ciudad = 'Cali'; // El tipo se infiere
+  
+  print('Nombre: $nombre');
+  print('Edad: $edad');
+  print('Altura: $altura');
+  print('Es estudiante: $esEstudiante');
+  print('Ciudad: $ciudad');
 }
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello, World!')
-        )
-      ),
-    );
-  }
-};
 [end]
+[trycode] 00838af93b7981119311449fbd221205
+
+[p]
+Usa `int` para números enteros, `double` para decimales, `String` para texto y `bool` para valores lógicos.
+
+[p]
+`var` deja que Dart infiera el tipo según el valor inicial.
+
+[p]
+`dynamic` permite cambiar el tipo de la variable, pero se recomienda solo si es necesario.
+
+[st] Ejemplo práctico: main y variables
+
+[c:dart]
+void main() {
+  String nombre = 'Ana';
+  int edad = 25;
+  print('Hola, mi nombre es $nombre y tengo $edad años.');
+}
+[end]
+[trycode] ae89df20a06833de993721c7223812d0
