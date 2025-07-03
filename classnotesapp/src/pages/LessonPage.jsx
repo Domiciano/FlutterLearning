@@ -48,6 +48,9 @@ const LessonPage = forwardRef(({ sections }, ref) => {
       setParsedContent(parsed);
     }
     setLoading(false);
+    
+    // Scroll to top when lesson changes (instant, no animation)
+    window.scrollTo(0, 0);
   }, [lessonId, lessonMap]);
 
   useImperativeHandle(ref, () => ({
