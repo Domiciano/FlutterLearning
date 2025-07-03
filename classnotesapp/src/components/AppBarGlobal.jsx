@@ -42,11 +42,15 @@ const AppBarGlobal = ({ onOpenMobileToc, onOpenMobileNav }) => {
             sx={{
               color: theme.appBarText,
               fontWeight: 700,
-              letterSpacing: '0.04em',
-              fontSize: '1.25rem',
+              letterSpacing: isMobile ? '0.01em' : '0.04em',
+              fontSize: isMobile ? '1rem' : '1.25rem',
+              maxWidth: isMobile ? 120 : 'none',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
-            Aplicaciones Móviles
+            {isMobile ? 'Apps' : 'Aplicaciones Móviles'}
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
