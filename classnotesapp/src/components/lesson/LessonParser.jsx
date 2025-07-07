@@ -105,6 +105,11 @@ const LessonParser = ({ content }) => {
     if (trimmedLine.startsWith("[st]")) {
       flushParagraph(elements, paragraphBuffer, i);
       paragraphBuffer = "";
+      // Si hay un pendingCodeBlock, insertarlo antes del subtítulo
+      if (pendingCodeBlock) {
+        elements.push(pendingCodeBlock);
+        pendingCodeBlock = null;
+      }
       const subtitleText = trimmedLine.slice(4).trim();
       subtitles.push({
         id: `subtitle-${i}`,
@@ -225,20 +230,17 @@ const LessonParser = ({ content }) => {
 
     // --- TEXTO CONTINUO (NOT PART OF CODE BLOCK) ---
     if (trimmedLine !== "") {
-      if (pendingCodeBlock) {
-        elements.push(pendingCodeBlock);
-        pendingCodeBlock = null;
-      }
       paragraphBuffer += (paragraphBuffer ? " " : "") + trimmedLine;
     }
 
     // --- FIN DEL ARCHIVO ---
     if (i === lines.length - 1) {
+      flushParagraph(elements, paragraphBuffer, i);
+      // Si hay un pendingCodeBlock al final, insertarlo
       if (pendingCodeBlock) {
         elements.push(pendingCodeBlock);
         pendingCodeBlock = null;
       }
-      flushParagraph(elements, paragraphBuffer, i);
     }
   }
 

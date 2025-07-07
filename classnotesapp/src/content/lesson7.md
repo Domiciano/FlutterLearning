@@ -5,6 +5,10 @@ Los métodos son bloques de código reutilizables. En Dart, puedes crear funcion
 
 [st] Funciones básicas
 
+
+[st] TEST 1>>>>>>>>>
+
+
 [c:dart]
 void main() {
   saludar('Ana');
@@ -23,6 +27,8 @@ int sumar(int a, int b) {
 }
 [end]
 [trycode] 68338a515c29a0e4aeace145b03f7b56
+
+[st] TEST 1>>>>>>>>>
 
 [p]
 Las funciones pueden retornar valores o no (void).
