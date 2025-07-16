@@ -7,6 +7,7 @@ import TableOfContentsParser from '@/utils/tableOfContentsParser';
 import tocContent from '@/content/toc.md?raw';
 import LessonPage from '@/pages/LessonPage';
 import AppBarGlobal from '@/components/AppBarGlobal';
+import { StudiedLessonsProvider } from '@/theme/StudiedLessonsContext';
 
 function App() {
   const [sections, setSections] = useState([]);
@@ -55,7 +56,7 @@ function App() {
         if (lastLesson) {
           navigate(`/lesson/${lastLesson}`, { replace: true });
         } else {
-          navigate(`/lesson/${firstLessonId}`, { replace: true });
+        navigate(`/lesson/${firstLessonId}`, { replace: true });
         }
       }
     }
@@ -80,7 +81,7 @@ function App() {
   }
 
   return (
-    <>
+    <StudiedLessonsProvider>
       <AppBarGlobal 
         onOpenMobileToc={() => lessonPageRef.current?.openMobileToc()} 
         onOpenMobileNav={() => layoutNavRef.current?.()} 
@@ -102,7 +103,7 @@ function App() {
           } />
         </Routes>
       </Layout>
-    </>
+    </StudiedLessonsProvider>
   );
 }
 

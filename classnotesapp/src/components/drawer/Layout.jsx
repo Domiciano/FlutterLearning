@@ -17,6 +17,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useThemeMode } from '@/theme/ThemeContext';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useStudiedLessons } from '@/theme/StudiedLessonsContext';
 
 const drawerWidth = 240;
 
@@ -26,26 +27,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { theme } = useThemeMode();
-  const [studiedLessons, setStudiedLessons] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('studiedLessons') || '[]');
-    } catch {
-      return [];
-    }
-  });
-
-  const toggleStudied = (lessonId) => {
-    setStudiedLessons((prev) => {
-      let updated;
-      if (prev.includes(lessonId)) {
-        updated = prev.filter(id => id !== lessonId);
-      } else {
-        updated = [...prev, lessonId];
-      }
-      localStorage.setItem('studiedLessons', JSON.stringify(updated));
-      return updated;
-    });
-  };
+  const { studiedLessons, toggleStudied } = useStudiedLessons();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -95,6 +77,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                 to={`/lesson/${sec.id}`}
                 selected={isSelected}
                 sx={{
+                  m:1,
                   color: theme.drawerSection,
                   '&.Mui-selected': {
                     backgroundColor: 'rgba(100,181,246,0.25)', // Azul claro, saturado y translúcido
@@ -117,7 +100,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
-                    toggleStudied(sec.id);
+                    toggleStudied(String(sec.id));
                   }}
                   sx={{ ml: 1 }}
                   aria-label={isStudied ? 'Marcar como no estudiada' : 'Marcar como estudiada'}

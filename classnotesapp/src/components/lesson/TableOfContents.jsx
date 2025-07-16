@@ -6,6 +6,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { useThemeMode } from '@/theme/ThemeContext';
+import Button from '@mui/material/Button';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import IconButton from '@mui/material/IconButton';
+import { useStudiedLessons } from '@/theme/StudiedLessonsContext';
 
 // Función para convertir texto a slug válido para URL
 const createSlug = (text) => {
@@ -19,8 +23,12 @@ const createSlug = (text) => {
     .trim('-'); // Remueve guiones al inicio y final
 };
 
-const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '' }) => {
+const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '', lessonId }) => {
   const { theme } = useThemeMode();
+
+  // Estado de lecciones estudiadas
+  const { studiedLessons, toggleStudied } = useStudiedLessons();
+  const isStudied = studiedLessons.includes(lessonId);
 
   const scrollToSubtitle = (id) => {
     const element = document.getElementById(id);
@@ -52,16 +60,26 @@ const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '' }) =>
         position: 'sticky',
         top: { xs: '56px', sm: '64px' },
         pt: 2,
-        pl: { lg: 3 },
+        // pl: { lg: 3 }, // Eliminar padding izquierdo para alinear
         background: { lg: theme.background, xs: 'none' },
       }}
     >
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', paddingTop:2, paddingBottom:2 }}>
+        {lessonId && (
+          <IconButton
+            onClick={() => toggleStudied(String(lessonId))}
+            sx={{ marginTop:0.5, color: isStudied ? theme.accent : '#fff', p:0}}
+            aria-label={isStudied ? 'Marcar como no completado' : 'Marcar como completado'}
+          >
+            <CheckCircleIcon sx={{ color: isStudied ? theme.accent : '#fff' }} fontSize="small" />
+          </IconButton>
+        )}
       <Typography
         variant="h6"
         sx={{
+            marginLeft:1,
           color: theme.textPrimary,
           fontWeight: 700,
-          mb: 2,
           fontSize: '1.1rem',
           textTransform: 'none',
           letterSpacing: '0.01em',
@@ -69,6 +87,7 @@ const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '' }) =>
       >
         {lessonTitle}
       </Typography>
+      </Box>
       <List dense sx={{ p: 0 }}>
         {subtitles.map((subtitle) => (
           <ListItem key={subtitle.id} sx={{ p: 0, mb: 0.5 }}>

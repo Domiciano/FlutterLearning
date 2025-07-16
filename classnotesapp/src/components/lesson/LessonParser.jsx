@@ -13,7 +13,12 @@ import images from "@/assets";
 import TryCodeButton from './TryCodeButton';
 
 const LessonParser = ({ content }) => {
+  // Eliminar líneas en blanco al final para asegurar flush correcto
   const lines = content.split("\n");
+  let lastNonEmptyIndex = lines.length - 1;
+  while (lastNonEmptyIndex >= 0 && lines[lastNonEmptyIndex].trim() === "") {
+    lastNonEmptyIndex--;
+  }
   const elements = [];
   const subtitles = [];
   let lessonTitleText = null;
@@ -43,7 +48,7 @@ const LessonParser = ({ content }) => {
     if (buffer.trim() !== "") {
       elements.push(
         <LessonParagraph key={`p-${key}`}>
-          {parseInlineCode(buffer.trim())}
+          {parseInlineLinks(parseInlineCode(buffer.trim()))}
         </LessonParagraph>
       );
     }
@@ -66,7 +71,88 @@ const LessonParser = ({ content }) => {
     });
   };
 
-  for (let i = 0; i < lines.length; i++) {
+  // Helper function for inline link parsing
+  const parseInlineLinks = (elements) => {
+    if (typeof elements === 'string') {
+      // Si es una cadena, procesar normalmente
+      const parts = elements.split(/(\[link\]\s+[^\]]+)/g);
+      return parts.map((part, index) => {
+        if (part.startsWith("[link]")) {
+          const rest = part.slice(6).trim();
+          
+          // Buscar patrón con paréntesis: [link] (texto) url
+          const parenthesesMatch = rest.match(/^\((.*?)\)\s+(.+)$/);
+          if (parenthesesMatch) {
+            const displayname = parenthesesMatch[1].trim();
+            const url = parenthesesMatch[2].trim();
+            return (
+              <Link key={`inline-link-${index}`} displayname={displayname} url={url} />
+            );
+          } else {
+            // Sintaxis original: [link] displayname url
+            const firstSpace = rest.indexOf(" ");
+            if (firstSpace > 0) {
+              const displayname = rest.slice(0, firstSpace).trim();
+              const url = rest.slice(firstSpace + 1).trim();
+              return (
+                <Link key={`inline-link-${index}`} displayname={displayname} url={url} />
+              );
+            }
+          }
+          return part; // Si no coincide con ningún patrón, devolver el texto original
+        } else {
+          return part;
+        }
+      });
+    } else if (Array.isArray(elements)) {
+      // Si es un array (resultado de parseInlineCode), procesar cada elemento
+      return elements.map((element, index) => {
+        if (typeof element === 'string') {
+          // Procesar el string para links
+          const parts = element.split(/(\[link\]\s+[^\]]+)/g);
+          if (parts.length === 1) {
+            return element; // No hay links en este string
+          }
+          return parts.map((part, partIndex) => {
+            if (part.startsWith("[link]")) {
+              const rest = part.slice(6).trim();
+              
+              // Buscar patrón con paréntesis: [link] (texto) url
+              const parenthesesMatch = rest.match(/^\((.*?)\)\s+(.+)$/);
+              if (parenthesesMatch) {
+                const displayname = parenthesesMatch[1].trim();
+                const url = parenthesesMatch[2].trim();
+                return (
+                  <Link key={`inline-link-${index}-${partIndex}`} displayname={displayname} url={url} />
+                );
+              } else {
+                // Sintaxis original: [link] displayname url
+                const firstSpace = rest.indexOf(" ");
+                if (firstSpace > 0) {
+                  const displayname = rest.slice(0, firstSpace).trim();
+                  const url = rest.slice(firstSpace + 1).trim();
+                  return (
+                    <Link key={`inline-link-${index}-${partIndex}`} displayname={displayname} url={url} />
+                  );
+                }
+              }
+              return part; // Si no coincide con ningún patrón, devolver el texto original
+            } else {
+              return part;
+            }
+          });
+        } else {
+          // Es un elemento React (como <code>), devolverlo tal como está
+          return element;
+        }
+      }).flat(); // Aplanar el array resultante
+    } else {
+      // Es un elemento React, devolverlo tal como está
+      return elements;
+    }
+  };
+
+  for (let i = 0; i <= lastNonEmptyIndex; i++) {
     const rawLine = lines[i];
     const trimmedLine = rawLine.trim();
 
@@ -95,7 +181,7 @@ const LessonParser = ({ content }) => {
       
       elements.push(
         <LessonTitle key={`title-${i}`}>
-          {parseInlineCode(titleText)}
+          {parseInlineLinks(parseInlineCode(titleText))}
         </LessonTitle>
       );
       continue;
@@ -117,7 +203,7 @@ const LessonParser = ({ content }) => {
       });
       elements.push(
         <LessonSub key={`subtitle-${i}`} id={`subtitle-${i}`}>
-          {parseInlineCode(subtitleText)}
+          {parseInlineLinks(parseInlineCode(subtitleText))}
         </LessonSub>
       );
       continue;
@@ -193,7 +279,7 @@ const LessonParser = ({ content }) => {
     // --- CIERRE DE BLOQUE DE CÓDIGO o CÓDIGO CONTINUO ---
     if (parsingCode) {
       codeBuffer += rawLine + "\n";
-      if (i === lines.length - 1) {
+      if (i === lastNonEmptyIndex) {
         flushCodeBlock(i);
       }
       continue;
@@ -204,10 +290,13 @@ const LessonParser = ({ content }) => {
       flushParagraph(elements, paragraphBuffer, i);
       paragraphBuffer = "";
       const gistId = trimmedLine.slice(9).trim();
-      elements.push(
-        <TryCodeButton key={`trycode-${i}`} gistId={gistId} codeBlock={pendingCodeBlock} />
-      );
-      pendingCodeBlock = null;
+      // Solo crear TryCodeButton si hay un pendingCodeBlock válido
+      if (pendingCodeBlock) {
+        elements.push(
+          <TryCodeButton key={`trycode-${i}`} gistId={gistId} codeBlock={pendingCodeBlock} />
+        );
+        pendingCodeBlock = null;
+      }
       continue;
     }
 
@@ -215,15 +304,27 @@ const LessonParser = ({ content }) => {
     if (trimmedLine.startsWith("[link]")) {
       flushParagraph(elements, paragraphBuffer, i);
       paragraphBuffer = "";
-      // Sintaxis: [link] displayname url
+      // Sintaxis: [link] displayname url o [link] (texto del enlace) url
       const rest = trimmedLine.slice(6).trim();
-      const firstSpace = rest.indexOf(" ");
-      if (firstSpace > 0) {
-        const displayname = rest.slice(0, firstSpace).trim();
-        const url = rest.slice(firstSpace + 1).trim();
+      
+      // Buscar patrón con paréntesis: [link] (texto) url
+      const parenthesesMatch = rest.match(/^\((.*?)\)\s+(.+)$/);
+      if (parenthesesMatch) {
+        const displayname = parenthesesMatch[1].trim();
+        const url = parenthesesMatch[2].trim();
         elements.push(
           <Link key={`link-${i}`} displayname={displayname} url={url} />
         );
+      } else {
+        // Sintaxis original: [link] displayname url
+        const firstSpace = rest.indexOf(" ");
+        if (firstSpace > 0) {
+          const displayname = rest.slice(0, firstSpace).trim();
+          const url = rest.slice(firstSpace + 1).trim();
+          elements.push(
+            <Link key={`link-${i}`} displayname={displayname} url={url} />
+          );
+        }
       }
       continue;
     }
@@ -234,7 +335,7 @@ const LessonParser = ({ content }) => {
     }
 
     // --- FIN DEL ARCHIVO ---
-    if (i === lines.length - 1) {
+    if (i === lastNonEmptyIndex) {
       flushParagraph(elements, paragraphBuffer, i);
       // Si hay un pendingCodeBlock al final, insertarlo
       if (pendingCodeBlock) {
@@ -242,6 +343,13 @@ const LessonParser = ({ content }) => {
         pendingCodeBlock = null;
       }
     }
+  }
+
+  // --- FUERA DEL CICLO: Asegura que cualquier bloque pendiente se agregue ---
+  flushParagraph(elements, paragraphBuffer, lines.length);
+  if (pendingCodeBlock) {
+    elements.push(pendingCodeBlock);
+    pendingCodeBlock = null;
   }
 
   return {
