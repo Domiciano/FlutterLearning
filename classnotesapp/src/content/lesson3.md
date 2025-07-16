@@ -7,16 +7,16 @@ Los strings en Dart son secuencias de caracteres que puedes manipular de varias 
 
 [c:dart]
 void main() {
-  String nombre = 'Ana';
-  String apellido = 'García';
+  String firstName = 'Ana';
+  String lastName = 'García';
   
-  // Concatenación con +
-  String nombreCompleto = nombre + ' ' + apellido;
-  print(nombreCompleto); // Ana García
+  // Concatenation with +
+  String fullName = firstName + ' ' + lastName;
+  print(fullName); // Ana García
   
-  // Concatenación con +
-  String saludo = 'Hola ' + nombre;
-  print(saludo); // Hola Ana
+  // Concatenation with +
+  String greeting = 'Hello ' + firstName;
+  print(greeting); // Hello Ana
 }
 [end]
 [trycode] 9ea5113dcc307145e4f26950b3770012
@@ -31,20 +31,20 @@ También puedes usar interpolación para unir strings.
 
 [c:dart]
 void main() {
-  String nombre = 'Carlos';
-  int edad = 25;
+  String name = 'Carlos';
+  int age = 25;
   
-  // Interpolación simple con $
-  String mensaje = 'Hola, me llamo $nombre';
-  print(mensaje); // Hola, me llamo Carlos
+  // Simple interpolation with $
+  String message = 'Hello, my name is $name';
+  print(message); // Hello, my name is Carlos
   
-  // Interpolación con expresiones
-  String presentacion = 'Tengo $edad años y el año que viene tendré ${edad + 1}';
-  print(presentacion); // Tengo 25 años y el año que viene tendré 26
+  // Interpolation with expressions
+  String introduction = 'I am $age years old and next year I will be ${age + 1}';
+  print(introduction); // I am 25 years old and next year I will be 26
   
-  // Interpolación con propiedades
-  String lista = 'Lista de compras: ${['manzanas', 'leche', 'pan']}';
-  print(lista); // Lista de compras: [manzanas, leche, pan]
+  // Interpolation with properties
+  String list = 'Shopping list: ${['apples', 'milk', 'bread']}';
+  print(list); // Shopping list: [apples, milk, bread]
 }
 [end]
 [trycode] 9375d5f2e5afb0049c2deabf728a2102
@@ -59,23 +59,23 @@ Puedes usar `${}` para expresiones más complejas.
 
 [c:dart]
 void main() {
-  // String multilínea con comillas triples
-  String poema = '''
-  El viento sopla
-  Las hojas caen
-  Es otoño
+  // Multiline string with triple quotes
+  String poem = '''
+  The wind blows
+  The leaves fall
+  It's autumn
   ''';
-  print(poema);
+  print(poem);
   
-  // String multilínea con comillas dobles
-  String carta = """
-  Estimado señor:
+  // Multiline string with double quotes
+  String letter = """
+  Dear Sir:
   
-  Le escribo para informarle...
+  I am writing to inform you...
   
-  Saludos cordiales.
+  Best regards.
   """;
-  print(carta);
+  print(letter);
 }
 [end]
 [trycode] fb3770f6687957ed296000cfe5a6e483
@@ -87,15 +87,15 @@ Usa comillas triples `'''` o `"""` para strings que ocupan múltiples líneas.
 
 [c:dart]
 void main() {
-  String texto = '  Hola Mundo  ';
+  String text = '  Hello World  ';
   
-  print(texto.toUpperCase()); //   HOLA MUNDO  
-  print(texto.toLowerCase()); //   hola mundo  
-  print(texto.trim()); // Hola Mundo
-  print(texto.length); // 13
-  print(texto.contains('Mundo')); // true
-  print(texto.startsWith('  ')); // true
-  print(texto.endsWith('  ')); // true
+  print(text.toUpperCase()); //   HELLO WORLD  
+  print(text.toLowerCase()); //   hello world  
+  print(text.trim()); // Hello World
+  print(text.length); // 13
+  print(text.contains('World')); // true
+  print(text.startsWith('  ')); // true
+  print(text.endsWith('  ')); // true
 }
 [end]
 [trycode] 4c4d6995aece9660c1b65839437c4c03

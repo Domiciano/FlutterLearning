@@ -10,12 +10,12 @@ void main() {
   int a = 10;
   int b = 3;
   
-  print(a + b);  // Suma: 13
-  print(a - b);  // Resta: 7
-  print(a * b);  // Multiplicación: 30
-  print(a / b);  // División: 3.333...
-  print(a % b);  // Módulo (resto): 1
-  print(a ~/ b); // División entera: 3
+  print(a + b);  // Sum: 13
+  print(a - b);  // Subtraction: 7
+  print(a * b);  // Multiplication: 30
+  print(a / b);  // Division: 3.333...
+  print(a % b);  // Modulo (remainder): 1
+  print(a ~/ b); // Integer division: 3
 }
 [end]
 [trycode] 0b724266b8c3b41729324393b1770bf3
@@ -34,10 +34,10 @@ void main() {
 [c:dart]
 void main() {
   int x = 5;
-  x += 3;  // Equivale a: x = x + 3
+  x += 3;  // Equivalent to: x = x + 3
   print(x); // 8
   
-  x *= 2;  // Equivale a: x = x * 2
+  x *= 2;  // Equivalent to: x = x * 2
   print(x); // 16
 }
 [end]
@@ -50,14 +50,14 @@ Los operadores `+=`, `-=`, `*=`, `/=` son atajos para modificar una variable.
 
 [c:dart]
 void main() {
-  int edad = 18;
+  int age = 18;
   
-  print(edad > 16);   // Mayor que: true
-  print(edad < 21);   // Menor que: true
-  print(edad >= 18);  // Mayor o igual: true
-  print(edad <= 20);  // Menor o igual: true
-  print(edad == 18);  // Igual: true
-  print(edad != 20);  // Diferente: true
+  print(age > 16);   // Greater than: true
+  print(age < 21);   // Less than: true
+  print(age >= 18);  // Greater or equal: true
+  print(age <= 20);  // Less or equal: true
+  print(age == 18);  // Equal: true
+  print(age != 20);  // Not equal: true
 }
 [end]
 [trycode] a501a06d10cb1e0a852d138191943569
@@ -69,13 +69,13 @@ Estos operadores devuelven `true` o `false` y son fundamentales para las estruct
 
 [c:dart]
 void main() {
-  int contador = 5;
+  int counter = 5;
   
-  contador++;  // Incrementa en 1
-  print(contador); // 6
+  counter++;  // Increments by 1
+  print(counter); // 6
   
-  contador--;  // Decrementa en 1
-  print(contador); // 5
+  counter--;  // Decrements by 1
+  print(counter); // 5
 }
 [end]
 [trycode] 9d90271cdc58be19cac8482d9581e22a

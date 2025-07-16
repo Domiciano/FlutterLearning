@@ -7,16 +7,16 @@ Las listas y mapas son estructuras de datos fundamentales en Dart. Aprenderás a
 
 [c:dart]
 void main() {
-  // Crear una lista
-  List<String> frutas = ['manzana', 'banana', 'naranja'];
+  // Create a list
+  List<String> fruits = ['apple', 'banana', 'orange'];
   
-  // Agregar elementos
-  frutas.add('uva');
-  frutas.addAll(['pera', 'mango']);
+  // Add elements
+  fruits.add('grape');
+  fruits.addAll(['pear', 'mango']);
   
-  // Acceder por índice
-  print(frutas[0]); // manzana
-  print(frutas.length); // 6
+  // Access by index
+  print(fruits[0]); // apple
+  print(fruits.length); // 6
 }
 [end]
 [trycode] 861f536e05b1f549f3477bbec1af1296
@@ -31,21 +31,21 @@ Usa `add()` para un elemento y `addAll()` para múltiples.
 
 [c:dart]
 void main() {
-  List<int> numeros = [1, 2, 3, 4, 5];
+  List<int> numbers = [1, 2, 3, 4, 5];
   
-  // for tradicional con índice
-  for (int i = 0; i < numeros.length; i++) {
-    print('Índice $i: ${numeros[i]}');
+  // Traditional for with index
+  for (int i = 0; i < numbers.length; i++) {
+    print('Index $i:  numbers[i]}');
   }
   
   // for-in (foreach)
-  for (int numero in numeros) {
-    print('Número: $numero');
+  for (int number in numbers) {
+    print('Number: $number');
   }
   
-  // forEach con función
-  numeros.forEach((numero) {
-    print('Valor: $numero');
+  // forEach with function
+  numbers.forEach((number) {
+    print('Value: $number');
   });
 }
 [end]
@@ -64,19 +64,19 @@ El `for-in` es más simple para recorrer valores.
 
 [c:dart]
 void main() {
-  // Crear un mapa
-  Map<String, int> edades = {
+  // Create a map
+  Map<String, int> ages = {
     'Ana': 25,
     'Carlos': 30,
     'María': 28,
   };
   
-  // Agregar elementos
-  edades['Juan'] = 35;
+  // Add elements
+  ages['Juan'] = 35;
   
-  // Acceder por clave
-  print(edades['Ana']); // 25
-  print(edades.length); // 4
+  // Access by key
+  print(ages['Ana']); // 25
+  print(ages.length); // 4
 }
 [end]
 [trycode] ed87a5e54b7b469aa862ec9b4bb7ed36
@@ -91,25 +91,25 @@ Accede a valores usando la clave como índice.
 
 [c:dart]
 void main() {
-  Map<String, String> paises = {
+  Map<String, String> countries = {
     'Colombia': 'Bogotá',
     'Argentina': 'Buenos Aires',
     'México': 'Ciudad de México',
   };
   
-  // Recorrer claves
-  for (String pais in paises.keys) {
-    print('País: $pais');
+  // Iterate keys
+  for (String country in countries.keys) {
+    print('Country: $country');
   }
   
-  // Recorrer valores
-  for (String capital in paises.values) {
+  // Iterate values
+  for (String capital in countries.values) {
     print('Capital: $capital');
   }
   
-  // Recorrer claves y valores
-  paises.forEach((pais, capital) {
-    print('$pais - $capital');
+  // Iterate keys and values
+  countries.forEach((country, capital) {
+    print('$country - $capital');
   });
 }
 [end]
@@ -128,22 +128,22 @@ Usa `.values` para recorrer solo los valores.
 
 [c:dart]
 void main() {
-  List<int> numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   
-  // map: transformar cada elemento
-  List<String> numerosTexto = numeros.map((n) => 'Número $n').toList();
-  print(numerosTexto);
+  // map: transform each element
+  List<String> numbersText = numbers.map((n) => 'Number $n').toList();
+  print(numbersText);
   
-  // filter: filtrar elementos
-  List<int> pares = numeros.where((n) => n % 2 == 0).toList();
-  print(pares); // [2, 4, 6, 8, 10]
+  // filter: filter elements
+  List<int> evens = numbers.where((n) => n % 2 == 0).toList();
+  print(evens); // [2, 4, 6, 8, 10]
   
-  // Combinar map y filter
-  List<String> paresTexto = numeros
+  // Combine map and filter
+  List<String> evensText = numbers
       .where((n) => n % 2 == 0)
-      .map((n) => 'Par: $n')
+      .map((n) => 'Even: $n')
       .toList();
-  print(paresTexto);
+  print(evensText);
 }
 [end]
 [trycode] 81d33660c5e44ead08be3a817cc33122

@@ -7,7 +7,7 @@ Todo programa en Dart comienza con la función `main`. Es el punto de entrada de
 
 [c:dart]
 void main() {
-  print('Hola, Dart!');
+  print('Hello, Dart!');
 }
 [end]
 [trycode] 70ea035e72b031116992afc88dfb63ae
@@ -22,17 +22,17 @@ Dart es un lenguaje tipado, pero permite declarar variables de forma explícita 
 
 [c:dart]
 void main() {
-  int edad = 25;
-  double altura = 1.75;
-  String nombre = 'Ana';
-  bool esEstudiante = true;
-  var ciudad = 'Cali'; // El tipo se infiere
+  int age = 25;
+  double height = 1.75;
+  String name = 'Ana';
+  bool isStudent = true;
+  var city = 'Cali'; // Type is inferred
   
-  print('Nombre: $nombre');
-  print('Edad: $edad');
-  print('Altura: $altura');
-  print('Es estudiante: $esEstudiante');
-  print('Ciudad: $ciudad');
+  print('Name: $name');
+  print('Age: $age');
+  print('Height: $height');
+  print('Is student: $isStudent');
+  print('City: $city');
 }
 [end]
 [trycode] 00838af93b7981119311449fbd221205
@@ -50,9 +50,9 @@ Usa `int` para números enteros, `double` para decimales, `String` para texto y 
 
 [c:dart]
 void main() {
-  String nombre = 'Ana';
-  int edad = 25;
-  print('Hola, mi nombre es $nombre y tengo $edad años.');
+  String name = 'Ana';
+  int age = 25;
+  print('Hello, my name is $name and I am $age years old.');
 }
 [end]
 [trycode] ae89df20a06833de993721c7223812d0

@@ -7,24 +7,24 @@ Las clases son plantillas para crear objetos. En Dart, todo es un objeto, y las 
 
 [c:dart]
 void main() {
-  // Crear una instancia de la clase
-  Persona persona1 = Persona('Ana', 25);
-  persona1.saludar();
+  // Create an instance of the class
+  Person person1 = Person('Ana', 25);
+  person1.greet();
   
-  Persona persona2 = Persona('Carlos', 30);
-  persona2.saludar();
+  Person person2 = Person('Carlos', 30);
+  person2.greet();
 }
 
-class Persona {
-  String nombre;
-  int edad;
+class Person {
+  String name;
+  int age;
   
   // Constructor
-  Persona(this.nombre, this.edad);
+  Person(this.name, this.age);
   
-  // Método
-  void saludar() {
-    print('Hola, soy $nombre y tengo $edad años');
+  // Method
+  void greet() {
+    print('Hi, I am $name and I am $age years old');
   }
 }
 [end]
@@ -40,30 +40,30 @@ El constructor `Persona(this.nombre, this.edad)` inicializa las propiedades.
 
 [c:dart]
 void main() {
-  Producto producto = Producto('Laptop', 1200.0);
+  Product product = Product('Laptop', 1200.0);
   
-  print(producto.nombre); // Laptop
-  print(producto.precio); // 1200.0
-  print(producto.precioConIVA); // 1428.0
+  print(product.name); // Laptop
+  print(product.price); // 1200.0
+  print(product.priceWithVAT); // 1428.0
   
-  producto.precio = 1000.0; // Usar setter
-  print(producto.precioConIVA); // 1190.0
+  product.price = 1000.0; // Use setter
+  print(product.priceWithVAT); // 1190.0
 }
 
-class Producto {
-  String nombre;
-  double _precio; // Propiedad privada
+class Product {
+  String name;
+  double _price; // Private property
   
-  Producto(this.nombre, this._precio);
+  Product(this.name, this._price);
   
   // Getter
-  double get precio => _precio;
-  double get precioConIVA => _precio * 1.19;
+  double get price => _price;
+  double get priceWithVAT => _price * 1.19;
   
   // Setter
-  set precio(double valor) {
-    if (valor > 0) {
-      _precio = valor;
+  set price(double value) {
+    if (value > 0) {
+      _price = value;
     }
   }
 }
@@ -83,43 +83,43 @@ Las propiedades privadas empiezan con `_`.
 
 [c:dart]
 void main() {
-  Estudiante estudiante = Estudiante('María', 20, 'Ingeniería');
-  estudiante.saludar();
-  estudiante.estudiar();
+  Student student = Student('María', 20, 'Engineering');
+  student.greet();
+  student.study();
   
-  Profesor profesor = Profesor('Dr. García', 45, 'Matemáticas');
-  profesor.saludar();
-  profesor.enseñar();
+  Teacher teacher = Teacher('Dr. García', 45, 'Mathematics');
+  teacher.greet();
+  teacher.teach();
 }
 
-class Persona {
-  String nombre;
-  int edad;
+class Person {
+  String name;
+  int age;
   
-  Persona(this.nombre, this.edad);
+  Person(this.name, this.age);
   
-  void saludar() {
-    print('Hola, soy $nombre');
+  void greet() {
+    print('Hi, I am $name');
   }
 }
 
-class Estudiante extends Persona {
-  String carrera;
+class Student extends Person {
+  String major;
   
-  Estudiante(String nombre, int edad, this.carrera) : super(nombre, edad);
+  Student(String name, int age, this.major) : super(name, age);
   
-  void estudiar() {
-    print('$nombre está estudiando $carrera');
+  void study() {
+    print('$name is studying $major');
   }
 }
 
-class Profesor extends Persona {
-  String materia;
+class Teacher extends Person {
+  String subject;
   
-  Profesor(String nombre, int edad, this.materia) : super(nombre, edad);
+  Teacher(String name, int age, this.subject) : super(name, age);
   
-  void enseñar() {
-    print('$nombre enseña $materia');
+  void teach() {
+    print('$name teaches $subject');
   }
 }
 [end]
@@ -138,39 +138,39 @@ Cada clase puede tener métodos específicos.
 
 [c:dart]
 void main() {
-  // Constructor por defecto
-  Vehiculo auto1 = Vehiculo('Toyota', 'Corolla');
+  // Default constructor
+  Vehicle car1 = Vehicle('Toyota', 'Corolla');
   
-  // Constructor nombrado
-  Vehiculo auto2 = Vehiculo.electrico('Tesla', 'Model 3');
-  Vehiculo auto3 = Vehiculo.usado('Ford', 'Focus', 2018);
+  // Named constructor
+  Vehicle car2 = Vehicle.electric('Tesla', 'Model 3');
+  Vehicle car3 = Vehicle.used('Ford', 'Focus', 2018);
   
-  auto1.mostrarInfo();
-  auto2.mostrarInfo();
-  auto3.mostrarInfo();
+  car1.showInfo();
+  car2.showInfo();
+  car3.showInfo();
 }
 
-class Vehiculo {
-  String marca;
-  String modelo;
-  String? tipo;
-  int? año;
+class Vehicle {
+  String brand;
+  String model;
+  String? type;
+  int? year;
   
-  // Constructor por defecto
-  Vehiculo(this.marca, this.modelo);
+  // Default constructor
+  Vehicle(this.brand, this.model);
   
-  // Constructor nombrado para vehículos eléctricos
-  Vehiculo.electrico(this.marca, this.modelo) {
-    tipo = 'Eléctrico';
+  // Named constructor for electric vehicles
+  Vehicle.electric(this.brand, this.model) {
+    type = 'Electric';
   }
   
-  // Constructor nombrado para vehículos usados
-  Vehiculo.usado(this.marca, this.modelo, this.año);
+  // Named constructor for used vehicles
+  Vehicle.used(this.brand, this.model, this.year);
   
-  void mostrarInfo() {
-    String info = '$marca $modelo';
-    if (tipo != null) info += ' ($tipo)';
-    if (año != null) info += ' - Año $año';
+  void showInfo() {
+    String info = '$brand $model';
+    if (type != null) info += ' ($type)';
+    if (year != null) info += ' - Year $year';
     print(info);
   }
 }

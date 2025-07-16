@@ -7,18 +7,18 @@ Los métodos son bloques de código reutilizables. En Dart, puedes crear funcion
 
 [c:dart]
 void main() {
-  saludar('Ana');
-  int resultado = sumar(5, 3);
-  print('Resultado: $resultado');
+  greet('Ana');
+  int result = add(5, 3);
+  print('Result: $result');
 }
 
-// Función que no retorna valor
-void saludar(String nombre) {
-  print('Hola, $nombre!');
+// Function that does not return a value
+void greet(String name) {
+  print('Hello, $name!');
 }
 
-// Función que retorna un valor
-int sumar(int a, int b) {
+// Function that returns a value
+int add(int a, int b) {
   return a + b;
 }
 [end]
@@ -34,16 +34,16 @@ Define el tipo de retorno y los tipos de los parámetros.
 
 [c:dart]
 void main() {
-  saludarPersona('Carlos');
-  saludarPersona('María', 'Buenos días');
-  saludarPersona('Juan', 'Hola', 'amigo');
+  greetPerson('Carlos');
+  greetPerson('María', 'Good morning');
+  greetPerson('Juan', 'Hello', 'friend');
 }
 
-// Parámetros opcionales con []
-void saludarPersona(String nombre, [String? saludo, String? apellido]) {
-  String mensaje = saludo ?? 'Hola';
-  String nombreCompleto = apellido != null ? '$nombre $apellido' : nombre;
-  print('$mensaje, $nombreCompleto!');
+// Optional parameters with []
+void greetPerson(String name, [String? greeting, String? lastName]) {
+  String message = greeting ?? 'Hello';
+  String fullName = lastName != null ? '$name $lastName' : name;
+  print('$message, $fullName!');
 }
 [end]
 [trycode] 5d5ab9f43ddc1bdeeedff7b1b8621318
@@ -58,15 +58,15 @@ El operador `??` proporciona un valor por defecto.
 
 [c:dart]
 void main() {
-  // Arrow function simple
-  int cuadrado(int x) => x * x;
+  // Simple arrow function
+  int square(int x) => x * x;
   
-  // Arrow function con múltiples líneas
-  String formatearNombre(String nombre, String apellido) => 
-    '${nombre.toUpperCase()} ${apellido.toUpperCase()}';
+  // Arrow function with multiple lines
+  String formatName(String name, String lastName) => 
+    '${name.toUpperCase()} ${lastName.toUpperCase()}';
   
-  print(cuadrado(5)); // 25
-  print(formatearNombre('ana', 'garcía')); // ANA GARCÍA
+  print(square(5)); // 25
+  print(formatName('ana', 'garcía')); // ANA GARCÍA
 }
 [end]
 [trycode] 434d65b18c81965a6b9b9a97d4c52157
@@ -81,17 +81,17 @@ Son más concisas que las funciones tradicionales.
 
 [c:dart]
 void main() {
-  List<int> numeros = [1, 2, 3, 4, 5];
+  List<int> numbers = [1, 2, 3, 4, 5];
   
-  // Pasar función como parámetro
-  procesarLista(numeros, (n) => n * 2);
-  procesarLista(numeros, (n) => n + 10);
+  // Pass function as parameter
+  processList(numbers, (n) => n * 2);
+  processList(numbers, (n) => n + 10);
 }
 
-void procesarLista(List<int> lista, int Function(int) operacion) {
-  for (int numero in lista) {
-    int resultado = operacion(numero);
-    print('$numero -> $resultado');
+void processList(List<int> list, int Function(int) operation) {
+  for (int number in list) {
+    int result = operation(number);
+    print('$number -> $result');
   }
 }
 [end]
@@ -107,22 +107,22 @@ Las funciones pueden recibir otras funciones como parámetros.
 
 [c:dart]
 void main() {
-  List<int> numeros = [1, 2, 3, 4, 5, 6];
+  List<int> numbers = [1, 2, 3, 4, 5, 6];
   
-  // forEach: ejecutar función en cada elemento
-  numeros.forEach((n) => print('Número: $n'));
+  // forEach: execute function on each element
+  numbers.forEach((n) => print('Number: $n'));
   
-  // map: transformar cada elemento
-  List<String> textos = numeros.map((n) => 'Valor $n').toList();
-  print(textos);
+  // map: transform each element
+  List<String> texts = numbers.map((n) => 'Value $n').toList();
+  print(texts);
   
-  // where: filtrar elementos
-  List<int> pares = numeros.where((n) => n % 2 == 0).toList();
-  print(pares);
+  // where: filter elements
+  List<int> evens = numbers.where((n) => n % 2 == 0).toList();
+  print(evens);
   
-  // reduce: combinar elementos
-  int suma = numeros.reduce((a, b) => a + b);
-  print('Suma total: $suma');
+  // reduce: combine elements
+  int sum = numbers.reduce((a, b) => a + b);
+  print('Total sum: $sum');
 }
 [end]
 [trycode] bc57d9043c1423e18fcb0a34399ae8cd

@@ -7,17 +7,17 @@ En Dart, los tipos opcionales te permiten manejar valores que pueden ser `null`.
 
 [c:dart]
 void main() {
-  // Variable que puede ser null
-  String? nombre = null;
-  print(nombre); // null
+  // Variable that can be null
+  String? name = null;
+  print(name); // null
   
-  // Asignar un valor
-  nombre = 'Ana';
-  print(nombre); // Ana
+  // Assign a value
+  name = 'Ana';
+  print(name); // Ana
   
-  // Variable que no puede ser null
-  String apellido = 'García'; // Error si intentas asignar null
-  print(apellido);
+  // Variable that cannot be null
+  String lastName = 'García'; // Error if you try to assign null
+  print(lastName);
 }
 [end]
 [trycode] f0fd4d9f795c46529176e86bc4287aaf
@@ -34,20 +34,20 @@ Sin `?`, la variable nunca puede ser null.
 void main() {
   String? email = null;
   
-  // Verificar si es null
+  // Check if it is null
   if (email != null) {
     print('Email: $email');
   } else {
-    print('No hay email');
+    print('No email');
   }
   
-  // Asignar email
-  email = 'ana@ejemplo.com';
+  // Assign email
+  email = 'ana@example.com';
   
   if (email != null) {
     print('Email: $email');
   } else {
-    print('No hay email');
+    print('No email');
   }
 }
 [end]
@@ -63,16 +63,16 @@ Solo después de verificar puedes usar la variable sin `?`.
 
 [c:dart]
 void main() {
-  String? texto = null;
+  String? text = null;
   
-  // Acceso seguro - no causa error si es null
-  print(texto?.length); // null
+  // Safe access - does not cause error if null
+  print(text?.length); // null
   
-  texto = 'Hola';
-  print(texto?.length); // 4
+  text = 'Hello';
+  print(text?.length); // 4
   
-  // Sin acceso seguro causaría error
-  // print(texto.length); // Error si texto es null
+  // Without safe access would cause error
+  // print(text.length); // Error if text is null
 }
 [end]
 [trycode] 778d63184ff6c07404bdaecf4171b330
@@ -87,19 +87,19 @@ Si es null, retorna null en lugar de causar error.
 
 [c:dart]
 void main() {
-  String? nombre = null;
-  String? apellido = 'García';
+  String? name = null;
+  String? lastName = 'García';
   
-  // Usar valor por defecto si es null
-  String nombreCompleto = nombre ?? 'Anónimo';
-  print(nombreCompleto); // Anónimo
+  // Use default value if null
+  String fullName = name ?? 'Anonymous';
+  print(fullName); // Anonymous
   
-  String apellidoCompleto = apellido ?? 'Sin apellido';
-  print(apellidoCompleto); // García
+  String fullLastName = lastName ?? 'No last name';
+  print(fullLastName); // García
   
-  // También funciona con expresiones
-  String mensaje = nombre ?? apellido ?? 'Sin nombre';
-  print(mensaje); // García
+  // Also works with expressions
+  String message = name ?? lastName ?? 'No name';
+  print(message); // García
 }
 [end]
 [trycode] cebc63befd4e7eb207bb23b20187e7f2
@@ -114,19 +114,19 @@ Puedes encadenar múltiples `??` para fallbacks.
 
 [c:dart]
 void main() {
-  String? nombre = null;
+  String? name = null;
   
-  // Solo asigna si la variable es null
-  nombre ??= 'Juan';
-  print(nombre); // Juan
+  // Only assigns if the variable is null
+  name ??= 'Juan';
+  print(name); // Juan
   
-  // No cambia si ya tiene valor
-  nombre ??= 'Pedro';
-  print(nombre); // Juan (no cambió)
+  // Does not change if it already has a value
+  name ??= 'Pedro';
+  print(name); // Juan (did not change)
   
-  String? edad = null;
-  edad ??= '25';
-  print(edad); // 25
+  String? age = null;
+  age ??= '25';
+  print(age); // 25
 }
 [end]
 [trycode] 3aee48062336caac7725347bcd0bf2c4

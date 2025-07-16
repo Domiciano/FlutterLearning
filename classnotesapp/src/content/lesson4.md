@@ -7,17 +7,17 @@ Las estructuras de control te permiten tomar decisiones en tu código. En Dart, 
 
 [c:dart]
 void main() {
-  int edad = 18;
+  int age = 18;
   
-  if (edad >= 18) {
-    print('Eres mayor de edad');
+  if (age >= 18) {
+    print('You are an adult');
   }
   
-  // if con else
-  if (edad >= 18) {
-    print('Eres mayor de edad');
+  // if with else
+  if (age >= 18) {
+    print('You are an adult');
   } else {
-    print('Eres menor de edad');
+    print('You are a minor');
   }
 }
 [end]
@@ -33,18 +33,18 @@ El `else` ejecuta código alternativo cuando la condición es falsa.
 
 [c:dart]
 void main() {
-  int nota = 85;
+  int grade = 85;
   
-  if (nota >= 90) {
-    print('Excelente');
-  } else if (nota >= 80) {
-    print('Muy bien');
-  } else if (nota >= 70) {
-    print('Bien');
-  } else if (nota >= 60) {
-    print('Aprobado');
+  if (grade >= 90) {
+    print('Excellent');
+  } else if (grade >= 80) {
+    print('Very good');
+  } else if (grade >= 70) {
+    print('Good');
+  } else if (grade >= 60) {
+    print('Passed');
   } else {
-    print('Reprobado');
+    print('Failed');
   }
 }
 [end]
@@ -60,22 +60,22 @@ Solo se ejecuta el primer bloque cuya condición sea verdadera.
 
 [c:dart]
 void main() {
-  int edad = 25;
-  bool tieneLicencia = true;
+  int age = 25;
+  bool hasLicense = true;
   
   // AND (&&)
-  if (edad >= 18 && tieneLicencia) {
-    print('Puedes conducir');
+  if (age >= 18 && hasLicense) {
+    print('You can drive');
   }
   
   // OR (||)
-  if (edad < 18 || !tieneLicencia) {
-    print('No puedes conducir');
+  if (age < 18 || !hasLicense) {
+    print('You cannot drive');
   }
   
   // NOT (!)
-  if (!tieneLicencia) {
-    print('Necesitas obtener una licencia');
+  if (!hasLicense) {
+    print('You need to get a license');
   }
 }
 [end]
@@ -94,26 +94,26 @@ void main() {
 
 [c:dart]
 void main() {
-  String dia = 'lunes';
+  String day = 'Monday';
   
-  switch (dia) {
-    case 'lunes':
-      print('Inicio de semana');
+  switch (day) {
+    case 'Monday':
+      print('Start of the week');
       break;
-    case 'martes':
-    case 'miércoles':
-    case 'jueves':
-      print('Día laboral');
+    case 'Tuesday':
+    case 'Wednesday':
+    case 'Thursday':
+      print('Workday');
       break;
-    case 'viernes':
-      print('¡Viernes!');
+    case 'Friday':
+      print('Friday!');
       break;
-    case 'sábado':
-    case 'domingo':
-      print('Fin de semana');
+    case 'Saturday':
+    case 'Sunday':
+      print('Weekend');
       break;
     default:
-      print('Día no válido');
+      print('Invalid day');
   }
 }
 [end]
@@ -132,16 +132,16 @@ El `default` se ejecuta si ningún caso coincide.
 
 [c:dart]
 void main() {
-  int numero = 5;
+  int number = 5;
   
-  String resultado = switch (numero) {
-    1 => 'Uno',
-    2 => 'Dos',
-    3 => 'Tres',
-    _ => 'Otro número'
+  String result = switch (number) {
+    1 => 'One',
+    2 => 'Two',
+    3 => 'Three',
+    _ => 'Other number'
   };
   
-  print(resultado); // Otro número
+  print(result); // Other number
 }
 [end]
 [trycode] de38d5d1ed991997ce2fef292fb3e57b
