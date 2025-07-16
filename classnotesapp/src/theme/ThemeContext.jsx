@@ -4,16 +4,26 @@ import { light, dark } from './colors';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // Detectar preferencia del sistema
-  const [mode, setMode] = useState('dark');
+  // Leer preferencia guardada en localStorage o default a 'dark'
+  const [mode, setMode] = useState(() => {
+    return localStorage.getItem('themeMode') || 'dark';
+  });
 
   const theme = useMemo(() => (mode === 'dark' ? dark : light), [mode]);
 
-  const toggleTheme = () => setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  const toggleTheme = () => {
+    setMode((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('themeMode', next);
+      return next;
+    });
+  };
 
   useEffect(() => {
     document.body.classList.remove('dark', 'light');
     document.body.classList.add(mode);
+    // Guardar en localStorage si cambia desde otro lugar
+    localStorage.setItem('themeMode', mode);
   }, [mode]);
 
   return (

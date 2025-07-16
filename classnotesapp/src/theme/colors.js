@@ -35,7 +35,7 @@ export const light = {
   codeBg: '#f5f5f5',
   codeText: '#222',
 
-  appBarBg: '#0D47A1',             // Fondo AppBar claro - Azul muy oscuro
+  appBarBg: '#102840',             // Fondo AppBar claro - Azul grisáceo y sobrio
   appBarText: '#FFFFFF',              // Texto AppBar claro - Blanco para contraste
 };
 
@@ -74,7 +74,7 @@ export const dark = {
   codeBg: '#23272e',
   codeText: '#f8f8f2',
 
-  appBarBg: '#0D47A1',             // Fondo AppBar oscuro - Azul muy oscuro
+  appBarBg: '#102840',             // Fondo AppBar oscuro - Azul grisáceo y sobrio
   appBarText: '#ffffff',              // Texto AppBar oscuro - Blanco para contraste
 };
 

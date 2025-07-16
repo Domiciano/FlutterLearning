@@ -33,6 +33,11 @@ const LessonPage = forwardRef(({ sections }, ref) => {
   useEffect(() => {
     setLoading(true);
 
+    // Guardar el número de lección en localStorage
+    if (lessonId && !isNaN(Number(lessonId))) {
+      localStorage.setItem('lastLesson', lessonId);
+    }
+
     const filePath = lessonMap.get(lessonId);
 
     if (filePath && allLessonRawContents[filePath]) {

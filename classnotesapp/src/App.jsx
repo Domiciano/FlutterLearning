@@ -50,8 +50,13 @@ function App() {
         navigate(deepPath, { replace: true });
       } else if (location.pathname === '/' && firstLessonId) {
         // Si no hay deepPath y estamos en la ruta raíz del basename,
-        // redirigimos a la primera lección por defecto.
-        navigate(`/lesson/${firstLessonId}`, { replace: true });
+        // redirigimos a la lección guardada en localStorage o a la primera por defecto.
+        const lastLesson = localStorage.getItem('lastLesson');
+        if (lastLesson) {
+          navigate(`/lesson/${lastLesson}`, { replace: true });
+        } else {
+          navigate(`/lesson/${firstLessonId}`, { replace: true });
+        }
       }
     }
   }, [loading, sections, location.search, firstLessonId, navigate, location.pathname]); // Dependencias del efecto
