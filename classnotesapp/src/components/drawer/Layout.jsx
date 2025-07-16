@@ -57,7 +57,14 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
   }, [onOpenMobileNav]);
 
   const drawerContent = (
-    <Box sx={{ width: drawerWidth, backgroundColor: theme.background, height: '100vh' }}>
+    <Box sx={{
+      width: drawerWidth,
+      backgroundColor: theme.background,
+      height: '100vh',
+      overflowY: 'auto',
+      scrollbarWidth: 'none', // Firefox
+      '&::-webkit-scrollbar': { display: 'none' }, // Chrome/Safari
+    }}>
       <List>
         {sections.map((sec, index) => {
           if (sec.type === "title") {
@@ -71,6 +78,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                   color: theme.drawerTitle,
                   fontSize: "0.75rem",
                   textTransform: "uppercase",
+                  mb: '2px', // Margin inferior de 2px entre títulos
                 }}
               >
                 {sec.label}
@@ -89,10 +97,13 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                 sx={{
                   color: theme.drawerSection,
                   '&.Mui-selected': {
-                    backgroundColor: 'rgba(66, 165, 245, 0.1)',
+                    backgroundColor: 'rgba(100,181,246,0.25)', // Azul claro, saturado y translúcido
                     color: theme.drawerTitle,
                   },
-                  '&:hover': { color: theme.drawerTitle },
+                  '&:hover': {
+                    color: theme.drawerTitle,
+                    backgroundColor: 'rgba(100,181,246,0.25)', // Azul claro, saturado y translúcido
+                  },
                   backgroundColor: isStudied && !isSelected ? 'rgba(33, 150, 243, 0.08)' : undefined,
                   borderRadius: 2,
                   display: 'flex',
@@ -121,6 +132,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
           return null;
         })}
       </List>
+      <Box sx={{ height: 100 }} /> {/* Espacio de relleno al final */}
     </Box>
   );
 
@@ -196,3 +208,5 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
 };
 
 export default Layout;
+
+
