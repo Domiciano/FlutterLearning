@@ -15,6 +15,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { Link, useLocation } from "react-router-dom";
 import { useThemeMode } from '@/theme/ThemeContext';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const drawerWidth = 240;
 
@@ -24,6 +26,26 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { theme } = useThemeMode();
+  const [studiedLessons, setStudiedLessons] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('studiedLessons') || '[]');
+    } catch {
+      return [];
+    }
+  });
+
+  const toggleStudied = (lessonId) => {
+    setStudiedLessons((prev) => {
+      let updated;
+      if (prev.includes(lessonId)) {
+        updated = prev.filter(id => id !== lessonId);
+      } else {
+        updated = [...prev, lessonId];
+      }
+      localStorage.setItem('studiedLessons', JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -56,12 +78,14 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
             );
           }
           if (sec.type === "lesson") {
+            const isStudied = studiedLessons.includes(sec.id);
+            const isSelected = location.pathname === `/lesson/${sec.id}`;
             return (
               <ListItemButton
                 key={`lesson-${sec.id}`}
                 component={Link}
                 to={`/lesson/${sec.id}`}
-                selected={location.pathname === `/lesson/${sec.id}`}
+                selected={isSelected}
                 sx={{
                   color: theme.drawerSection,
                   '&.Mui-selected': {
@@ -69,10 +93,28 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                     color: theme.drawerTitle,
                   },
                   '&:hover': { color: theme.drawerTitle },
+                  backgroundColor: isStudied && !isSelected ? 'rgba(33, 150, 243, 0.08)' : undefined,
+                  borderRadius: 2,
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
                 onClick={() => setMobileOpen(false)}
               >
                 <ListItemText primary={sec.label} />
+                <IconButton
+                  size="small"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleStudied(sec.id);
+                  }}
+                  sx={{ ml: 1 }}
+                  aria-label={isStudied ? 'Marcar como no estudiada' : 'Marcar como estudiada'}
+                >
+                  {isStudied
+                    ? <CheckCircleIcon sx={{ color: theme.accent }} />
+                    : <CheckCircleOutlineIcon sx={{ color: isSelected ? theme.accent : theme.border, opacity: isSelected ? 0.8 : 1 }} />}
+                </IconButton>
               </ListItemButton>
             );
           }
