@@ -3,8 +3,10 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DartPadEmbed from '../embed/DartPadEmbed';
 import { useThemeMode } from '@/theme/ThemeContext';
+import CodeBlock from '../code/CodeBlock';
 
-const TryCodeButton = ({ gistId, codeBlock }) => {
+const TryCodeButton = ({ gistId, code, language }) => {
+  console.log('TryCodeButton props:', { code, language, gistId });
   const [showDartPad, setShowDartPad] = useState(false);
   const { theme } = useThemeMode();
   
@@ -75,7 +77,6 @@ const TryCodeButton = ({ gistId, codeBlock }) => {
           Fire it up!
         </Button>
       </Box>
-      
       {/* Contenido de las pestañas */}
       <Box sx={{ 
         border: 1, 
@@ -89,9 +90,7 @@ const TryCodeButton = ({ gistId, codeBlock }) => {
         {showDartPad ? (
           <DartPadEmbed gistId={gistId} />
         ) : (
-          <Box>
-            {codeBlock}
-          </Box>
+          <CodeBlock language={language}>{code}</CodeBlock>
         )}
       </Box>
     </Box>

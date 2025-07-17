@@ -346,18 +346,20 @@ const LessonParser = ({ content }) => {
       continue;
     }
 
-    // --- CIERRE DE BLOQUE DE CÓDIGO NUEVO ---
+    // --- Llenar el buffer de código mientras parsingCode ---
     if (parsingCode) {
       if (trimmedLine === '[endcode]') {
-        // Agregar el bloque de código
-        elements.push(
-          <CodeBlock key={`code-${i}`} language={codeLang}>
-            {codeBuffer}
-          </CodeBlock>
-        );
+        // Verifica si la siguiente línea es un [trycode]
+        const nextLine = lines[i + 1]?.trim() || '';
+        const willHaveTryCode = nextLine.startsWith('[trycode');
+        pendingCodeBlock = {
+          code: codeBuffer.trimEnd(),
+          language: codeLang,
+          noMarginTop: willHaveTryCode
+        };
         parsingCode = false;
-        codeLang = "";
         codeBuffer = "";
+        codeLang = "";
         continue;
       } else {
         codeBuffer += rawLine + "\n";
@@ -365,19 +367,32 @@ const LessonParser = ({ content }) => {
       }
     }
 
-    // --- TRY CODE BUTTON ---
-    if (trimmedLine.startsWith('[trycode]')) {
-      flushParagraph(elements, paragraphBuffer, i);
-      paragraphBuffer = "";
-      const gistId = trimmedLine.slice(9).trim();
-      // Solo crear TryCodeButton si hay un pendingCodeBlock válido
+    // --- TRYCODE después de bloque de código ---
+    if (trimmedLine.startsWith('[trycode')) {
       if (pendingCodeBlock) {
+        const gistId = trimmedLine.replace('[trycode]', '').trim();
         elements.push(
-          <TryCodeButton key={`trycode-${i}`} gistId={gistId} codeBlock={pendingCodeBlock} />
+          <TryCodeButton
+            key={`trycode-${i}`}
+            code={pendingCodeBlock.code}
+            language={pendingCodeBlock.language}
+            gistId={gistId || undefined}
+            noMarginTop={pendingCodeBlock.noMarginTop}
+          />
         );
         pendingCodeBlock = null;
+        continue;
       }
-      continue;
+    }
+
+    // Si hay un pendingCodeBlock y no se usó, insértalo antes de cualquier otro elemento
+    if (pendingCodeBlock) {
+      elements.push(
+        <CodeBlock key={`code-${i}`} language={pendingCodeBlock.language} sx={pendingCodeBlock.noMarginTop ? { mt: 0 } : {}}>
+          {pendingCodeBlock.code}
+        </CodeBlock>
+      );
+      pendingCodeBlock = null;
     }
 
     // --- LINK ELEGANTE ---
