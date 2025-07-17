@@ -1,11 +1,11 @@
 [t] Listas y mapas
 
-[p]
+
 Las listas y mapas son estructuras de datos fundamentales en Dart. Aprenderás a crearlas y recorrerlas de diferentes formas.
 
 [st] Listas (Arrays)
 
-[c:dart]
+[code:dart]
 void main() {
   // Create a list
   List<String> fruits = ['apple', 'banana', 'orange'];
@@ -18,18 +18,18 @@ void main() {
   print(fruits[0]); // apple
   print(fruits.length); // 6
 }
-[end]
+[endcode]
 [trycode] 861f536e05b1f549f3477bbec1af1296
 
-[p]
+
 Las listas almacenan elementos ordenados y accesibles por índice.
 
-[p]
+
 Usa `add()` para un elemento y `addAll()` para múltiples.
 
 [st] Recorrer listas con for
 
-[c:dart]
+[code:dart]
 void main() {
   List<int> numbers = [1, 2, 3, 4, 5];
   
@@ -48,21 +48,21 @@ void main() {
     print('Value: $number');
   });
 }
-[end]
+[endcode]
 [trycode] b35f2f1791d67b9d6dd65360f8cdf620
 
-[p]
+
 El `for` tradicional te da control del índice.
 
-[p]
+
 El `for-in` es más simple para recorrer valores.
 
-[p]
+
 `forEach()` ejecuta una función para cada elemento.
 
 [st] Mapas (Dictionaries)
 
-[c:dart]
+[code:dart]
 void main() {
   // Create a map
   Map<String, int> ages = {
@@ -78,18 +78,18 @@ void main() {
   print(ages['Ana']); // 25
   print(ages.length); // 4
 }
-[end]
+[endcode]
 [trycode] ed87a5e54b7b469aa862ec9b4bb7ed36
 
-[p]
+
 Los mapas almacenan pares clave-valor.
 
-[p]
+
 Accede a valores usando la clave como índice.
 
 [st] Recorrer mapas
 
-[c:dart]
+[code:dart]
 void main() {
   Map<String, String> countries = {
     'Colombia': 'Bogotá',
@@ -112,21 +112,21 @@ void main() {
     print('$country - $capital');
   });
 }
-[end]
+[endcode]
 [trycode] 6d5ee941076ea161b3880ac8ef888664
 
-[p]
+
 Usa `.keys` para recorrer solo las claves.
 
-[p]
+
 Usa `.values` para recorrer solo los valores.
 
-[p]
+
 `forEach()` te da acceso a clave y valor.
 
 [st] Métodos funcionales: map y filter
 
-[c:dart]
+[code:dart]
 void main() {
   List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   
@@ -145,14 +145,14 @@ void main() {
       .toList();
   print(evensText);
 }
-[end]
+[endcode]
 [trycode] 81d33660c5e44ead08be3a817cc33122
 
-[p]
+
 `map()` transforma cada elemento de la lista.
 
-[p]
+
 `where()` (filter) selecciona elementos que cumplan una condición.
 
-[p]
+
 Puedes encadenar estos métodos para operaciones complejas. 

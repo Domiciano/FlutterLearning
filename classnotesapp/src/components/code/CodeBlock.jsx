@@ -36,11 +36,13 @@ const CodeBlock = ({ children, language, className = "" }) => {
       className={`flutter-code ${className}`}
       sx={{ 
         position: "relative", 
-        my: 0,
+        mt: 2,
+        mb: 2,
         maxWidth: '100%',
         '& pre': {
           border: 'none !important',
           boxShadow: 'none !important',
+          marginBottom: '0 !important',
         },
         '& code': {
           border: 'none !important',
@@ -56,7 +58,7 @@ const CodeBlock = ({ children, language, className = "" }) => {
       >
         <ContentCopyIcon fontSize="small" />
       </IconButton>
-      <pre style={{ margin: 0, maxWidth: 800, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none' }}
+      <pre style={{ margin: 0, marginBottom: 0, maxWidth: 800, overflowX: 'auto', paddingBottom: 8, scrollbarWidth: 'none' }}
         className="codeblock-pre-hide-scroll"
       >
         {/* Usamos 'ref' para que Prism.js pueda acceder al elemento <code> */}

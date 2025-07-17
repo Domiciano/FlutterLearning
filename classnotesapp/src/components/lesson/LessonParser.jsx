@@ -11,6 +11,7 @@ import IconBlock from "@/components/lesson/IconBlock";
 import Link from "@/components/lesson/Link";
 import images from "@/assets";
 import TryCodeButton from './TryCodeButton';
+import Typography from "@mui/material/Typography";
 
 const LessonParser = ({ content }) => {
   // Eliminar líneas en blanco al final para asegurar flush correcto
@@ -27,6 +28,16 @@ const LessonParser = ({ content }) => {
   let parsingCode = false;
   let codeLang = "";
   let pendingCodeBlock = null;
+
+  // --- LISTA ---
+  let parsingList = false;
+  let listItems = [];
+
+  // Definir estilos de lista idénticos a LessonParagraph
+  const listTextStyle = {
+    fontSize: '1rem',
+    fontFamily: 'Roboto, Arial, sans-serif',
+  };
 
   // Helper function to flush the current code block
   const flushCodeBlock = (index) => {
@@ -156,6 +167,66 @@ const LessonParser = ({ content }) => {
     const rawLine = lines[i];
     const trimmedLine = rawLine.trim();
 
+    // --- INICIO DE LISTA ---
+    if (trimmedLine === '[list]') {
+      flushParagraph(elements, paragraphBuffer, i);
+      paragraphBuffer = "";
+      parsingList = true;
+      listItems = [];
+      continue;
+    }
+
+    // --- FIN DE LISTA ---
+    if (trimmedLine === '[endlist]') {
+      parsingList = false;
+      elements.push(
+        <ul key={`list-${i}`} style={{ margin: '0px 0 0px 4px', ...listTextStyle }}>
+          {listItems}
+        </ul>
+      );
+      listItems = [];
+      continue;
+    }
+
+    // --- ELEMENTO DE LISTA ---
+    if (parsingList) {
+      // Cada línea no vacía dentro de la lista es un item
+      if (trimmedLine !== "") {
+        listItems.push(
+          <li key={`li-${i}`} style={{ padding:0, margin: '0px 0', listStyle: 'none', display: 'flex', alignItems: 'baseline' }}>
+            <span style={{
+              display: 'inline-block',
+              width: 4,
+              height: '1em',
+              background: '#fff',
+              borderRadius: 0,
+              marginRight: 12,
+              marginLeft: 2,
+              verticalAlign: 'middle',
+              marginTop: 0,
+            }} />
+            <Typography
+              sx={{
+                p:0,
+                color: 'inherit',
+                fontSize: { xs: '1rem', md: '1.1rem' },
+                lineHeight: 'calc(1.7em)',
+                fontFamily: 'Roboto, Arial, sans-serif',
+              }}
+            >
+              {parseInlineLinks(parseInlineCode(trimmedLine))}
+            </Typography>
+          </li>
+        );
+      }
+      continue;
+    }
+
+    // Si estamos dentro de una lista, ignorar cualquier otra línea
+    if (parsingList) {
+      continue;
+    }
+
     // Check if the current line is a directive *before* checking parsingCode
     const isDirective = trimmedLine.match(/^\[(t|st|p|v|i|icon|dartpad|trycode|c:|link).*"]$/);
 
@@ -210,11 +281,12 @@ const LessonParser = ({ content }) => {
     }
 
     // --- INICIO DE NUEVO PÁRRAFO ---
-    if (trimmedLine === "[p]") {
-      flushParagraph(elements, paragraphBuffer, i);
-      paragraphBuffer = "";
-      continue;
-    }
+    // Eliminado el manejo de [p]
+    // if (trimmedLine === "[p]") {
+    //   flushParagraph(elements, paragraphBuffer, i);
+    //   paragraphBuffer = "";
+    //   continue;
+    // }
 
     // --- VIDEO EMBED ---
     if (trimmedLine.startsWith("[v]")) {
@@ -266,23 +338,31 @@ const LessonParser = ({ content }) => {
       continue;
     }
 
-    // --- INICIO DE BLOQUE DE CÓDIGO ---
-    if (trimmedLine.startsWith("[c:")) {
-      flushParagraph(elements, paragraphBuffer, i);
-      paragraphBuffer = "";
+    // --- INICIO DE BLOQUE DE CÓDIGO NUEVO ---
+    if (trimmedLine.startsWith("[code:")) {
       parsingCode = true;
-      codeLang = trimmedLine.match(/\[c:(.*)\]/)[1];
+      codeLang = trimmedLine.match(/\[code:(.*)\]/)[1].trim();
       codeBuffer = "";
       continue;
     }
 
-    // --- CIERRE DE BLOQUE DE CÓDIGO o CÓDIGO CONTINUO ---
+    // --- CIERRE DE BLOQUE DE CÓDIGO NUEVO ---
     if (parsingCode) {
-      codeBuffer += rawLine + "\n";
-      if (i === lastNonEmptyIndex) {
-        flushCodeBlock(i);
+      if (trimmedLine === '[endcode]') {
+        // Agregar el bloque de código
+        elements.push(
+          <CodeBlock key={`code-${i}`} language={codeLang}>
+            {codeBuffer}
+          </CodeBlock>
+        );
+        parsingCode = false;
+        codeLang = "";
+        codeBuffer = "";
+        continue;
+      } else {
+        codeBuffer += rawLine + "\n";
+        continue;
       }
-      continue;
     }
 
     // --- TRY CODE BUTTON ---
@@ -330,8 +410,20 @@ const LessonParser = ({ content }) => {
     }
 
     // --- TEXTO CONTINUO (NOT PART OF CODE BLOCK) ---
-    if (trimmedLine !== "") {
-      paragraphBuffer += (paragraphBuffer ? " " : "") + trimmedLine;
+    // Cada línea (vacía o no) debe reflejarse con un <br /> en el output
+    // Si la línea no está vacía, agregar el texto y luego un <br />
+    if (!parsingList && !parsingCode) {
+      if (rawLine !== "") {
+        elements.push(
+          <React.Fragment key={`line-${i}`}>
+            {parseInlineLinks(parseInlineCode(rawLine))}
+            <br key={`br-${i}`} />
+          </React.Fragment>
+        );
+      } else {
+        // Línea vacía, solo <br />
+        elements.push(<br key={`br-${i}`} />);
+      }
     }
 
     // --- FIN DEL ARCHIVO ---

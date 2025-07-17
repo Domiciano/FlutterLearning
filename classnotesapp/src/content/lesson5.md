@@ -1,11 +1,11 @@
 [t] Tipos opcionales y null safety
 
-[p]
+
 En Dart, los tipos opcionales te permiten manejar valores que pueden ser `null`. El sistema de null safety ayuda a prevenir errores comunes.
 
 [st] Tipos opcionales básicos
 
-[c:dart]
+[code:dart]
 void main() {
   // Variable that can be null
   String? name = null;
@@ -19,18 +19,18 @@ void main() {
   String lastName = 'García'; // Error if you try to assign null
   print(lastName);
 }
-[end]
+[endcode]
 [trycode] f0fd4d9f795c46529176e86bc4287aaf
 
-[p]
+
 Usa `?` después del tipo para indicar que puede ser null.
 
-[p]
+
 Sin `?`, la variable nunca puede ser null.
 
 [st] Verificar si es null
 
-[c:dart]
+[code:dart]
 void main() {
   String? email = null;
   
@@ -50,18 +50,18 @@ void main() {
     print('No email');
   }
 }
-[end]
+[endcode]
 [trycode] 66405bd35f0f6d4afe60328ba63e2da9
 
-[p]
+
 Usa `!= null` para verificar si una variable tiene valor.
 
-[p]
+
 Solo después de verificar puedes usar la variable sin `?`.
 
 [st] Operador de acceso seguro (?. )
 
-[c:dart]
+[code:dart]
 void main() {
   String? text = null;
   
@@ -74,18 +74,18 @@ void main() {
   // Without safe access would cause error
   // print(text.length); // Error if text is null
 }
-[end]
+[endcode]
 [trycode] 778d63184ff6c07404bdaecf4171b330
 
-[p]
+
 El operador `?.` accede a propiedades solo si el valor no es null.
 
-[p]
+
 Si es null, retorna null en lugar de causar error.
 
 [st] Operador de coalescencia nula (??)
 
-[c:dart]
+[code:dart]
 void main() {
   String? name = null;
   String? lastName = 'García';
@@ -101,18 +101,18 @@ void main() {
   String message = name ?? lastName ?? 'No name';
   print(message); // García
 }
-[end]
+[endcode]
 [trycode] cebc63befd4e7eb207bb23b20187e7f2
 
-[p]
+
 El operador `??` proporciona un valor por defecto si la variable es null.
 
-[p]
+
 Puedes encadenar múltiples `??` para fallbacks.
 
 [st] Asignación de coalescencia nula (??=)
 
-[c:dart]
+[code:dart]
 void main() {
   String? name = null;
   
@@ -128,11 +128,11 @@ void main() {
   age ??= '25';
   print(age); // 25
 }
-[end]
+[endcode]
 [trycode] 3aee48062336caac7725347bcd0bf2c4
 
-[p]
+
 El operador `??=` asigna un valor solo si la variable es null.
 
-[p]
+
 Es útil para inicializar variables opcionales. 

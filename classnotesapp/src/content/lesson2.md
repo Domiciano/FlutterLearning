@@ -1,11 +1,8 @@
 [t] Operadores numéricos
-
-[p]
 Los operadores te permiten realizar cálculos y comparaciones con variables numéricas en Dart. Vamos a ver los más importantes.
 
 [st] Operadores aritméticos básicos
-
-[c:dart]
+[code:dart]
 void main() {
   int a = 10;
   int b = 3;
@@ -17,21 +14,16 @@ void main() {
   print(a % b);  // Modulo (remainder): 1
   print(a ~/ b); // Integer division: 3
 }
-[end]
+[endcode]
 [trycode] 0b724266b8c3b41729324393b1770bf3
-
-[p]
 `+` suma, `-` resta, `*` multiplica, `/` divide (resultado decimal)
 
-[p]
 `%` obtiene el resto de la división
 
-[p]
 `~/` divide y devuelve solo la parte entera
 
 [st] Operadores de asignación
-
-[c:dart]
+[code:dart]
 void main() {
   int x = 5;
   x += 3;  // Equivalent to: x = x + 3
@@ -40,15 +32,12 @@ void main() {
   x *= 2;  // Equivalent to: x = x * 2
   print(x); // 16
 }
-[end]
+[endcode]
 [trycode] e6c00b23687660a44f959f591dff34a4
-
-[p]
 Los operadores `+=`, `-=`, `*=`, `/=` son atajos para modificar una variable.
 
 [st] Operadores de comparación
-
-[c:dart]
+[code:dart]
 void main() {
   int age = 18;
   
@@ -59,15 +48,12 @@ void main() {
   print(age == 18);  // Equal: true
   print(age != 20);  // Not equal: true
 }
-[end]
+[endcode]
 [trycode] a501a06d10cb1e0a852d138191943569
-
-[p]
 Estos operadores devuelven `true` o `false` y son fundamentales para las estructuras de control.
 
 [st] Operadores de incremento y decremento
-
-[c:dart]
+[code:dart]
 void main() {
   int counter = 5;
   
@@ -77,10 +63,5 @@ void main() {
   counter--;  // Decrements by 1
   print(counter); // 5
 }
-[end]
+[endcode]
 [trycode] 9d90271cdc58be19cac8482d9581e22a
-
-
-
-
-

@@ -1,11 +1,11 @@
 [t] Clases y objetos en Dart
 
-[p]
+
 Las clases son plantillas para crear objetos. En Dart, todo es un objeto, y las clases te permiten definir propiedades y comportamientos.
 
 [st] Crear una clase básica
 
-[c:dart]
+[code:dart]
 void main() {
   // Create an instance of the class
   Person person1 = Person('Ana', 25);
@@ -27,18 +27,18 @@ class Person {
     print('Hi, I am $name and I am $age years old');
   }
 }
-[end]
+[endcode]
 [trycode] e930ec503d90ef658887d57ace23df94
 
-[p]
+
 Las clases definen propiedades (variables) y métodos (funciones).
 
-[p]
+
 El constructor `Persona(this.nombre, this.edad)` inicializa las propiedades.
 
 [st] Getters y setters
 
-[c:dart]
+[code:dart]
 void main() {
   Product product = Product('Laptop', 1200.0);
   
@@ -67,21 +67,21 @@ class Product {
     }
   }
 }
-[end]
+[endcode]
 [trycode] bc1e77ba3975bc12df21b88f17af0ac3
 
-[p]
+
 Los getters permiten acceder a propiedades calculadas.
 
-[p]
+
 Los setters permiten validar datos antes de asignarlos.
 
-[p]
+
 Las propiedades privadas empiezan con `_`.
 
 [st] Herencia
 
-[c:dart]
+[code:dart]
 void main() {
   Student student = Student('María', 20, 'Engineering');
   student.greet();
@@ -122,21 +122,21 @@ class Teacher extends Person {
     print('$name teaches $subject');
   }
 }
-[end]
+[endcode]
 [trycode] 20a0a0bdf3a2f03a8aa519536fe40af2
 
-[p]
+
 `extends` permite heredar de otra clase.
 
-[p]
+
 `super()` llama al constructor de la clase padre.
 
-[p]
+
 Cada clase puede tener métodos específicos.
 
 [st] Constructores nombrados
 
-[c:dart]
+[code:dart]
 void main() {
   // Default constructor
   Vehicle car1 = Vehicle('Toyota', 'Corolla');
@@ -174,11 +174,11 @@ class Vehicle {
     print(info);
   }
 }
-[end]
+[endcode]
 [trycode] 85b89338cd1dec1644ef3814e11d0525
 
-[p]
+
 Los constructores nombrados permiten diferentes formas de crear objetos.
 
-[p]
+
 Son útiles para casos de uso específicos con diferentes parámetros. 

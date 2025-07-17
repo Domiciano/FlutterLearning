@@ -5,7 +5,7 @@ En Dart, los constructores permiten inicializar los objetos de una clase. Puedes
 
 [st] Constructor básico y uso de final
 
-[c:dart]
+[code:dart]
 class Person {
   final String name;
   final int age;
@@ -17,7 +17,7 @@ void main() {
   var person = Person('Ana', 30);
   print(person.name); // Ana
 }
-[end]
+[endcode]
 [trycode] 1d4a3fe97b9141abd8f292c68644d573
 
 [p]
@@ -25,7 +25,7 @@ La palabra `final` indica que el valor solo puede ser asignado una vez, normalme
 
 [st] Parámetros nombrados y required
 
-[c:dart]
+[code:dart]
 class Person {
   final String name;
   final int age;
@@ -37,7 +37,7 @@ void main() {
   var person = Person(name: 'Luis', age: 25);
   print(person.name); // Luis
 }
-[end]
+[endcode]
 [trycode] e0a448441e7b821d4bcd7cbba36d037b
 
 [p]
@@ -45,7 +45,7 @@ Los parámetros nombrados (entre `{}`) permiten mayor claridad y flexibilidad al
 
 [st] Parámetros opcionales y valores por defecto
 
-[c:dart]
+[code:dart]
 class Person {
   final String name;
   final int age;
@@ -57,7 +57,7 @@ void main() {
   var person = Person(name: 'Sofía');
   print(person.age); // 18
 }
-[end]
+[endcode]
 [trycode] f3d26c9e77675dbf1c2e654b759cf8ad
 
 [p]

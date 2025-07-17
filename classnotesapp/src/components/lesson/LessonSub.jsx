@@ -14,8 +14,6 @@ const LessonSub = ({ children, id }) => {
         fontSize: { xs: "1.5rem", md: "2rem" },
         letterSpacing: "0.02em",
         textAlign: "left",
-        mt: 3,
-        mb: 2,
         lineHeight: 1.2,
         fontFamily: "'Roboto', sans-serif",
       }}

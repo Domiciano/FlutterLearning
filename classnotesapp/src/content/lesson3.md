@@ -1,11 +1,8 @@
 [t] Trabajando con Strings
-
-[p]
 Los strings en Dart son secuencias de caracteres que puedes manipular de varias formas. Vamos a ver las más comunes: concatenación e interpolación.
 
 [st] Concatenación de strings
-
-[c:dart]
+[code:dart]
 void main() {
   String firstName = 'Ana';
   String lastName = 'García';
@@ -18,18 +15,13 @@ void main() {
   String greeting = 'Hello ' + firstName;
   print(greeting); // Hello Ana
 }
-[end]
+[endcode]
 [trycode] 9ea5113dcc307145e4f26950b3770012
-
-[p]
 La concatenación con `+` es la forma más simple de unir strings.
-
-[p]
 También puedes usar interpolación para unir strings.
 
 [st] Interpolación de strings
-
-[c:dart]
+[code:dart]
 void main() {
   String name = 'Carlos';
   int age = 25;
@@ -46,18 +38,13 @@ void main() {
   String list = 'Shopping list: ${['apples', 'milk', 'bread']}';
   print(list); // Shopping list: [apples, milk, bread]
 }
-[end]
+[endcode]
 [trycode] 9375d5f2e5afb0049c2deabf728a2102
-
-[p]
 La interpolación con `$` es más legible y eficiente que la concatenación.
-
-[p]
 Puedes usar `${}` para expresiones más complejas.
 
 [st] Strings multilínea
-
-[c:dart]
+[code:dart]
 void main() {
   // Multiline string with triple quotes
   String poem = '''
@@ -77,15 +64,12 @@ void main() {
   """;
   print(letter);
 }
-[end]
+[endcode]
 [trycode] fb3770f6687957ed296000cfe5a6e483
-
-[p]
 Usa comillas triples `'''` o `"""` para strings que ocupan múltiples líneas.
 
 [st] Métodos útiles de strings
-
-[c:dart]
+[code:dart]
 void main() {
   String text = '  Hello World  ';
   
@@ -97,16 +81,12 @@ void main() {
   print(text.startsWith('  ')); // true
   print(text.endsWith('  ')); // true
 }
-[end]
+[endcode]
 [trycode] 4c4d6995aece9660c1b65839437c4c03
-
-[p]
 `toUpperCase()` y `toLowerCase()` cambian el caso.
 
-[p]
 `trim()` elimina espacios al inicio y final.
 
-[p]
 `contains()`, `startsWith()` y `endsWith()` verifican contenido.
 
 
