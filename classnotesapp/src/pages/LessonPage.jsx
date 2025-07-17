@@ -9,11 +9,6 @@ import TableOfContents from '@/components/lesson/TableOfContents';
 import { useThemeMode } from '@/theme/ThemeContext';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContentSpy } from '@/hooks/useContentSpy';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const LessonPage = forwardRef(({ sections }, ref) => {
   const { lessonId } = useParams();
@@ -24,15 +19,6 @@ const LessonPage = forwardRef(({ sections }, ref) => {
   
   // Use content spy to track active section
   const { activeSection } = useContentSpy(parsedContent.subtitles);
-
-  // Eliminar variables y hooks no usados
-  // const lessonSections = useMemo(() => sections.filter(s => s.type === 'lesson'), [sections]);
-  // const currentIndex = lessonSections.findIndex(l => String(l.id) === String(lessonId));
-  // const prevLesson = currentIndex > 0 ? lessonSections[currentIndex - 1] : null;
-  // const nextLesson = currentIndex < lessonSections.length - 1 ? lessonSections[currentIndex + 1] : null;
-  // const [studiedLessons, setStudiedLessons] = useState(() => { ... });
-  // const isStudied = studiedLessons.includes(lessonId);
-  // const toggleStudied = () => { ... };
 
   const lessonMap = useMemo(() => {
     const map = new Map();
@@ -46,11 +32,6 @@ const LessonPage = forwardRef(({ sections }, ref) => {
 
   useEffect(() => {
     setLoading(true);
-
-    // Guardar el número de lección en localStorage
-    if (lessonId && !isNaN(Number(lessonId))) {
-      localStorage.setItem('lastLesson', lessonId);
-    }
 
     const filePath = lessonMap.get(lessonId);
 
@@ -85,18 +66,39 @@ const LessonPage = forwardRef(({ sections }, ref) => {
     <Box sx={{ 
       display: 'flex', 
       width: '100%', 
-      flexDirection: { xs: 'column', lg: 'row' } 
+      flexDirection: { xs: 'column', lg: 'row' },
+      minWidth: 0 
     }}>
-      <Box sx={{ flex: 1, width: '100%' }}>
+      <Box sx={{ 
+        flex: 1, 
+        right:{lg:220, xs: 10},
+        left:{lg:220, xs: 10},
+        position:'absolute',
+        overflow:'scroll',
+        height:'100vh',
+        bottom:0,
+        zIndex:0, // Asegura que el contenido esté debajo de la sidebar
+        scrollbarWidth: 'none', // Firefox
+        msOverflowStyle: 'none', // IE y Edge
+        '&::-webkit-scrollbar': {
+          display: 'none',      // Chrome, Safari, Opera
+          width: 0,
+          height: 0,
+          background: 'transparent',
+        },
+      }}
+      >
         {parsedContent.elements}
-        {/* Eliminar el Stack de botones de completado y navegación aquí */}
       </Box>
       {/* TOC en desktop */}
       <Box sx={{ 
-        width: { lg: '280px' }, 
+        width: { lg: 235 }, 
         flexShrink: 0, 
         display: { xs: 'none', lg: 'block' },
-        mr: 2 // margen derecho real
+        mr: 2,
+        position:'fixed',
+        right: 0,
+        top: 64,
       }}>
         <TableOfContents 
           subtitles={parsedContent.subtitles} 

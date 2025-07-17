@@ -71,3 +71,15 @@
   white-space: nowrap;
   color: #fff;
 }
+
+/* Ocultar visualmente la barra de scroll en bloques de código y su contenedor */
+.codeblock-pre-hide-scroll {
+  scrollbar-width: none !important;        /* Firefox */
+  -ms-overflow-style: none !important;     /* IE y Edge */
+}
+.codeblock-pre-hide-scroll::-webkit-scrollbar {
+  display: none !important;                /* Chrome, Safari, Opera */
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}

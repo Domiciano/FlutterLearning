@@ -40,8 +40,10 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
 
   const drawerContent = (
     <Box sx={{
-      width: drawerWidth,
-      backgroundColor: theme.background,
+      width: 260,
+      position: 'fixed  ',
+      left:0,
+      zIndex:10,
       height: '100vh',
       overflowY: 'auto',
       scrollbarWidth: 'none', // Firefox
