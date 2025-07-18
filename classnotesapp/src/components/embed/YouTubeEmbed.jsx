@@ -6,10 +6,12 @@ const YouTubeEmbed = ({ videoId, title = "YouTube video" }) => {
     <Box
       sx={{
         position: 'relative',
-        paddingBottom: '66.25%', // 16:9
+        paddingBottom: '38%', // 16:9
         height: 0,
+        marginLeft:10,
+        marginRight:10,
         overflow: 'hidden',
-        borderRadius: 2,
+        borderRadius: 10,
         boxShadow: 3,
         my: 3,
       }}

@@ -1,10 +1,6 @@
 [t] Tipos opcionales y null safety
-
-
 En Dart, los tipos opcionales te permiten manejar valores que pueden ser `null`. El sistema de null safety ayuda a prevenir errores comunes.
-
 [st] Tipos opcionales básicos
-
 [code:dart]
 void main() {
   // Variable that can be null
@@ -21,15 +17,9 @@ void main() {
 }
 [endcode]
 [trycode] f0fd4d9f795c46529176e86bc4287aaf
-
-
-Usa `?` después del tipo para indicar que puede ser null.
-
-
-Sin `?`, la variable nunca puede ser null.
+Usa `?` después del tipo para indicar que puede ser null. Sin `?`, la variable nunca puede ser null.
 
 [st] Verificar si es null
-
 [code:dart]
 void main() {
   String? email = null;
@@ -52,15 +42,9 @@ void main() {
 }
 [endcode]
 [trycode] 66405bd35f0f6d4afe60328ba63e2da9
-
-
-Usa `!= null` para verificar si una variable tiene valor.
-
-
-Solo después de verificar puedes usar la variable sin `?`.
+Usa `!= null` para verificar si una variable tiene valor. Solo después de verificar puedes usar la variable sin `?`.
 
 [st] Operador de acceso seguro (?. )
-
 [code:dart]
 void main() {
   String? text = null;
@@ -76,15 +60,9 @@ void main() {
 }
 [endcode]
 [trycode] 778d63184ff6c07404bdaecf4171b330
-
-
-El operador `?.` accede a propiedades solo si el valor no es null.
-
-
-Si es null, retorna null en lugar de causar error.
+El operador `?.` accede a propiedades solo si el valor no es null. Si es null, retorna null en lugar de causar error.
 
 [st] Operador de coalescencia nula (??)
-
 [code:dart]
 void main() {
   String? name = null;
@@ -103,15 +81,9 @@ void main() {
 }
 [endcode]
 [trycode] cebc63befd4e7eb207bb23b20187e7f2
-
-
-El operador `??` proporciona un valor por defecto si la variable es null.
-
-
-Puedes encadenar múltiples `??` para fallbacks.
+El operador `??` proporciona un valor por defecto si la variable es null. Puedes encadenar múltiples `??` para fallbacks.
 
 [st] Asignación de coalescencia nula (??=)
-
 [code:dart]
 void main() {
   String? name = null;
@@ -130,9 +102,4 @@ void main() {
 }
 [endcode]
 [trycode] 3aee48062336caac7725347bcd0bf2c4
-
-
-El operador `??=` asigna un valor solo si la variable es null.
-
-
-Es útil para inicializar variables opcionales. 
+El operador `??=` asigna un valor solo si la variable es null. Es útil para inicializar variables opcionales. 

@@ -1,10 +1,7 @@
 [t] Clases y objetos en Dart
-
-
 Las clases son plantillas para crear objetos. En Dart, todo es un objeto, y las clases te permiten definir propiedades y comportamientos.
 
 [st] Crear una clase básica
-
 [code:dart]
 void main() {
   // Create an instance of the class
@@ -29,15 +26,9 @@ class Person {
 }
 [endcode]
 [trycode] e930ec503d90ef658887d57ace23df94
-
-
-Las clases definen propiedades (variables) y métodos (funciones).
-
-
-El constructor `Persona(this.nombre, this.edad)` inicializa las propiedades.
+Las clases definen propiedades (variables) y métodos (funciones). El constructor `Persona(this.nombre, this.edad)` inicializa las propiedades.
 
 [st] Getters y setters
-
 [code:dart]
 void main() {
   Product product = Product('Laptop', 1200.0);
@@ -69,18 +60,9 @@ class Product {
 }
 [endcode]
 [trycode] bc1e77ba3975bc12df21b88f17af0ac3
-
-
-Los getters permiten acceder a propiedades calculadas.
-
-
-Los setters permiten validar datos antes de asignarlos.
-
-
-Las propiedades privadas empiezan con `_`.
+Los getters permiten acceder a propiedades calculadas. Los setters permiten validar datos antes de asignarlos. Las propiedades privadas empiezan con `_`.
 
 [st] Herencia
-
 [code:dart]
 void main() {
   Student student = Student('María', 20, 'Engineering');
@@ -124,18 +106,13 @@ class Teacher extends Person {
 }
 [endcode]
 [trycode] 20a0a0bdf3a2f03a8aa519536fe40af2
-
-
+[list]
 `extends` permite heredar de otra clase.
-
-
 `super()` llama al constructor de la clase padre.
-
-
+[endlist]
 Cada clase puede tener métodos específicos.
 
 [st] Constructores nombrados
-
 [code:dart]
 void main() {
   // Default constructor
@@ -176,9 +153,4 @@ class Vehicle {
 }
 [endcode]
 [trycode] 85b89338cd1dec1644ef3814e11d0525
-
-
-Los constructores nombrados permiten diferentes formas de crear objetos.
-
-
-Son útiles para casos de uso específicos con diferentes parámetros. 
+Los constructores nombrados permiten diferentes formas de crear objetos. Son útiles para casos de uso específicos con diferentes parámetros. 

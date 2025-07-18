@@ -1,5 +1,5 @@
 // components/Layout.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -28,6 +28,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
   const location = useLocation();
   const { theme } = useThemeMode();
   const { studiedLessons, toggleStudied } = useStudiedLessons();
+  const selectedLessonRef = useRef(null);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -78,6 +79,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                 component={Link}
                 to={`/lesson/${sec.id}`}
                 selected={isSelected}
+                ref={isSelected ? selectedLessonRef : null}
                 sx={{
                   m:1,
                   color: theme.drawerSection,
@@ -120,6 +122,12 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
       <Box sx={{ height: 100 }} /> {/* Espacio de relleno al final */}
     </Box>
   );
+
+  useEffect(() => {
+    if (selectedLessonRef.current) {
+      selectedLessonRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+  }, [location.pathname]);
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>

@@ -1,60 +1,44 @@
-[t] Instalación de Supabase (Self-hosted)
-En esta lección aprenderás a instalar Supabase en modo self-hosted usando Docker Compose. Esto te permitirá tener una instancia local de Supabase con base de datos, autenticación, almacenamiento y la interfaz web Studio.
+[t] Tu primera app Flutter
+En esta lección aprenderás a crear tu primer proyecto Flutter desde cero usando el comando `flutter create` y a entender la estructura básica del proyecto.
+[v] 44JrbFEeMrE
 
-[st] Pasos para la instalación
+[st] Crear el proyecto con flutter create
+Para crear tu primer proyecto, abre una terminal en la carpeta donde quieras guardar tus proyectos y ejecuta:
 
 [code:shell]
-# Clona el repositorio oficial de Supabase
-git clone --depth 1 https://github.com/supabase/supabase
-
-# Crea un directorio para tu proyecto Supabase
-mkdir supabase-project
-
-# Copia los archivos de Docker al nuevo proyecto
-cp -rf supabase/docker/* supabase-project
-
-# Copia las variables de entorno de ejemplo
-cp supabase/docker/.env.example supabase-project/.env
-
-# Entra al directorio de tu proyecto
-cd supabase-project
-
-# Descarga las imágenes más recientes
-docker compose pull
-
-# Inicia los servicios en segundo plano
-docker compose up -d
+flutter create -org com.tuempresa mi_primera_app
 [endcode]
 
-
-¡Listo! Ahora tienes Supabase corriendo localmente en modo self-hosted.
-
-[st] Acceso a la interfaz web (Studio)
-
-
-Puedes ingresar a la interfaz web de Supabase en:
-
-[link] http://localhost:8000 http://localhost:8000
-
-
-Credenciales por defecto:
-
-Usuario: `supabase`
-Contraseña: `this_password_is_insecure_and_should_be_updated`
-
-
-Nota: Por seguridad, cambia la contraseña en producción.
-
-[st] Acceso a las APIs
-
-Cada una de las APIs está disponible a través del mismo API gateway:
+Este comando crea una nueva app Flutter en la carpeta `mi_primera_app` y configura el identificador de paquete (package name) con el dominio de tu organización (`com.tuempresa`).
 [list]
-REST:     `http://<your-ip>:8000/rest/v1/` 
-Auth:     `http://<your-domain>:8000/auth/v1/` 
-Storage:  `http://<your-domain>:8000/storage/v1/`
-Realtime: `http://<your-domain>:8000/realtime/v1/`
+Cambia `com.tuempresa` por el dominio de tu organización o tu nombre invertido (ejemplo: `com.ejemplo`).
+Cambia `mi_primera_app` por el nombre que quieras para tu proyecto.
+El nombre del proyecto y la carpeta debe estar en minúsculas y usar guión bajo para separar palabras (snake_case). Ejemplo: `first_app` o `mi_primera_app`.
 [endlist]
 
+[st] Path del proyecto
+Por nada del mundo permitas que el path de tu proyecto tenga non-ASCII characters o espacios. El nombre del proyecto debe ir en minúsculas usando `snake_case`
 
-Reemplaza `<your-ip>` o `<your-domain>` por la dirección de tu máquina o servidor donde esté corriendo Supabase. 
+[st] Abrir el proyecto en Visual Studio Code
+Abre Visual Studio Code y selecciona la carpeta de tu nuevo proyecto para comenzar a trabajar en él.
+[list]
+Ve a "File > Open Folder" y selecciona la carpeta creada.
+Confirma que confías en los archivos del proyecto.
+No te preocupes si ves muchas carpetas y archivos, lo importante es la carpeta `lib` donde está el código principal.
+[endlist]
 
+[st] Estructura del proyecto Flutter
+El proyecto generado tiene varias carpetas
+[list]
+`android` y `ios`: aquí puedes editar configuraciones específicas de cada plataforma, como permisos o integraciones nativas.
+`lib`: aquí va el código principal de tu app (por defecto, el archivo `main.dart`).
+`linux`, `web`, `windows`: carpetas para soporte multiplataforma (enfoque principal: Android/iOS).
+[endlist]
+
+[st] El archivo pubspec.yaml
+El archivo `pubspec.yaml` es donde se gestionan las dependencias de tu proyecto Flutter, similar a `package.json` en Node.js.
+[list]
+Aquí puedes añadir paquetes y plugins que tu app necesite.
+Cada vez que modifiques este archivo, ejecuta `flutter pub get` para instalar las dependencias.
+¡Listo! Ahora tienes tu primer proyecto Flutter creado, abierto en VS Code y listo para comenzar a desarrollar. 
+[endlist]

@@ -1,5 +1,6 @@
 [t] Instalación de Flutter
 En esta lección aprenderás a instalar Flutter en tu sistema operativo (Windows, macOS o Linux) y a dejarlo listo para comenzar a desarrollar aplicaciones móviles.
+[v] dUMqg_JQsEc
 
 [st] Descargar Flutter
 Para comenzar, ve a la página oficial de instalación de Flutter en [link] (la página oficial de instalación de Flutter) https://docs.flutter.dev/get-started/install

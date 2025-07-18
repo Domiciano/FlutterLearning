@@ -1,10 +1,6 @@
 [t] Listas y mapas
-
-
 Las listas y mapas son estructuras de datos fundamentales en Dart. Aprenderás a crearlas y recorrerlas de diferentes formas.
-
 [st] Listas (Arrays)
-
 [code:dart]
 void main() {
   // Create a list
@@ -20,15 +16,9 @@ void main() {
 }
 [endcode]
 [trycode] 861f536e05b1f549f3477bbec1af1296
-
-
 Las listas almacenan elementos ordenados y accesibles por índice.
-
-
 Usa `add()` para un elemento y `addAll()` para múltiples.
-
 [st] Recorrer listas con for
-
 [code:dart]
 void main() {
   List<int> numbers = [1, 2, 3, 4, 5];
@@ -50,18 +40,12 @@ void main() {
 }
 [endcode]
 [trycode] b35f2f1791d67b9d6dd65360f8cdf620
-
-
+[list]
 El `for` tradicional te da control del índice.
-
-
 El `for-in` es más simple para recorrer valores.
-
-
 `forEach()` ejecuta una función para cada elemento.
-
+[endlist]
 [st] Mapas (Dictionaries)
-
 [code:dart]
 void main() {
   // Create a map
@@ -80,15 +64,8 @@ void main() {
 }
 [endcode]
 [trycode] ed87a5e54b7b469aa862ec9b4bb7ed36
-
-
-Los mapas almacenan pares clave-valor.
-
-
-Accede a valores usando la clave como índice.
-
+Los mapas almacenan pares clave-valor. Accede a valores usando la clave como índice.
 [st] Recorrer mapas
-
 [code:dart]
 void main() {
   Map<String, String> countries = {
@@ -114,18 +91,13 @@ void main() {
 }
 [endcode]
 [trycode] 6d5ee941076ea161b3880ac8ef888664
-
-
+[list]
 Usa `.keys` para recorrer solo las claves.
-
-
 Usa `.values` para recorrer solo los valores.
-
-
 `forEach()` te da acceso a clave y valor.
+[endlist]
 
 [st] Métodos funcionales: map y filter
-
 [code:dart]
 void main() {
   List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -147,12 +119,8 @@ void main() {
 }
 [endcode]
 [trycode] 81d33660c5e44ead08be3a817cc33122
-
-
+[list]
 `map()` transforma cada elemento de la lista.
-
-
 `where()` (filter) selecciona elementos que cumplan una condición.
-
-
 Puedes encadenar estos métodos para operaciones complejas. 
+[endlist]
