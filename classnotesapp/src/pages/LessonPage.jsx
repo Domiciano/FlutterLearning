@@ -73,9 +73,11 @@ const LessonPage = forwardRef(({ sections }, ref) => {
         flex: 1, 
         right:{lg:220, xs: 10},
         left:{lg:220, xs: 10},
+        botom:0,
+        top:{lg:0, xs: 20},
         position:'absolute',
         overflow:'scroll',
-        height:'100vh',
+        
         bottom:0,
         zIndex:0, // Asegura que el contenido esté debajo de la sidebar
         scrollbarWidth: 'none', // Firefox

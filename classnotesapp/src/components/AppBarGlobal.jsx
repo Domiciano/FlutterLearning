@@ -16,7 +16,7 @@ import { useTheme as useMuiTheme } from '@mui/material/styles';
 const AppBarGlobal = ({ onOpenMobileToc, onOpenMobileNav }) => {
   const { mode, toggleTheme, theme } = useThemeMode();
   const muiTheme = useMuiTheme();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down('lg'));
 
   return (
     <AppBar

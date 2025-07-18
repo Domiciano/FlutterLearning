@@ -23,7 +23,7 @@ const drawerWidth = 240;
 
 const Layout = ({ children, sections = [], onOpenMobileNav }) => {
   const muiTheme = useTheme();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("lg"));
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { theme } = useThemeMode();

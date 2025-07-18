@@ -17,16 +17,16 @@ const markdownFile = process.argv[2];
 const markdown = fs.readFileSync(markdownFile, 'utf8');
 const baseName = path.basename(markdownFile, path.extname(markdownFile));
 
-// Extrae todos los bloques [c:dart] ... [end]
+// Extrae todos los bloques [code:dart] ... [endcode]
 const codeBlocks = [];
-const regex = /\[c:dart\]([\s\S]*?)\[end\]/g;
+const regex = /\[code:dart\]([\s\S]*?)\[endcode\]/g;
 let match;
 while ((match = regex.exec(markdown)) !== null) {
   codeBlocks.push(match[1].trim());
 }
 
 if (codeBlocks.length === 0) {
-  console.log('No se encontraron bloques [c:dart] en el archivo.');
+  console.log('No se encontraron bloques [code:dart] en el archivo.');
   process.exit(0);
 }
 
@@ -132,7 +132,7 @@ async function createOrUpdateGist(filename, code, description, gists) {
   const newLines = [];
   while (i < lines.length) {
     newLines.push(lines[i]);
-    if (lines[i].trim() === '[end]' && blockIndex < gistIds.length) {
+    if (lines[i].trim() === '[endcode]' && blockIndex < gistIds.length) {
       // Si la siguiente línea es [trycode] ... o [dartpad] ... la reemplazamos
       if (lines[i + 1] && (lines[i + 1].trim().startsWith('[trycode]') || lines[i + 1].trim().startsWith('[dartpad]'))) {
         newLines.push(`[trycode] ${gistIds[blockIndex]}`);
