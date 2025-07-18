@@ -12,77 +12,61 @@ const TryCodeButton = ({ gistId, code, language }) => {
   
   return (
     <Box sx={{ my: 2 }}>
-      {/* Pestañas */}
-      <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 0 }}>
+      {/* Botones tipo toggle, no pestañas */}
+      <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
         <Button
-          variant={!showDartPad ? 'contained' : 'text'}
           onClick={() => setShowDartPad(false)}
           sx={{
-            borderRadius: '8px 8px 0 0',
-            borderBottom: !showDartPad ? 'none' : '1px solid',
-            borderColor: 'divider',
-            minWidth: 'auto',
+            borderRadius: 2,
             px: 2,
-            py: 1,
-            fontSize: '0.875rem',
+            py: 0.7,
+            fontSize: '0.95rem',
             fontWeight: 600,
-            backgroundColor: !showDartPad ? 'primary.main' : 'transparent',
-            color: !showDartPad ? 'white' : theme.textSecondary,
+            backgroundColor: !showDartPad ? theme.accent : 'transparent',
+            color: !showDartPad ? '#fff' : theme.textSecondary,
+            border: !showDartPad ? 'none' : `1px solid ${theme.border}`,
             boxShadow: 'none',
             outline: 'none',
-            '&:focus': {
-              outline: 'none',
-              boxShadow: 'none',
-            },
-            '&:focus-visible': {
-              outline: 'none',
-              boxShadow: 'none',
-            },
+            minWidth: 0,
+            transition: 'all 0.18s',
             '&:hover': {
-              backgroundColor: !showDartPad ? 'primary.dark' : 'action.hover',
-            }
+              backgroundColor: !showDartPad ? theme.accent : theme.backgroundLight,
+              color: !showDartPad ? '#fff' : theme.textPrimary,
+              border: `1px solid ${theme.accent}`,
+            },
           }}
         >
           Código
         </Button>
         <Button
-          variant={showDartPad ? 'contained' : 'text'}
           onClick={() => setShowDartPad(true)}
           sx={{
-            borderRadius: '8px 8px 0 0',
-            borderBottom: showDartPad ? 'none' : '1px solid',
-            borderColor: 'divider',
-            minWidth: 'auto',
+            borderRadius: 2,
             px: 2,
-            py: 1,
-            fontSize: '0.875rem',
+            py: 0.7,
+            fontSize: '0.95rem',
             fontWeight: 600,
-            backgroundColor: showDartPad ? 'primary.main' : 'transparent',
-            color: showDartPad ? 'white' : theme.textSecondary,
+            backgroundColor: showDartPad ? theme.accent : 'transparent',
+            color: showDartPad ? '#fff' : theme.textSecondary,
+            border: showDartPad ? 'none' : `1px solid ${theme.border}`,
             boxShadow: 'none',
             outline: 'none',
-            '&:focus': {
-              outline: 'none',
-              boxShadow: 'none',
-            },
-            '&:focus-visible': {
-              outline: 'none',
-              boxShadow: 'none',
-            },
+            minWidth: 0,
+            transition: 'all 0.18s',
             '&:hover': {
-              backgroundColor: showDartPad ? 'primary.dark' : 'action.hover',
-            }
+              backgroundColor: showDartPad ? theme.accent : theme.backgroundLight,
+              color: showDartPad ? '#fff' : theme.textPrimary,
+              border: `1px solid ${theme.accent}`,
+            },
           }}
         >
           Fire it up!
         </Button>
       </Box>
-      {/* Contenido de las pestañas */}
+      {/* Contenido de los botones */}
       <Box sx={{ 
-        border: 1, 
-        borderColor: 'divider', 
-        borderTop: 'none',
-        borderRadius: '0 0 8px 8px',
+        border: 'none',
+        borderRadius: 2,
         overflow: 'hidden',
         mt: 0,
         p: 0
