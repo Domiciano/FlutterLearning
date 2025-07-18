@@ -71,8 +71,8 @@ const LessonPage = forwardRef(({ sections }, ref) => {
     }}>
       <Box sx={{ 
         flex: 1, 
-        right:{lg:220, xs: 10},
-        left:{lg:220, xs: 10},
+        right:{lg:280, xs: 10},
+        left:{lg:280, xs: 10},
         botom:0,
         top:{lg:0, xs: 20},
         position:'absolute',

@@ -15,6 +15,5 @@
 [lesson] lesson13.md
 [t] Flutter 
 [lesson] lesson14.md
-
 [t] Supabase 
 [lesson] lesson15.md

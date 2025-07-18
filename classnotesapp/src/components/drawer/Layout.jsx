@@ -157,7 +157,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
           sx={{
             [`& .MuiDrawer-paper`]: {
               width: "85%",
-              maxWidth: drawerWidth,
+              maxWidth: 260,
               backgroundColor: theme.background,
               color: theme.textPrimary,
               borderRight: `1px solid ${theme.border}`,

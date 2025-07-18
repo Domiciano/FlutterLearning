@@ -9,7 +9,7 @@ const LessonParagraph = ({ children }) => {
     <Typography
       sx={{
         color: theme.textPrimary,
-        fontSize: { xs: '1rem', md: '1.1rem' },
+        fontSize: { xs: '1.05rem', md: '1.18rem' },
         lineHeight: 1.7,
         fontFamily: 'Roboto, Arial, sans-serif',
       }}
