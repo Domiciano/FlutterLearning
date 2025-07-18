@@ -3,7 +3,7 @@ En esta lección aprenderás a instalar Supabase en modo self-hosted usando Dock
 
 [st] Pasos para la instalación
 
-[code:shell]
+[code:bash]
 # Clona el repositorio oficial de Supabase
 git clone --depth 1 https://github.com/supabase/supabase
 
@@ -39,7 +39,7 @@ Puedes ingresar a la interfaz web de Supabase en:
 
 Credenciales por defecto:
 Usuario: 
-`supabase`
+`supabase`  
 Contraseña: 
 `this_password_is_insecure_and_should_be_updated`
 

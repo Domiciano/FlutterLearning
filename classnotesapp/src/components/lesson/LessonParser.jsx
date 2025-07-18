@@ -12,6 +12,7 @@ import Link from "@/components/lesson/Link";
 import images from "@/assets";
 import TryCodeButton from './TryCodeButton';
 import Typography from "@mui/material/Typography";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const LessonParser = ({ content }) => {
   // Eliminar líneas en blanco al final para asegurar flush correcto
@@ -180,7 +181,7 @@ const LessonParser = ({ content }) => {
     if (trimmedLine === '[endlist]') {
       parsingList = false;
       elements.push(
-        <ul key={`list-${i}`} style={{ margin: '0px 0 0px 4px', ...listTextStyle }}>
+        <ul key={`list-${i}`} style={{ margin: '0px 0px 0px 24px', padding: '0px', width: '100%', ...listTextStyle }}>
           {listItems}
         </ul>
       );
@@ -193,21 +194,13 @@ const LessonParser = ({ content }) => {
       // Cada línea no vacía dentro de la lista es un item
       if (trimmedLine !== "") {
         listItems.push(
-          <li key={`li-${i}`} style={{ padding:0, margin: '0px 0', listStyle: 'none', display: 'flex', alignItems: 'baseline' }}>
-            <span style={{
-              display: 'inline-block',
-              width: 4,
-              height: '1em',
-              background: '#fff',
-              borderRadius: 0,
-              marginRight: 12,
-              marginLeft: 2,
-              verticalAlign: 'middle',
-              marginTop: 0,
-            }} />
+          <li key={`li-${i}`} style={{ margin: 0, padding: 0, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CheckCircleOutlineIcon sx={{ fontSize: 15, color: '#b0b4ba', mr: 1, alignSelf: 'flex-start', mt: '4px' }} />
             <Typography
+              component="span"
               sx={{
                 p:0,
+                m:0,
                 color: 'inherit',
                 fontSize: { xs: '1rem', md: '1.1rem' },
                 lineHeight: 'calc(1.7em)',
