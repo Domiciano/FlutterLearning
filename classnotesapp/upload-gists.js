@@ -25,6 +25,16 @@ while ((match = regex.exec(markdown)) !== null) {
   codeBlocks.push(match[1].trim());
 }
 
+// Log de depuración: cantidad y contenido de bloques encontrados
+console.log('Bloques [code:dart] encontrados:', codeBlocks.length);
+codeBlocks.forEach((block, idx) => {
+  console.log(`--- Bloque ${idx + 1} ---\n${block}\n--- Fin bloque ${idx + 1} ---`);
+});
+
+// Contar [endcode] en el archivo
+const endcodeCount = (markdown.match(/\[endcode\]/g) || []).length;
+console.log('Cantidad de [endcode] en el archivo:', endcodeCount);
+
 if (codeBlocks.length === 0) {
   console.log('No se encontraron bloques [code:dart] en el archivo.');
   process.exit(0);
@@ -145,6 +155,10 @@ async function createOrUpdateGist(filename, code, description, gists) {
     } else {
       i++;
     }
+  }
+  // Si el último bloque termina justo en [endcode] y no se insertó el último [trycode]
+  if (blockIndex < gistIds.length) {
+    newLines.push(`[trycode] ${gistIds[blockIndex]}`);
   }
   fs.writeFileSync(markdownFile, newLines.join('\n'), 'utf8');
   console.log('Archivo markdown actualizado con los IDs de gist usando [trycode].');

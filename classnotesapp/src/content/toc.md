@@ -20,5 +20,9 @@
 [lesson] lesson17.md
 [t] UI
 [lesson] lesson18.md
+[lesson] lesson19.md
+[lesson] lesson20.md
+[lesson] lesson21.md
+[lesson] lesson22.md
 [t] Supabase 
 [lesson] lessonX5.md
