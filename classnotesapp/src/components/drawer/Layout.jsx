@@ -18,6 +18,7 @@ import { useThemeMode } from '@/theme/ThemeContext';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useStudiedLessons } from '@/theme/StudiedLessonsContext';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 // Utilidad para persistir el estado de colapso de cada sección en localStorage
 const LS_SECTIONS_COLLAPSED = 'flutter_sidebar_sections_collapsed';
@@ -115,9 +116,22 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                     mb: '2px',
                     cursor: 'pointer',
                     userSelect: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.2,
                   }}
                   onClick={() => setSectionsCollapsed(prev => ({ ...prev, [group.normalized]: !prev[group.normalized] }))}
                 >
+                  <ChevronRightIcon
+                    sx={{
+                      fontSize: 18,
+                      color: theme.drawerTitle,
+                      transition: 'transform 0.18s',
+                      transform: sectionsCollapsed[group.normalized] ? 'rotate(0deg)' : 'rotate(90deg)',
+                      opacity: 0.7,
+                      mr: 0.5,
+                    }}
+                  />
                   {group.title}
                 </Box>
               )}
