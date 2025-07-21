@@ -24,5 +24,5 @@
 [lesson] lesson20.md
 [lesson] lesson21.md
 [lesson] lesson22.md
-[t] Supabase 
+[t] Supabase
 [lesson] lessonX5.md

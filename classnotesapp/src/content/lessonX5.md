@@ -1,4 +1,4 @@
-[t] Instalación de Supabase (Self-hosted)
+[t] Instalación de Supabase
 En esta lección aprenderás a instalar Supabase en modo self-hosted usando Docker Compose. Esto te permitirá tener una instancia local de Supabase con base de datos, autenticación, almacenamiento y la interfaz web Studio.
 
 [st] Pasos para la instalación
@@ -50,10 +50,10 @@ Nota: Por seguridad, cambia la contraseña en producción.
 
 Cada una de las APIs está disponible a través del mismo API gateway:
 [list]
-REST:     `http://<your-ip>:8000/rest/v1/` 
-Auth:     `http://<your-domain>:8000/auth/v1/` 
-Storage:  `http://<your-domain>:8000/storage/v1/`
-Realtime: `http://<your-domain>:8000/realtime/v1/`
+REST:     http://`<your-ip>`:`8000` `/rest/v1/` 
+Auth:     http://`<your-domain>`:`8000` `/auth/v1/` 
+Storage:  http://`<your-domain>`:`8000` `/storage/v1/`
+Realtime: http://`<your-domain>`:`8000` `/realtime/v1/`
 [endlist]
 
 
