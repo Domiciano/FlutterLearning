@@ -181,7 +181,7 @@ const LessonParser = ({ content }) => {
     if (trimmedLine === '[endlist]') {
       parsingList = false;
       elements.push(
-        <ul key={`list-${i}`} style={{ margin: '0px 0px 0px 24px', padding: '0px', width: '100%', ...listTextStyle }}>
+        <ul key={`list-${i}`} style={{ margin: '0px 0px 0px 24px', padding: '0px', width: 'auto', boxSizing: 'border-box', ...listTextStyle }}>
           {listItems}
         </ul>
       );
