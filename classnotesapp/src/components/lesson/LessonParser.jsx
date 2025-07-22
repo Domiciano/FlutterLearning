@@ -193,7 +193,7 @@ const LessonParser = ({ content }) => {
     if (parsingList) {
       // Cada línea no vacía dentro de la lista es un item
       if (trimmedLine !== "") {
-        listItems.push(
+      listItems.push(
           <li key={`li-${i}`} style={{ margin: 0, padding: 0, display: 'flex', alignItems: 'center', gap: 1 }}>
             <CheckCircleOutlineIcon sx={{ fontSize: 15, color: '#b0b4ba', mr: 1, alignSelf: 'flex-start', mt: '4px' }} />
             <Typography
@@ -209,9 +209,9 @@ const LessonParser = ({ content }) => {
             >
               {parseInlineLinks(parseInlineCode(trimmedLine))}
             </Typography>
-          </li>
-        );
-      }
+        </li>
+      );
+    }
       continue;
     }
 
@@ -355,8 +355,8 @@ const LessonParser = ({ content }) => {
         codeLang = "";
         continue;
       } else {
-        codeBuffer += rawLine + "\n";
-        continue;
+      codeBuffer += rawLine + "\n";
+      continue;
       }
     }
 
@@ -374,7 +374,7 @@ const LessonParser = ({ content }) => {
           />
         );
         pendingCodeBlock = null;
-        continue;
+      continue;
       }
     }
 

@@ -65,7 +65,7 @@ flutter doctor
 `flutter doctor` te indicará si necesitas instalar Android Studio, Xcode (en Mac), o aceptar licencias. Sigue las instrucciones que aparecen en la terminal.
 
 [st] Instalar Android Studio y Xcode (si aplica)
-Descarga e instala Android Studio desde [link] Android Studio https://developer.android.com/studio
+Descarga e instala Android Studio desde [link] (Android Studio) https://developer.android.com/studio
 
 Abre Android Studio al menos una vez y crea un proyecto para que se configuren las herramientas.
 
