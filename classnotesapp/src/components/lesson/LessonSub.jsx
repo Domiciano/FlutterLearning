@@ -4,6 +4,7 @@ import { useThemeMode } from '@/theme/ThemeContext';
 
 const LessonSub = ({ children, id }) => {
   const { theme } = useThemeMode();
+  console.log('LessonSub rendering with ID:', id);
   return (
     <Typography
       id={id}

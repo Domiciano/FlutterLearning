@@ -60,7 +60,7 @@ const LessonParser = ({ content }) => {
     if (buffer.trim() !== "") {
       elements.push(
         <LessonParagraph key={`p-${key}`}>
-          {parseInlineLinks(parseInlineCode(buffer.trim()))}
+          {parseInlineLinks(parseInlineCode(buffer))}
         </LessonParagraph>
       );
     }

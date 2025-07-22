@@ -64,12 +64,13 @@
 }
 
 .inline-code {
-  background-color: #2196F3;
-  border-radius: 6px;
-  font-family: 'Fira Code', 'Roboto Mono', monospace;
-  padding: 0.15em 0.4em;
-  white-space: nowrap;
-  color: #fff;
+  background-color: #2196F3;                                                                                       
+  border-radius: 6px;                                                                                              
+  font-family: 'Fira Code', 'Roboto Mono', monospace;                                                              
+  padding: 0.15em 0.4em;                                                                                           
+  white-space: pre-wrap;
+  color: #fff; 
+
 }
 
 /* Ocultar visualmente la barra de scroll en bloques de código y su contenedor */

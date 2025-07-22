@@ -5,12 +5,10 @@ Nombre de la asignatura: Aplicaciones móviles
 Código de la asignatura: 09738 - TIC
 Periodo Académico: 202520
 Nrc: 10193
-Grupo: 001
-Programas/Semestres: TEL 06
 Intensidad horaria: 4
 Intensidad Semanal: 3
 Créditos: 3
-Docente(s): Domiciano Rincón Niño
+Docente: Domiciano Rincón Niño
 [endlist]
 
 [st] Introducción o presentación general del curso
@@ -18,9 +16,9 @@ Este curso brinda a los estudiantes la oportunidad de experimentar un entorno mu
 
 [st] Formación en competencias
 [list]
-SO-1. Solución de problemas: Identificar, formular y resolver problemas complejos de ingeniería aplicando pensamiento crítico y principios de las ciencias, las matemáticas, la ingeniería y, en particular, de las Ciencias de la Computación y de la Ingeniería de Software.
-SO-3. Comunicación efectiva: Comunicarse efectivamente de forma oral y escrita, tanto en español como en inglés.
-SO-5. Trabajar de manera efectiva en equipos, cuyos miembros brinden liderazgo de manera colectiva, creen entornos colaborativos e inclusivos, establezcan metas, planifiquen tareas y logren objetivos, mientras se adaptan a situaciones cambiantes.
+`SO1` Solución de problemas: Identificar, formular y resolver problemas complejos de ingeniería aplicando pensamiento crítico y principios de las ciencias, las matemáticas, la ingeniería y, en particular, de las Ciencias de la Computación y de la Ingeniería de Software.
+`SO3` Comunicación efectiva: Comunicarse efectivamente de forma oral y escrita, tanto en español como en inglés.
+`SO5` Trabajar de manera efectiva en equipos, cuyos miembros brinden liderazgo de manera colectiva, creen entornos colaborativos e inclusivos, establezcan metas, planifiquen tareas y logren objetivos, mientras se adaptan a situaciones cambiantes.
 [endlist]
 
 [st] Objetivo general de aprendizaje
@@ -28,18 +26,18 @@ Desarrollar y aplicar habilidades del diseño, construcción, arquitectura y des
 
 [st] Unidades de aprendizaje
 
-Unidad 1 - Fundamentos de programación en Android
+`Unidad 1` Fundamentos de programación para aplicaciones móviles
 [list]
 Introducción al curso de Aplicaciones Móviles
 Instalación y familiarización con el entorno de desarrollo
 Uso del modo de depuración del IDE para identificar y solucionar errores de ejecución
 Uso de logs para rastrear y registrar errores durante la ejecución de la aplicación
 Estructura de una aplicación móvil y sus componentes principales
-Diseño de la interfaz de usuario en Android
+Diseño de la interfaz de usuario para aplicaciones móviles
 Uso de actividades, fragmentos, persistencia y bases de datos en una aplicación
 [endlist]
 
-Unidad 2 - Diseño, Ideación y Prototipado
+`Unidad 2` Diseño, Ideación y Prototipado
 [list]
 Estilos de navegación y técnicas de prototipado en el diseño de aplicaciones móviles
 Uso de herramientas como Sketch, Wireframe y Mockup para el diseño de interfaces
@@ -47,7 +45,7 @@ Creación de prototipos no funcionales para visualizar y validar la experiencia 
 Diseño de la experiencia móvil teniendo en cuenta aspectos multidisciplinarios
 [endlist]
 
-Unidad 3 - Arquitectura de las Aplicaciones Móviles
+`Unidad 3` Arquitectura de las Aplicaciones Móviles
 [list]
 Exploración de la arquitectura de soluciones móviles.
 Uso del patrón de arquitectura de software MVVM en el desarrollo de aplicaciones móviles.
@@ -57,7 +55,7 @@ Integración de servicios Cloud utilizando Firebase.
 Consumo de Web Services REST y depuración de solicitudes, respuestas y deserialización de datos.
 [endlist]
 
-Unidad 4 - Construcción y Despliegue
+`Unidad 4` Construcción y Despliegue
 [list]
 Desarrollo de un Producto Mínimo Viable (MVP) en el proceso de construcción de una aplicación móvil
 Fase de lanzamiento de aplicaciones, considerando aspectos como pruebas, ajustes finales y optimización del rendimiento
@@ -72,22 +70,39 @@ La asistencia es esencial.
 El uso de la IA en este curso se define como Uso Colaborativo, lo que implica que la IA participa en la co-creación del aprendizaje junto con el estudiante, respaldada por un proceso de verificación y supervisión activa.
 
 [st] Evaluación de aprendizajes
-[list]
-DB: `15%    `
-EXPO: 15%
-Pitch: 10%
-Proto: 15%
-SPRINT 1: 15%
-SPRINT 2: 15%
-SPRINT 3: 15%
-[endlist]
+
+Pitch
+`10%    ` 
+Un pitch elevator junto con su grupo en el que proponga sus ideas de proyecto final
+
+DB
+`15%      ` 
+Modelo de la base de datos que deberá presentar mediante diagramas
+
+Proto
+`15%      `
+Prototipo no funcional de alta fidelidad que debe mostrar preliminarmente las funciones de la aplicación. Adicionalmente debe declarar todo los módulos de la aplicación.
+
+Sprint 1
+`15%      `
+De acuerdo al backlog, deberá resolver el módulo de autenticación y autorización de la aplicación. Tenga en cuenta que pueden haber varios roles. Algunas aplicaciones pueden tener un proceso de onboarding más complejo en una app o en otra
+
+Sprint 2
+`15%      `
+De acuerdo al backlog, deberá escoger qué módulos de la aplicación incluirá en el segundo sprint. Esa declaración debe ser presentada en moodle como Kick off del sprint 2.
+
+Sprint 3
+`15%      `
+De acuerdo al backlog, deberá escoger qué módulos de la aplicación incluirá en el segundo sprint. Esa declaración debe ser presentada en moodle como Kick off del sprint 3.
+
+Exhibición
+`15%      `
+La actividad final del curso es exponer su aplicación en una exibición de las funcionalidades alcanzadas
 
 [st] Recursos de apoyo
 No es necesario comprar ningún libro para el curso. Todo el material necesario para el curso será suministrado a través de Intu, como los materiales bibliográficos, guías de clases, videos, blogs, cursos en línea y otros.
 
 [st] Enlaces y herramientas relevantes
-[link](Documentación oficial de Android) https://developer.android.com/
-
-[link](Documentación oficial de Firebase) https://firebase.google.com/docs/android
+[link](Documentación oficial de Flutter) https://docs.flutter.dev/get-started/install
 
 [link](Aplicaciones móviles ICESI) https://miro.com/app/board/o9J_I2waJG0=/

@@ -15,18 +15,26 @@
 [lesson] lessonB3.md
 [lesson] lessonB4.md
 [lesson] lessonB5.md
-[t] Flutter 
+[lesson] lessonB6.md
+[t] Flutter · SEMANA 1
 [lesson] lessonC1.md
 [lesson] lessonC2.md
 [lesson] lessonC3.md
 [lesson] lessonC4.md
-[t] User Interface
+[t] UI · SEMANA 1
 [lesson] lessonD1.md
 [lesson] lessonD2.md
 [lesson] lessonD3.md
-[lesson] lessonD4.md
-[lesson] lessonD5.md
+[t] Widgets básicos · SEMANA 1
+[lesson] lessonD4A.md
+[lesson] lessonD4B.md
+[lesson] lessonD4C.md
+[lesson] lessonD4D.md
+[lesson] lessonD4E.md
+[t] UI Extras
+[lesson] lessonD6.md
 [t] Navegación
 [lesson] lessonE1.md
+[lesson] lessonE2.md
 [t] Supabase
 [lesson] lessonX5.md

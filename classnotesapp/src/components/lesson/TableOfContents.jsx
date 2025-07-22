@@ -23,7 +23,7 @@ const createSlug = (text) => {
     .trim('-'); // Remueve guiones al inicio y final
 };
 
-const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '', lessonId }) => {
+const TableOfContents = ({ subtitles = [], lessonTitle, activeSections = [], lessonId }) => {
   const { theme } = useThemeMode();
 
   // Estado de lecciones estudiadas
@@ -97,14 +97,14 @@ const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '', less
                 borderRadius: 1,
                 py: 0.5,
                 px: 1,
-                backgroundColor: activeSection === subtitle.id
+                backgroundColor: activeSections.includes(subtitle.id)
                   ? 'rgba(66, 165, 245, 0.15)' // accent con opacidad
                   : 'transparent',
-                border: activeSection === subtitle.id
+                border: activeSections.includes(subtitle.id)
                   ? `1px solid ${theme.accent}`
                   : '1px solid transparent',
                 '&:hover': {
-                  backgroundColor: activeSection === subtitle.id
+                  backgroundColor: activeSections.includes(subtitle.id)
                     ? 'rgba(66, 165, 245, 0.22)'
                     : 'rgba(66, 165, 245, 0.08)',
                 },
@@ -116,11 +116,11 @@ const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '', less
                   <Typography
                     variant="body2"
                     sx={{
-                      color: activeSection === subtitle.id
+                      color: activeSections.includes(subtitle.id)
                         ? theme.primaryTitle
                         : theme.textSecondary,
                       fontSize: '0.875rem',
-                      fontWeight: activeSection === subtitle.id ? 600 : 400,
+                      fontWeight: activeSections.includes(subtitle.id) ? 600 : 400,
                       lineHeight: 1.3,
                       transition: 'all 0.2s ease-in-out',
                     }}

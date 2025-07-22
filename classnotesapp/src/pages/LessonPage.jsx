@@ -17,8 +17,8 @@ const LessonPage = forwardRef(({ sections }, ref) => {
   const [showMobileToc, setShowMobileToc] = useState(false);
   const { theme } = useThemeMode();
   
-  // Use content spy to track active section
-  const { activeSection } = useContentSpy(parsedContent.subtitles);
+  // Use content spy to track active sections
+  const { activeSections } = useContentSpy(parsedContent.subtitles);
 
   const lessonMap = useMemo(() => {
     const map = new Map();
@@ -105,7 +105,7 @@ const LessonPage = forwardRef(({ sections }, ref) => {
         <TableOfContents 
           subtitles={parsedContent.subtitles} 
           lessonTitle={parsedContent.lessonTitle}
-          activeSection={activeSection}
+          activeSections={activeSections}
           lessonId={lessonId}
         />
       </Box>
@@ -136,7 +136,7 @@ const LessonPage = forwardRef(({ sections }, ref) => {
             <TableOfContents 
               subtitles={parsedContent.subtitles} 
               lessonTitle={parsedContent.lessonTitle}
-              activeSection={activeSection}
+              activeSections={activeSections}
               lessonId={lessonId}
             />
           </Box>

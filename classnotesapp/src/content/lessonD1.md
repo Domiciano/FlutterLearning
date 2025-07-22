@@ -1,8 +1,12 @@
 [t] Estructura básica de una app Flutter
 En esta lección aprenderás cómo funciona el archivo principal de una app Flutter (`main.dart`), cómo crear el widget principal de la aplicación y cómo organizar tu código en carpetas y archivos.
+
+[v] nb5Iqoy073E
+
 Vamos a borrar el contenido de ese archivos con el propósito de entender la función de cada elemento.
 
-[st] El archivo main.dart y el método main
+[st] El archivo `main.dart` y el método `main()`
+
 El archivo `main.dart` en la carpeta `lib` es el punto de entrada de toda app Flutter. El método `main()` es el primero que se ejecuta y debe llamar a `runApp()` pasando el widget principal de la app.
 
 [code:dart]
