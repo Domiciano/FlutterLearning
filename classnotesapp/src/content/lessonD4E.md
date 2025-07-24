@@ -42,12 +42,13 @@ SingleChildScrollView(
 
 [st] Consideraciones de Rendimiento
 
-*   **`SingleChildScrollView` vs `ListView`:** Si tienes una lista muy larga de elementos similares (como una lista de productos, mensajes de chat, etc.), `ListView` es generalmente más eficiente que `SingleChildScrollView`. `ListView` construye solo los elementos que son visibles en la pantalla, mientras que `SingleChildScrollView` construye todos sus hijos a la vez, lo que puede afectar el rendimiento con mucho contenido.
-*   **Anidamiento:** Evita anidar múltiples widgets de scroll (por ejemplo, un `SingleChildScrollView` dentro de otro `SingleChildScrollView` o un `ListView`) ya que esto puede causar problemas de interacción y rendimiento.
+`SingleChildScrollView` vs `ListView`: Si tienes una lista muy larga de elementos similares (como una lista de productos, mensajes de chat, etc.), `ListView` es generalmente más eficiente que `SingleChildScrollView`. `ListView` construye solo los elementos que son visibles en la pantalla, mientras que `SingleChildScrollView` construye todos sus hijos a la vez, lo que puede afectar el rendimiento con mucho contenido.
+
+Anidamiento: Evita anidar múltiples widgets de scroll (por ejemplo, un `SingleChildScrollView` dentro de otro `SingleChildScrollView` o un `ListView`) ya que esto puede causar problemas de interacción y rendimiento.
 
 [st] Ejemplo Completo
 
-Aquí tienes un ejemplo completo y funcional que demuestra cómo usar `SingleChildScrollView` para manejar el desbordamiento de contenido, mostrando una lista de imágenes que exceden la altura de la pantalla.
+En el siguiente ejemplo, prueba con diferentes orientaciones del `SingleChildScrollView`
 
 [code:dart]
 import 'package:flutter/material.dart';
@@ -64,26 +65,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ejemplo SingleChildScrollView',
       home: Scaffold(
-        appBar: AppBar(title: const Text('Widget SingleChildScrollView')),
-        body: SingleChildScrollView(
-          child: Column(
-            children: List.generate(
-              15, // Generamos 15 imágenes para asegurar el scroll
-              (index) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.network(
-                  'https://picsum.photos/id/${index + 10}/400/200', // Imágenes aleatorias
-                  width: double.infinity,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+          appBar: AppBar(title: const Text('Widget SingleChildScrollView')),
+          body: SingleChildScrollView(
+          scrollDirection: Axis.horizontal, // Habilita el scroll horizontal
+          child: Row(
+            children: [
+              // Tus widgets aquí
+              Container(width: 200, height: 100, color: Colors.red),
+              Container(width: 200, height: 100, color: Colors.green),
+              Container(width: 200, height: 100, color: Colors.blue),
+              Container(width: 200, height: 100, color: Colors.black),
+            ],
           ),
-        ),
+        )
       ),
     );
   }
 }
 [endcode]
+[trycode] f2b6f19f634bcc8a293f38838c1e491e
 .

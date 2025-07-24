@@ -22,7 +22,6 @@ ElevatedButton(
   child: const Text('Mostrar SnackBar'),
 )
 [endcode]
-[trycode] 880402a495b34516cadaad5ec08e4ba1
 
 [st] SnackBar con Acción
 
@@ -48,7 +47,6 @@ ElevatedButton(
   child: const Text('Mostrar SnackBar con Acción'),
 )
 [endcode]
-[trycode] ba8452360d3fd3acda7f133ade0c99d0
 
 [st] Gestionar Múltiples SnackBar
 
@@ -69,7 +67,6 @@ ElevatedButton(
   child: const Text('Reemplazar SnackBar'),
 )
 [endcode]
-[trycode] 11a61033d65340466c5964a708e85aa8
 
 [st] Ejemplo Completo
 

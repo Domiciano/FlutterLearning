@@ -15,22 +15,17 @@ TextField()
 Para obtener el texto introducido por el usuario o para establecer el texto programáticamente, se utiliza un `TextEditingController`. Es una buena práctica asociar un controlador a cada `TextField`.
 
 [code:dart]
+TextEditingController _controller = TextEditingController();
+...
+TextField(
+  controller: _controller,
+)
+[endcode]
+
+El lugar adecuado para declarar el `TextEditingController` es en una clase `State` de un `StatefulWidget`.
+
+[code:dart]
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const FormScreen()
-    );
-  }
-}
 
 class FormScreen extends StatefulWidget {
   const FormScreen({super.key});
@@ -63,13 +58,101 @@ class FormScreenState extends State<FormScreen> {
     );
   }
 }
-[endcode]
 
-[st] Decoración del Campo de Texto (InputDecoration)
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const FormScreen()
+    );
+  }
+}
+
+void main() {
+  runApp(const MyApp());
+}
+[endcode]
+[trycode] 8d35af6ef04e6ef7045b2ce842028bd4
+
+[st] Extracción de texto
+Simplemente usando `_controller.text` se puede acceder al texto escrito en el `TextField`. Observa este ejemplo.
+
+En el ejemplo se extrae el texto para ser usado como una variable de estado. Ten en cuenta que la variable `_controller.text` es en sí misma un estado también, pero no es de solo lectura. Por lo tanto, evita usar la variable de forma directa como si fuera una variable de estado, ya que cuando lo quieras cambiar, no podrías usar el método `setState`.
+
+[code:dart]
+import 'package:flutter/material.dart';
+
+class FormScreen extends StatefulWidget {
+  const FormScreen({super.key});
+  @override
+  State<FormScreen> createState() => FormScreenState();
+}
+
+class FormScreenState extends State<FormScreen> {
+  final _controller = TextEditingController();
+  String _textoMostrado = "";
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Formulario con Label")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _controller,
+              decoration: const InputDecoration(labelText: "Escribe algo"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _textoMostrado = _controller.text; // 🔹 Guardamos el texto al presionar el botón
+                });
+              },
+              child: const Text("Mostrar texto"),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _textoMostrado,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(home: FormScreen());
+  }
+}
+
+void main() {
+  runApp(const MyApp());
+}
+[endcode]
+[trycode] f5c5c94135b2d27e13bd5f50a011288d
+[st] InputDecoration
 
 La propiedad `decoration` de `TextField` acepta un objeto `InputDecoration`, que permite añadir etiquetas, texto de ayuda, iconos, bordes y más, para mejorar la experiencia de usuario.
 
-[st] Etiqueta (labelText)
+[st] LabelText
 
 `labelText` muestra una etiqueta flotante que se anima cuando el campo está en foco.
 
@@ -80,7 +163,6 @@ TextField(
   ),
 )
 [endcode]
-[trycode] 8d35af6ef04e6ef7045b2ce842028bd4
 
 [st] Borde 
 Puedes añadir diferentes tipos de bordes, como `OutlineInputBorder` para un borde rectangular.
@@ -95,7 +177,7 @@ TextField(
 )
 [endcode]
 
-[st] Iconos (prefixIcon, suffixIcon)
+[st] Iconos
 
 `prefixIcon` y `suffixIcon` permiten añadir iconos al inicio o al final del campo de texto.
 
@@ -108,7 +190,6 @@ TextField(
   ),
 )
 [endcode]
-[trycode] e2d0130cb694a7ef036a1c4c8a8e4848
 
 [st] Texto de Ayuda (helperText, hintText)
 
@@ -231,5 +312,5 @@ class _MyTextFieldScreenState extends State<MyTextFieldScreen> {
   }
 }
 [endcode]
-[trycode] 8dd86144eec7f154e77dd9f38dab47f6
+[trycode] f9ea28d713db887153bb4fc11d755377
 .

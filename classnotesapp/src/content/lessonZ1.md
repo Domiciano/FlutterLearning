@@ -1,4 +1,11 @@
 [t] Programa del curso
+
+[i] logo.png
+
+Bienvenido a su curso de `Aplicaciones Móviles`. Este curso brinda a los estudiantes la oportunidad de experimentar un entorno multidisciplinario que refleja los desafíos que se encuentran en su vida profesional. A lo largo de este semestre, se recorrerán todas las etapas del desarrollo de aplicaciones móviles, desde el diseño inicial hasta el despliegue final. Los conceptos adquiridos durante su carrera serán aplicados y se utilizarán herramientas relevantes con el fin de lograr un objetivo común: el lanzamiento de una aplicación móvil innovadora. 
+
+En este programa de estudio, se explorarán los procesos de ideación y prototipado, así como la arquitectura y el diseño de aplicaciones móviles. Además, se adquirirán habilidades para la construcción y despliegue de productos mínimos viables. El uso de herramientas de diseño, bases de datos no relacionales, servicios Cloud y servicios web REST será parte integral de este proceso de aprendizaje. Prepárese para enfrentar los desafíos inherentes al desarrollo de aplicaciones móviles y elevar las habilidades a un nivel superior en este apasionante curso.
+
 [st] Información de la Asignatura
 [list]
 Nombre de la asignatura: Aplicaciones móviles
@@ -10,9 +17,6 @@ Intensidad Semanal: 3
 Créditos: 3
 Docente: Domiciano Rincón Niño
 [endlist]
-
-[st] Introducción o presentación general del curso
-Este curso brinda a los estudiantes la oportunidad de experimentar un entorno multidisciplinario que refleja los desafíos que se encuentran en su vida profesional. A lo largo de este semestre, se recorrerán todas las etapas del desarrollo de aplicaciones móviles, desde el diseño inicial hasta el despliegue final. Los conceptos adquiridos durante su carrera serán aplicados y se utilizarán herramientas relevantes con el fin de lograr un objetivo común: el lanzamiento de una aplicación móvil innovadora. En este programa de estudio, se explorarán los procesos de ideación y prototipado, así como la arquitectura y el diseño de aplicaciones móviles. Además, se adquirirán habilidades para la construcción y despliegue de productos mínimos viables. El uso de herramientas de diseño, bases de datos no relacionales, servicios Cloud y servicios web REST será parte integral de este proceso de aprendizaje. Prepárese para enfrentar los desafíos inherentes al desarrollo de aplicaciones móviles y elevar las habilidades a un nivel superior en este apasionante curso.
 
 [st] Formación en competencias
 [list]
@@ -72,31 +76,31 @@ El uso de la IA en este curso se define como Uso Colaborativo, lo que implica qu
 [st] Evaluación de aprendizajes
 
 Pitch
-`10%    ` 
+`10%      ` 
 Un pitch elevator junto con su grupo en el que proponga sus ideas de proyecto final
 
 DB
-`15%      ` 
+`15%            ` 
 Modelo de la base de datos que deberá presentar mediante diagramas
 
 Proto
-`15%      `
+`15%            `
 Prototipo no funcional de alta fidelidad que debe mostrar preliminarmente las funciones de la aplicación. Adicionalmente debe declarar todo los módulos de la aplicación.
 
 Sprint 1
-`15%      `
+`15%            `
 De acuerdo al backlog, deberá resolver el módulo de autenticación y autorización de la aplicación. Tenga en cuenta que pueden haber varios roles. Algunas aplicaciones pueden tener un proceso de onboarding más complejo en una app o en otra
 
 Sprint 2
-`15%      `
+`15%            `
 De acuerdo al backlog, deberá escoger qué módulos de la aplicación incluirá en el segundo sprint. Esa declaración debe ser presentada en moodle como Kick off del sprint 2.
 
 Sprint 3
-`15%      `
+`15%            `
 De acuerdo al backlog, deberá escoger qué módulos de la aplicación incluirá en el segundo sprint. Esa declaración debe ser presentada en moodle como Kick off del sprint 3.
 
 Exhibición
-`15%      `
+`15%            `
 La actividad final del curso es exponer su aplicación en una exibición de las funcionalidades alcanzadas
 
 [st] Recursos de apoyo
