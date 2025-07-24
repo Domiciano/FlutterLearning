@@ -12,7 +12,7 @@ import Link from "@/components/lesson/Link";
 import images from "@/assets";
 import TryCodeButton from './TryCodeButton';
 import Typography from "@mui/material/Typography";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 const LessonParser = ({ content }) => {
   // Eliminar líneas en blanco al final para asegurar flush correcto
@@ -195,7 +195,7 @@ const LessonParser = ({ content }) => {
       if (trimmedLine !== "") {
       listItems.push(
           <li key={`li-${i}`} style={{ margin: 0, padding: 0, display: 'flex', alignItems: 'center', gap: 1 }}>
-            <CheckCircleOutlineIcon sx={{ fontSize: 15, color: '#b0b4ba', mr: 1, alignSelf: 'flex-start', mt: '4px' }} />
+            <ArrowRightIcon sx={{ fontSize: 20, color: '#42A5F5', mr: 0.5, alignSelf: 'flex-start', mt: '4px' }} />
             <Typography
               component="span"
               sx={{
