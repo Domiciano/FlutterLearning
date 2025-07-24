@@ -15,23 +15,51 @@ TextField()
 Para obtener el texto introducido por el usuario o para establecer el texto programáticamente, se utiliza un `TextEditingController`. Es una buena práctica asociar un controlador a cada `TextField`.
 
 [code:dart]
-// En un StatefulWidget
-class MyFormState extends State<MyForm> {
-  final TextEditingController _controller = TextEditingController();
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const FormScreen()
+    );
+  }
+}
+
+class FormScreen extends StatefulWidget {
+  const FormScreen({super.key});
+  @override
+  State<FormScreen> createState() => FormScreenState();
+}
+
+class FormScreenState extends State<FormScreen> {
+  final _controller = TextEditingController();
+  @override
   void dispose() {
-    _controller.dispose(); // Liberar recursos del controlador
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: _controller,
-      onChanged: (text) {
-        print('Texto actual: $text');
-      },
+    return Scaffold(
+      body: Center(
+        child: TextField(
+          controller: _controller,
+          decoration: const InputDecoration(
+            labelText: "Escribe algo"
+          ),
+          onChanged: (text) {
+            print('Texto actual: $text');
+          },
+        ),
+      ),
     );
   }
 }
@@ -52,9 +80,9 @@ TextField(
   ),
 )
 [endcode]
+[trycode] 8d35af6ef04e6ef7045b2ce842028bd4
 
-[st] Borde (border)
-
+[st] Borde 
 Puedes añadir diferentes tipos de bordes, como `OutlineInputBorder` para un borde rectangular.
 
 [code:dart]
@@ -80,11 +108,14 @@ TextField(
   ),
 )
 [endcode]
+[trycode] e2d0130cb694a7ef036a1c4c8a8e4848
 
 [st] Texto de Ayuda (helperText, hintText)
 
-*   `helperText`: Texto que aparece debajo del campo de texto.
-*   `hintText`: Texto que aparece dentro del campo cuando está vacío.
+[list]
+`helperText`: Texto que aparece debajo del campo de texto.
+`hintText`: Texto que aparece dentro del campo cuando está vacío.
+[endlist]
 
 [code:dart]
 TextField(
@@ -200,4 +231,5 @@ class _MyTextFieldScreenState extends State<MyTextFieldScreen> {
   }
 }
 [endcode]
+[trycode] 8dd86144eec7f154e77dd9f38dab47f6
 .

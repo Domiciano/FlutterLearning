@@ -9,7 +9,31 @@ Para mostrar texto, simplemente pasas una cadena al constructor de `Text`.
 [code:dart]
 Text('Hola, Flutter!')
 [endcode]
-[trycode] 8b249f7f4669381d1390edbcbec140ea
+
+Pruébalo por ti mismo
+[code:dart]
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hola, Flutter!')
+        ),
+      ),
+    );
+  }
+}
+[endcode]
+[trycode] 74982acbc364f84b7004d0d5a7718f43
 
 [st] Estilizando el Texto
 
@@ -25,7 +49,33 @@ Text(
   style: TextStyle(color: Colors.red),
 )
 [endcode]
-[trycode] 74982acbc364f84b7004d0d5a7718f43
+Pruébalo por ti mismo
+[code:dart]
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text(
+            'Texto Rojo',
+            style: TextStyle(color: Colors.red),
+          )
+        ),
+      ),
+    );
+  }
+}
+[endcode]
+[trycode] 09f602401b9ec4bf8c1b0c0ab93ced95
 
 [st] Tamaño de la Fuente
 
@@ -37,7 +87,34 @@ Text(
   style: TextStyle(fontSize: 24.0),
 )
 [endcode]
-[trycode] e6fec68bba538091319cc1f0f0e5211b
+
+Pruébalo por ti mismo
+[code:dart]
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text(
+            'Texto Grande',
+            style: TextStyle(fontSize: 24.0),
+          )
+        ),
+      ),
+    );
+  }
+}
+[endcode]
+[trycode] b0247e8702b421da747b8153b55aae8c
 
 [st] Negrita y Otros Pesos de Fuente
 
@@ -49,7 +126,34 @@ Text(
   style: TextStyle(fontWeight: FontWeight.bold),
 )
 [endcode]
-[trycode] 09f602401b9ec4bf8c1b0c0ab93ced95
+
+Pruébalo por ti mismo
+[code:dart]
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text(
+            'Texto en Negrita',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )
+        ),
+      ),
+    );
+  }
+}
+[endcode]
+[trycode] 6d10a5b938b99ac69f2cc55deb4bad01
 
 [st] Combinando Estilos
 
@@ -65,7 +169,38 @@ Text(
   ),
 )
 [endcode]
-[trycode] 9069d316e22861466039bac6d2a98c72
+
+Pruébalo por tu mismo
+[code:dart]
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text(
+              'Texto Azul y Grande',
+              style: TextStyle(
+              color: Colors.blue,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w500, // Un peso intermedio
+            ),
+          )
+        ),
+      ),
+    );
+  }
+}
+[endcode]
+[trycode] 99e8e614431f0a06bfd66ec04ba09295
 
 [st] Ejemplo Completo
 
@@ -126,5 +261,6 @@ class MyApp extends StatelessWidget {
   }
 }
 [endcode]
-[trycode] b0247e8702b421da747b8153b55aae8c
+[trycode] 407020861ee8301495bb36973b9edc74
+
 .

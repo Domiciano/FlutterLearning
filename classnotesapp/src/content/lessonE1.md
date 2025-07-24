@@ -152,5 +152,4 @@ class DetailsScreen extends StatelessWidget {
 }
 [endcode]
 [trycode] 56b20c1f38c194fde8c2db1c35bbfcb6
-
-asd
+.

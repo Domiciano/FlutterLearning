@@ -45,6 +45,7 @@ class App extends StatelessWidget {
 }
 [endcode]
 
+
 [list]
 `MaterialApp` es el widget que configura el tema, el título y la pantalla inicial (`home`).
 Usa `const` en los constructores siempre que sea posible para mejor performance.
@@ -127,4 +128,4 @@ class MainScreen extends StatelessWidget {
   }
 }
 [endcode]
-[trycode] d95a0b5b9c85b828c94b237be21b1bb9
+[trycode] 66917ca2b1fdffc1c76f134f47348f67

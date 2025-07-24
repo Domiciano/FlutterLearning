@@ -86,15 +86,16 @@ export const useContentSpy = (subtitles) => {
       let newActiveSections = Array.from(intersectingIdsRef.current);
 
       if (newActiveSections.length === 0) {
-        // If no subtitles are currently intersecting, find the last one that passed the top
+        // If no subtitles are currently intersecting, find the last one that passed the reading line
         const scrollY = window.scrollY;
-        const viewportCenter = scrollY + window.innerHeight / 3; // A "reading line"
+        const readingLine = scrollY + window.innerHeight * 0.3; // 30% down the viewport
 
         let lastPassedSubtitleId = null;
+        // Iterate backwards to find the last subtitle whose top is above the reading line
         for (let i = subtitles.length - 1; i >= 0; i--) {
           const subtitle = subtitles[i];
           const element = subtitleElementsRef.current[subtitle.id];
-          if (element && element.offsetTop <= viewportCenter) {
+          if (element && element.offsetTop <= readingLine) {
             lastPassedSubtitleId = subtitle.id;
             break;
           }
@@ -102,7 +103,7 @@ export const useContentSpy = (subtitles) => {
         if (lastPassedSubtitleId) {
           newActiveSections = [lastPassedSubtitleId];
         } else if (subtitles.length > 0) {
-          // Fallback to the first subtitle if nothing else is found
+          // Fallback to the first subtitle if nothing else is found (e.g., at very top of page)
           newActiveSections = [subtitles[0].id];
         }
       }
