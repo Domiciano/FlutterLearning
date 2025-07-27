@@ -10,7 +10,7 @@ import 'prismjs/themes/prism-tomorrow.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider>
-      <BrowserRouter basename="/FlutterLearning/">
+      <BrowserRouter basename="/apps/">
         <App />
       </BrowserRouter>
     </ThemeProvider>

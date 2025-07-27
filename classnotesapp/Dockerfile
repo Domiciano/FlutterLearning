@@ -1,9 +1,9 @@
 # Stage 1: Build the React application
 FROM node:20 AS build
 WORKDIR /app
-COPY package*.json ./
+COPY classnotesapp/package*.json ./
 RUN npm install
-COPY . .
+COPY classnotesapp/. .
 RUN npm run build
 
 # Stage 2: Serve the application with Nginx
