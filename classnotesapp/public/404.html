@@ -6,9 +6,7 @@
     <script type="text/javascript">
       // Define la base de tu repositorio en GitHub Pages.
       // ¡Es crucial que sea el nombre EXACTO de tu repositorio!
-      var repoBase = "/FlutterLearning";
-
-      // Obtiene el pathname completo que causó el 404, ej. /FlutterLearning/lesson/1
+      var repoBase = "/apps";
       var currentPathname = window.location.pathname;
 
       // Extrae la parte de la ruta que React Router debe manejar.
@@ -24,7 +22,6 @@
       }
 
       // Construye la URL final para la redirección.
-      // Será: "/FlutterLearning/index.html?p=/lesson/1" (o cualquier otra ruta)
       // Usamos encodeURIComponent para asegurar que la ruta se pase correctamente.
       var finalRedirectUrl = repoBase + "/index.html?p=" + encodeURIComponent(reactRouterPath);
 
