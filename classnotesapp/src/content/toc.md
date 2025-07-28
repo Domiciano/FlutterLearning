@@ -1,5 +1,9 @@
 [t] Curso
 [lesson] lessonZ1.md
+[lesson] lessonZ3.md
+[t] Asignaciones
+[lesson] lessonZ2.md
+[lesson] lessonZ4.md
 [t] Dart basics
 [lesson] lessonA1.md
 [lesson] lessonA2.md
