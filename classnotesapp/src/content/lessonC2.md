@@ -6,7 +6,7 @@ En esta lección aprenderás a crear tu primer proyecto Flutter desde cero usand
 Para crear tu primer proyecto, abre una terminal en la carpeta donde quieras guardar tus proyectos y ejecuta:
 
 [code:shell]
-flutter create -org com.tuempresa mi_primera_app
+flutter create --org com.tuempresa mi_primera_app
 [endcode]
 
 Este comando crea una nueva app Flutter en la carpeta `mi_primera_app` y configura el identificador de paquete (package name) con el dominio de tu organización (`com.tuempresa`).

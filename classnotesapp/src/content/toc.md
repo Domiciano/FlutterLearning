@@ -38,8 +38,8 @@
 [t] UI Extras
 [lesson] lessonD4E.md
 [lesson] lessonD6.md
-[t] Laboratorio
-[lesson] lab1.md
+*[t] Laboratorio
+*[lesson] lab1.md
 [t] Navegación
 [lesson] lessonE1.md
 [lesson] lessonE2.md
