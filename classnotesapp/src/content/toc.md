@@ -43,5 +43,6 @@
 [t] Navegación
 [lesson] lessonE1.md
 [lesson] lessonE2.md
+[lesson] lessonE3.md
 [t] Supabase
 [lesson] lessonX5.md
