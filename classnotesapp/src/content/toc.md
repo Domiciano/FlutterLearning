@@ -40,7 +40,7 @@
 [lesson] lessonD6.md
 [t] Laboratorio
 [lesson] lab1.md
-[t] Navegación
+[t] Navegación · SEMANA 2
 [lesson] lessonE1.md
 [lesson] lessonE2.md
 [lesson] lessonE3.md
