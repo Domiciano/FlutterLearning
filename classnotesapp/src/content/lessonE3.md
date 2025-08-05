@@ -52,7 +52,7 @@ static const List<Widget> _widgetOptions = <Widget>[
   Text('Index 2: Escuela'),
 ];
 
-// Función para cambiar de pestaña
+// Función para cambio de pestaña
 void _onItemTapped(int index) {
   setState(() {
     _selectedIndex = index;
@@ -62,7 +62,7 @@ void _onItemTapped(int index) {
 
 [st] Conectando Todo
 
-Ahora, conectamos estas piezas al `Scaffold`. El `body` del `Scaffold` mostrará el widget de nuestra lista `_widgetOptions` correspondiente al `_selectedIndex`. La `BottomNavigationBar` usará `_selectedIndex` para resaltar la pestaña activa y `_onItemTapped` para manejar los toques.
+Ahora, conectamos estas partes al `Scaffold`. El `body` del `Scaffold` mostrará el widget de nuestra lista `_widgetOptions` correspondiente al `_selectedIndex`. La `BottomNavigationBar` usará `_selectedIndex` para resaltar la pestaña activa y `_onItemTapped` para manejar los clicks.
 
 [code:dart]
 Scaffold(
@@ -89,14 +89,14 @@ Scaffold(
     ],
     currentIndex: _selectedIndex, // Resalta la pestaña activa
     selectedItemColor: Colors.amber[800], // Color del ítem seleccionado
-    onTap: _onItemTapped, // Llama a la función al tocar
+    onTap: _onItemTapped, // Llama a la función al dar click
   ),
 );
 [endcode]
 
 [st] Ejemplo Completo
 
-Aquí tienes un ejemplo completo y funcional que puedes pegar en DartPad. Este código crea una aplicación con tres pestañas. Cada pestaña muestra un texto simple, pero en una aplicación real, reemplazarías esos `Text` con tus propios widgets de pantalla (por ejemplo, `HomeScreen()`, `ProfileScreen()`, etc.).
+Este código crea una aplicación con tres pestañas. Cada pestaña muestra un texto simple, pero en una aplicación real, reemplazarías esos `Text` con tus propios widgets de pantalla (por ejemplo, `HomeScreen()`, `ProfileScreen()`, etc.).
 
 [code:dart]
 import 'package:flutter/material.dart';
