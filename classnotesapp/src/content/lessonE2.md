@@ -18,6 +18,7 @@ onPressed: () {
 }
 [endcode]
 
+
 La clave está en el tercer parámetro. Es una función que se ejecuta para cada una de las rutas en el historial. Si la función devuelve `false`, la ruta es eliminada. Al usar `(route) => false`, le decimos a Flutter que elimine **todas** las rutas anteriores, dejando únicamente la nueva (`/home`) en el historial. Como resultado, el usuario no verá un botón para regresar.
 
 [st] Pasar Argumentos a una Ruta
@@ -26,7 +27,7 @@ Es muy común necesitar enviar datos de una pantalla a otra. Por ejemplo, una li
 
 El método `Navigator.pushNamed` tiene un parámetro opcional llamado `arguments` para este propósito.
 
-**Paso 1: Enviar los datos**
+`Paso 1` Enviar los datos
 
 Al llamar a `pushNamed`, pasamos los datos que queremos enviar en el parámetro `arguments`.
 
@@ -41,7 +42,8 @@ onPressed: () {
 }
 [endcode]
 
-**Paso 2: Recibir los datos**
+
+`Paso 2` Recibir los datos
 
 En la pantalla de destino, podemos acceder a estos argumentos usando `ModalRoute`.
 
@@ -81,6 +83,7 @@ class ScreenArguments {
   ScreenArguments(this.title, this.message);
 }
 [endcode]
+[trycode] fcaedf11986a08bea7c2ae9cc4223875
 
 `Paso 2` Enviar el objeto
 
@@ -97,6 +100,7 @@ onPressed: () {
   );
 }
 [endcode]
+[trycode] 7a0d89245b3093d02e7c0627779fea37
 
 `Paso 3` Recibir y usar el objeto
 
@@ -116,6 +120,7 @@ Widget build(BuildContext context) {
   );
 }
 [endcode]
+[trycode] ca6dcc63fd3d67474cc0c1e229ab2d2c
 
 Este método es mucho más robusto y es el recomendado para pasar datos complejos entre pantallas.
 
@@ -149,6 +154,7 @@ Future<void> _navigateAndDisplaySelection(BuildContext context) async {
 }
 [endcode]
 
+
 `Paso 2` Devolver el resultado
 
 En la pantalla de selección, cuando el usuario toma una decisión, usamos `Navigator.pop()` para cerrar la pantalla y pasar el resultado de vuelta.
@@ -174,6 +180,7 @@ ElevatedButton(
   child: const Text('¡No!'),
 )
 [endcode]
+
 
 Al presionar un botón, la `SelectionScreen` se cierra y el `String` correspondiente se devuelve al `Future` que estaba esperando en la pantalla principal.
 
@@ -284,4 +291,5 @@ class SelectionScreen extends StatelessWidget {
   }
 }
 [endcode]
+[trycode] 09ce64cecc2c69e03a226e109e55b139
 .
