@@ -38,11 +38,19 @@
 [t] UI Extras
 [lesson] lessonD4E.md
 [lesson] lessonD6.md
-[t] Laboratorio
+[t] Laboratorio 1
 [lesson] lab1.md
 [t] Navegación · SEMANA 2
 [lesson] lessonE1.md
 [lesson] lessonE2.md
 [lesson] lessonE3.md
+[t] Laboratorio 2
+[lesson] lab2concepts.md
+[lesson] lab2.md
+[t] Render de Listas · SEMANA 3
+[lesson] lessonF1.md
+[lesson] lessonF2.md
+[lesson] lessonF3.md
+[lesson] lessonF4.md
 [t] Supabase
 [lesson] lessonX5.md
