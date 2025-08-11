@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 
 // Definimos nuestro nuevo widget llamado SaludoWidget
 class SaludoWidget extends StatelessWidget {
-  // El constructor, que puede recibir una "Key"
-  const SaludoWidget({Key? key}) : super(key: key);
+  // El constructor
+  const SaludoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +27,13 @@ class SaludoWidget extends StatelessWidget {
 }
 [endcode]
 
-[st] ¿Por qué usamos `Key`?
+[st] ¿Por qué usamos `super.key`?
 
-La `Key` (o llave) es un identificador que Flutter usa para diferenciar un widget de otro.
+El parámetro `key` es un identificador que Flutter usa para diferenciar un widget de otro. Al pasarlo con `super.key`, le estamos dando una `Key` (o llave) única a nuestro widget.
 
 Imagina que tienes una lista de widgets idénticos. Si uno de ellos cambia, se elimina o se mueve, Flutter necesita una forma de saber exactamente cuál de ellos fue afectado para poder actualizar la pantalla de manera eficiente. La `Key` le da esa información. Esto ayuda a Flutter a gestionar el rendimiento.
+
+Desde Dart 2.17, la forma más simple de hacerlo es usando `super-parameters`, que nos permite pasar el parámetro `key` directamente al constructor de la superclase (`StatelessWidget` en este caso) usando `super.key`.
 
 [st] Usando Variables como Propiedades (Props)
 
@@ -47,7 +49,7 @@ class SaludoPersonalizado extends StatelessWidget {
   final String nombre;
 
   // 2. La añadimos como un parámetro requerido en el constructor
-  const SaludoPersonalizado({Key? key, required this.nombre}) : super(key: key);
+  const SaludoPersonalizado({super.key, required this.nombre});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class SaludoPersonalizado extends StatelessWidget {
 
 // Así lo usaríamos en otra parte de la app:
 class MiPantalla extends StatelessWidget {
-  const MiPantalla({Key? key}) : super(key: key);
+  const MiPantalla({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +92,7 @@ class BotonPersonalizado extends StatelessWidget {
   final void Function() onPressed;
 
   // 3. Las añadimos al constructor
-  const BotonPersonalizado({Key? key, required this.texto, required this.onPressed}) : super(key: key);
+  const BotonPersonalizado({super.key, required this.texto, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +106,7 @@ class BotonPersonalizado extends StatelessWidget {
 
 // Así lo usaríamos:
 class MiPantallaConBoton extends StatelessWidget {
-  const MiPantallaConBoton({Key? key}) : super(key: key);
+  const MiPantallaConBoton({super.key});
 
   void _miFuncionDeCallback() {
     print("¡El botón fue presionado!");
