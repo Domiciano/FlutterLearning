@@ -52,5 +52,7 @@
 [lesson] lessonF2.md
 [lesson] lessonF3.md
 [lesson] lessonF4.md
+[t] Laboratorio 3
+[lesson] lab3.md
 [t] Supabase
 [lesson] lessonX5.md
