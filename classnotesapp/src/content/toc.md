@@ -54,5 +54,8 @@
 [lesson] lessonF4.md
 [t] Laboratorio 3
 [lesson] lab3.md
+[t] BloC
+[lesson] lessonG1.md
+[lesson] lessonG2.md
 [t] Supabase
 [lesson] lessonX5.md
