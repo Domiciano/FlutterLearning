@@ -57,5 +57,6 @@
 [t] BloC
 [lesson] lessonG1.md
 [lesson] lessonG2.md
+[lesson] lessonG3.md
 [t] Supabase
 [lesson] lessonX5.md
