@@ -63,3 +63,9 @@
 [lesson] lab4.md
 [t] Supabase
 [lesson] lessonX5.md
+[t] Autenticación
+[lesson] lessonH1.md
+[lesson] lessonH15.md
+[lesson] lessonH2.md
+[lesson] lessonH3.md
+[lesson] lessonH4.md
