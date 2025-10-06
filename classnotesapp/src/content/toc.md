@@ -67,7 +67,10 @@
 [lesson] lessonH1.md
 [lesson] lessonH15.md
 [lesson] lessonH2.md
-[lesson] lessonH3.md
-[lesson] lessonH4.md
 [lesson] lessonH5.md
 [lesson] lessonH6.md
+[t] Database
+[lesson] lessonH4.md
+[lesson] lessonH3.md
+[lesson] lessonH7.md
+[lesson] lessonH8.md
