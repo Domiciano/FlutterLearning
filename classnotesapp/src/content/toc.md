@@ -74,3 +74,8 @@
 [lesson] lessonH3.md
 [lesson] lessonH7.md
 [lesson] lessonH8.md
+[t] Realtime
+[lesson] lessonI1.md
+[lesson] lessonI2.md
+[lesson] lessonI3.md
+[lesson] lessonH10.md
