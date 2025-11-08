@@ -84,3 +84,13 @@
 [lesson] lessonJ2.md
 [lesson] lessonJ3.md
 [lesson] lessonJ4.md
+[t] Google Maps
+[lesson] lessonL0.md
+[lesson] lessonL1.md
+[lesson] lessonL2.md
+[lesson] lessonL3.md
+[t] Push notifications
+[lesson] lessonK0.md
+[lesson] lessonK1.md
+[lesson] lessonK2.md
+[lesson] lessonK3.md
