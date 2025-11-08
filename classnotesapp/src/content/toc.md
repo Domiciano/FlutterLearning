@@ -94,3 +94,4 @@
 [lesson] lessonK1.md
 [lesson] lessonK2.md
 [lesson] lessonK3.md
+[lesson] lessonK4.md
