@@ -1,41 +1,32 @@
 [t] Clase: Introducción a Google Maps en Flutter
+Todo conocemos Google Maps, así que no necesita mayor introducción. Salvo que Google ha dispuesto Componentes UI para que los desarrolladores puedan integrar y utilizar mapas dentro de sus propias aplicaciones.
 
-[st] Objetivo general
-Aprender a integrar Google Maps en una aplicación Flutter, visualizar el mapa, agregar un marcador y centrar la cámara en la ubicación actual del usuario.
-
-[st] Parte 1: Configurar el proyecto
 [st] Crear un nuevo proyecto Flutter
 El primer paso es crear un nuevo proyecto de Flutter. Puedes hacerlo desde tu IDE (como VS Code o Android Studio) o utilizando la línea de comandos:
-
 [code:bash]
 flutter create maps_hello_world
 cd maps_hello_world
 [endcode]
-
 Esto creará una nueva aplicación de Flutter con la estructura básica.
 
 [st] Agregar dependencias al pubspec.yaml
 Abre el archivo `pubspec.yaml` en la raíz de tu proyecto y agrega las siguientes dependencias:
-
 [code:yaml]
 dependencies:
   flutter:
     sdk: flutter
   google_maps_flutter: ^2.9.0
-  geolocator: ^10.1.0
 [endcode]
-
 Luego, ejecuta el siguiente comando en tu terminal para obtener las nuevas dependencias:
-
 [code:bash]
 flutter pub get
 [endcode]
 
-[st] Parte 2: Configurar claves de API de Google Maps
+[st] Configurar claves de API de Google Maps
 Para que Google Maps funcione, necesitas una clave de API y configurarla para Android e iOS.
 
 [st] Obtener una API Key
-1. Ve a la [link](Google Cloud Console) https://console.cloud.google.com/.
+1. Ve a la Google Cloud Console https://console.cloud.google.com/.
 2. Crea un nuevo proyecto (o selecciona uno existente).
 3. En el menú de navegación, ve a "APIs y servicios" > "Biblioteca".
 4. Busca y habilita las siguientes APIs:
@@ -43,7 +34,7 @@ Para que Google Maps funcione, necesitas una clave de API y configurarla para An
    - `Maps SDK for iOS`
 5. En el menú de navegación, ve a "APIs y servicios" > "Credenciales".
 6. Haz clic en "Crear credenciales" > "Clave de API".
-7. Copia la clave generada. ¡Guárdala de forma segura y restringe su uso!
+7. Copia la clave generada.
 
 [st] Android
 En el archivo `android/app/src/main/AndroidManifest.xml`, agrega la siguiente etiqueta `<meta-data>` dentro de la etiqueta `<application>`:
@@ -80,11 +71,9 @@ import GoogleMaps // Asegúrate de importar GoogleMaps
   }
 }
 [endcode]
-Si estás usando Objective-C (`AppDelegate.m`), la línea sería:
-`[GMSServices provideAPIKey: @"TU_API_KEY_AQUI"];`
 Reemplaza `TU_API_KEY_AQUI` con tu clave de API.
 
-[st] Parte 3: Hola Mundo de Google Maps
+[st] Hola Mundo de Google Maps
 Ahora, vamos a mostrar un mapa básico en tu aplicación.
 
 [st] Crea un archivo lib/map_screen.dart:

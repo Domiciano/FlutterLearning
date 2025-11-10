@@ -2,24 +2,15 @@
 
 En esta lección, aprenderás a agregar marcadores a tu mapa de Google. Un marcador es un ícono que se coloca en una ubicación específica del mapa, a menudo con una ventana de información.
 
-[st] Un Momento... ¿Qué es `setState`?
-Antes de agregar el marcador, es crucial entender cómo Flutter actualiza la pantalla. Flutter usa un enfoque "declarativo": tú describes cómo debería ser la UI para un estado determinado, y Flutter se encarga de dibujarla.
-
-Cuando quieres cambiar algo en la pantalla (como agregar un marcador), no lo modificas directamente. En su lugar:
-1.  Actualizas una variable que contiene la información (el "estado").
-2.  Llamas a la función `setState(() { ... })`.
-
-Al llamar a `setState`, le dices a Flutter: "¡Oye, he cambiado algo! Por favor, vuelve a dibujar la pantalla para que refleje estos cambios". En nuestro caso, agregaremos un marcador a una lista y luego llamaremos a `setState` para que el mapa se redibuje con el nuevo marcador.
-
 [st] Almacenando los Marcadores
-Dentro de la clase `_MapScreenState`, agrega una nueva variable para guardar la colección de marcadores. Usamos un `Set` porque garantiza que cada marcador sea único.
+Dentro de la clase `_MapScreenState`, agrega una nueva variable para guardar la colección de marcadores.
 
 [code:dart]
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
   final LatLng _center = const LatLng(37.4219999, -122.0840575);
   
-  final Set<Marker> _markers = {}; // Nuevo: Set para guardar los marcadores
+  final Set<Marker> _markers = {};
 
   // ... resto del código
 }
@@ -69,6 +60,4 @@ Widget build(BuildContext context) {
   );
 }
 [endcode]
-
-[st] Resultado
-¡Ejecuta tu aplicación! Ahora deberías ver el mismo mapa, pero con un marcador rojo en la ubicación de la sede de Google. Toca el marcador para ver la `InfoWindow` con el título y el texto que definiste.
+Ejecuta tu aplicación. Ahora deberías ver el mismo mapa, pero con un marcador rojo en la ubicación de la sede de Google. Toca el marcador para ver la `InfoWindow` con el título y el texto que definiste.

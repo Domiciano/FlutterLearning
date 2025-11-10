@@ -1,15 +1,24 @@
 [t] Creando y Conectando un Proyecto de Firebase
-
 Esta guía te mostrará cómo iniciar un proyecto en Firebase y conectarlo a tu aplicación de Flutter utilizando las herramientas de línea de comandos de FlutterFire.
 
 [st] Requisitos Previos
 Antes de comenzar, asegúrate de tener instalado el siguiente software en tu sistema:
 [list]
 Flutter SDK: El entorno de desarrollo de Flutter debe estar correctamente instalado y configurado en tu PATH.
-Cuenta de Firebase: Necesitas una cuenta de Google para poder crear y administrar proyectos en la [link](Consola de Firebase) https://console.firebase.google.com/.
+Cuenta de Firebase: Necesitas una cuenta de Google para poder crear y administrar proyectos en la Consola de Firebase (https://console.firebase.google.com/)
 [endlist]
 
-[st] 1. Instalación de FlutterFire CLI
+[st] Instalación de Firebase CLI
+Instale la CLI de Firebase para facilitar la configuración de las notificaciones
+[code:sh]
+npm install -g firebase-tools
+[endcode]
+Verifique en una nueva consola que tiene el comando `firebase`. Debe logearse con
+[code:sh]
+firebase login
+[endcode]
+
+[st] Instalación de FlutterFire CLI
 FlutterFire CLI es una herramienta de línea de comandos que facilita la conexión de tus aplicaciones de Flutter con Firebase. Para instalarla, ejecuta el siguiente comando en tu terminal. Puedes ejecutarlo desde cualquier directorio.
 
 [code:bash]
@@ -73,6 +82,5 @@ class DefaultFirebaseOptions {
   );
 }
 [endcode]
-[trycode] 00000000000000000000000000000001
 
 ¡Y eso es todo! Con estos pasos, tu aplicación de Flutter ya está configurada para usar los servicios de Firebase.

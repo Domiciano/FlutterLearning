@@ -1,4 +1,4 @@
-[t] Interactuando con el Mapa: Listeners
+[t] Interactuando con el Mapa
 
 Un mapa interactivo es mucho más útil. En esta lección, aprenderemos a responder a las interacciones del usuario con el mapa, como toques (taps) y pulsaciones largas (long presses), tanto en el mapa en general como en marcadores específicos.
 
@@ -155,3 +155,4 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 [endcode]
+.

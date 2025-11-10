@@ -1,5 +1,4 @@
 [t] Integración completa de notificaciones con Firebase en Flutter
-
 [st] Objetivo
 En esta guía configuramos Firebase Cloud Messaging (FCM) y notificaciones locales para Android en un proyecto Flutter.
 Este proceso permite:
@@ -18,174 +17,152 @@ dependencies:
 [endcode]
 Estas librerías permiten inicializar Firebase, gestionar los mensajes de FCM y mostrar notificaciones locales en Android/iOS.
 
-[st] Configuración del proyecto Android
-[st] a. Habilitar `google-services`
-En `android/settings.gradle.kts`:
+[st] Android · Habilitar `google-services`
+En el archivo `android/app/build.gradle.kts`
 [code:kotlin]
 plugins {
-    id("com.google.gms.google-services") version("4.3.15") apply false
+  id("com.google.gms.google-services")
 }
-[endcode]
-En `android/app/build.gradle.kts`:
-[code:kotlin]
-plugins {
-    id("com.google.gms.google-services")
-}
-[endcode]
-Esto permite que Gradle integre automáticamente la configuración de Firebase.
-
-[st] b. Actualizar compatibilidad con Java y habilitar Desugaring
-Se modificó la configuración de compilación para usar Java 17 y habilitar las librerías de compatibilidad modernas.
-[code:kotlin]
 compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    isCoreLibraryDesugaringEnabled = true
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+  isCoreLibraryDesugaringEnabled = true
 }
 
 kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.toString()
+  jvmTarget = JavaVersion.VERSION_17.toString()
 }
-[endcode]
-Se añadió además la dependencia:
-[code:kotlin]
+
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 [endcode]
-
-[st] Agregar archivo de configuración de Firebase
-Se generó el archivo:
-[code:text]
-android/app/google-services.json
-[endcode]
-Con la configuración del proyecto Firebase:
-[code:json]
-{
-  "project_info": {
-    "project_number": "861116869551",
-    "project_id": "flutterdomibaas",
-    "storage_bucket": "flutterdomibaas.firebasestorage.app"
-  },
-  ...
-}
-[endcode]
-Este archivo es único por aplicación y se obtiene desde la consola de Firebase al registrar la app Android.
-
-[st] Archivo de opciones de Firebase
-Se generó automáticamente `lib/firebase_options.dart` mediante el comando:
-[code:bash]
-flutterfire configure
-[endcode]
-Este archivo define los parámetros de conexión para Android e iOS:
-[code:dart]
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-[endcode]
+Esto permite que Gradle integre la configuración de Firebase y use los servicios de Google
 
 [st] Inicialización de Firebase y configuración de notificaciones
 En `lib/main.dart` se hicieron los siguientes pasos:
-[st] a. Importar los paquetes necesarios
+[st] Importar los paquetes necesarios
 [code:dart]
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 [endcode]
-[st] b. Inicializar Firebase y Supabase
-[code:dart]
-await Firebase.initializeApp();
-await Supabase.initialize(
-  url: 'https://yzosfzyewkdpnmlbgbej.supabase.co',
-  anonKey: 'sb_publishable_sVlCTCKFQ9NktJjQTOmahw_QoBUGODX',
-);
-[endcode]
-[st] c. Configurar notificaciones locales
+
+[st] Configurar notificaciones locales
+En la raíz del proyecto
 [code:dart]
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
-const AndroidInitializationSettings initSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-const InitializationSettings initSettings =
-    InitializationSettings(android: initSettingsAndroid);
-
-await flutterLocalNotificationsPlugin.initialize(initSettings);
 [endcode]
+Esto permite generar notificaciones visuales
 
-[st] Mensajes en foreground
+[st] Inicialización de la aplicación
+En el archivo main.dart debemos inicializar la recepción asincrónica de mensajes. El orden de las líneas importa, de modo que aquí tiene la forma general del archivo 
 [code:dart]
-FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  print("Mensaje recibido en foreground: ${message.data}");
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  flutterLocalNotificationsPlugin.show(
-    id++,
-    "Nuevo mensaje",
-    "${message.data}",
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'canal_notif',
-        'Notificaciones generales',
-        importance: Importance.max,
-        priority: Priority.high,
-      ),
-    ),
+  await Firebase.initializeApp();
+
+  // Anclar un método de recepción de mensajes
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Configura canal local de Android
+  const AndroidInitializationSettings initSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const InitializationSettings initSettings =
+      InitializationSettings(android: initSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
+
+  await Supabase.initialize(
+    url: 'https://yzosfzyewkdpnmlbgbej.supabase.co',
+    anonKey: 'sb_publishable_sVlCTCKFQ9NktJjQTOmahw_QoBUGODX',
   );
-});
+
+  runApp(const App());
+}
 [endcode]
-[st] Mensajes en background
+
+[st] Método de rececpción 
+En la inicialización usamos `_firebaseMessagingBackgroundHandler`, la definición de ese método es
 [code:dart]
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('Mensaje recibido en background: ${message.messageId}');
 }
-FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-[endcode]
-[st] Cuando la app se abre desde una notificación
-[code:dart]
-FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-  print('Notificación abrió la app: ${message.data}');
-});
 [endcode]
 
-[st] Suscripción a un topic
+[st] Suscripción
+El Widget `App` debe ser un StatefulWidget para que haya método de inicialización `initState` y poder activar la recepción
 [code:dart]
-await messaging.subscribeToTopic("mi_topic_general");
-print("Suscrito al topic mi_topic_general");
-[endcode]
-Esto permite que el backend envíe notificaciones a todos los dispositivos suscritos a ese topic.
+class App extends StatefulWidget{
+  const App({super.key});
 
-[st] Ejemplo de envío desde el backend
-Ejemplo de payload JSON correcto para FCM:
-[code:json]
-{
-  "message": {
-    "topic": "mi_topic_general",
-    "data": {
-      "alfa": "Nuevo cambio"
-    }
+  @override
+  State<StatefulWidget> createState() {
+    return MyAppState();
+  }
+  
+}
+
+class MyAppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+    //Vamos a suscribirnos aquí
   }
 }
 [endcode]
-El campo `data` es clave para acceder a los valores en el cliente (`message.data`).
 
-[st] Resumen técnico
-[list]
-`firebase_core`: Inicializa Firebase en Flutter
-`firebase_messaging`: Permite recibir mensajes push de FCM
-`flutter_local_notifications`: Muestra notificaciones locales personalizadas
-`google-services.json`: Configuración del proyecto Firebase
-`Desugaring`: Permite compatibilidad con APIs modernas de Java 17
-[endlist]
+Ahora sí, en el método `initState` de la aplicación
+[code:dart]
+@override
+void initState() {
+  super.initState();
+  //Vamos a suscribirnos aquí
+  _initNotifications();
+}
 
-[st] Resultado final
-[list]
-La aplicación ahora recibe notificaciones push desde FCM.
-Muestra notificaciones locales incluso en foreground.
-Gestiona la suscripción a topics y el manejo de mensajes en background.
-[endlist]
+Future<void> _initNotifications() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-[st] Referencias
-[link](Firebase Cloud Messaging en Flutter) https://firebase.flutter.dev/docs/messaging/overview/
-[link](Notificaciones locales en Flutter) https://pub.dev/packages/flutter_local_notifications
-[link](Configuración de desugaring) https://developer.android.com/studio/write/java8-support
+    // Solicita permisos para notificaciones
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    print('Permisos otorgados: ${settings.authorizationStatus}');
+
+    // Suscripción al topic
+    await messaging.subscribeToTopic("mi_topic_general");
+    print("Suscrito al topic mi_topic_general");
+
+    // Escuchar mensajes entrantes
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        print("Mensaje recibido en foreground: ${message.data}");
+      }
+    );
+}
+[endcode]
+Dentro del listener se imprimen los mensajes que llegan, pero como queremos mostrarlos como notificación, podemos usar este objeto message la siguiente forma.
+[code:dart]
+RemoteNotification? notification = message.notification;
+AndroidNotification? android = message.notification?.android;
+flutterLocalNotificationsPlugin.show(
+  id++,
+  "Nuevo mensaje",
+  "${message.data}",
+  const NotificationDetails(
+    android: AndroidNotificationDetails(
+      'canal_notif', // ID único del canal
+      'Notificaciones generales',
+      importance: Importance.max,
+      priority: Priority.high,
+    ),
+  ),
+);
+[endcode]
+Con esto ya está suscrito al topic mi_topic_general.

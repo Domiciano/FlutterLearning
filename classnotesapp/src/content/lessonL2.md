@@ -1,97 +1,112 @@
 [t] Controlando la Cámara del Mapa
 
-Saber mostrar un mapa es genial, pero es aún más útil poder controlar lo que se ve. En esta lección, aprenderás a mover la cámara del mapa programáticamente para centrarla en la ubicación actual del usuario.
+Mostrar un mapa está bien, pero lo realmente útil es **poder mover la cámara** de forma programática, por ejemplo, al hacer clic en un botón para centrarla en una ubicación específica.
 
-[st] Obteniendo la Ubicación del Usuario
-Para mover la cámara a la ubicación del usuario, primero necesitamos saber dónde está. Usaremos el paquete `geolocator` que agregamos anteriormente. Dentro de tu clase `_MapScreenState`, crea un nuevo método para manejar la lógica de permisos y obtención de la ubicación.
+[st] Moviendo la Cámara con un Botón
+
+En este ejemplo, agregaremos un botón que moverá la cámara a una coordenada fija (por ejemplo, el Parque Simón Bolívar en Bogotá).
 
 [code:dart]
-import 'package:geolocator/geolocator.dart'; // Asegúrate de importar el paquete
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-// Dentro de la clase _MapScreenState
-Future<LatLng> _getUserLocation() async {
-  bool serviceEnabled;
-  LocationPermission permission;
+class MapScreen extends StatefulWidget {
+  const MapScreen({super.key});
 
-  // Verifica si los servicios de ubicación están habilitados.
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    return Future.error('Los servicios de ubicación están deshabilitados.');
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      return Future.error('Los permisos de ubicación fueron denegados.');
-    }
-  }
-  
-  if (permission == LocationPermission.deniedForever) {
-    return Future.error('Los permisos de ubicación están permanentemente denegados.');
-  } 
-
-  // Cuando los permisos están concedidos, obtenemos la posición.
-  final position = await Geolocator.getCurrentPosition();
-  return LatLng(position.latitude, position.longitude);
+  @override
+  State<MapScreen> createState() => _MapScreenState();
 }
-[endcode]
 
-[st] Moviendo la Cámara a la Ubicación del Usuario
-Ahora, modifica el método `_onMapCreated` para que sea `async` y use la función que acabamos de crear.
+class _MapScreenState extends State<MapScreen> {
+  late GoogleMapController mapController;
+  final LatLng _initialPosition = const LatLng(3.341571, -76.530198); // Posición inicial
+  final LatLng _destination = const LatLng(4.658383, -74.093389); // Parque Simón Bolívar
+  final Set<Marker> _markers = {};
 
-[code:dart]
-void _onMapCreated(GoogleMapController controller) async {
-  mapController = controller;
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('inicio'),
+        position: _initialPosition,
+        infoWindow: const InfoWindow(title: 'Posición inicial'),
+      ),
+    );
+  }
 
-  try {
-    final userLocation = await _getUserLocation();
+  void _moveCamera() {
+    mapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: _destination,
+          zoom: 16.0,
+          bearing: 0.0,
+          tilt: 0.0,
+        ),
+      ),
+    );
 
     setState(() {
-      _markers.clear(); // Limpiamos marcadores anteriores (como el de Google HQ)
       _markers.add(
         Marker(
-          markerId: const MarkerId('user_location'),
-          position: userLocation,
-          infoWindow: const InfoWindow(title: 'Tú estás aquí'),
+          markerId: const MarkerId('destino'),
+          position: _destination,
+          infoWindow: const InfoWindow(title: 'Parque Simón Bolívar'),
         ),
       );
     });
+  }
 
-    // Anima la cámara para centrarse en la ubicación del usuario
-    mapController.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(target: userLocation, zoom: 16.0),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Controlando la Cámara del Mapa')),
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(target: _initialPosition, zoom: 14.0),
+            markers: _markers,
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: _moveCamera,
+              child: const Icon(Icons.location_searching),
+            ),
+          ),
+        ],
       ),
     );
-  } catch (e) {
-    // Manejo de errores si no se puede obtener la ubicación
-    print(e); 
   }
 }
 [endcode]
-Usamos `mapController.animateCamera` para mover la vista del mapa de forma suave a una nueva `CameraPosition`.
 
-[st] Profundizando en CameraPosition
-`CameraPosition` tiene varias propiedades para controlar la vista del mapa:
-- `target`: El punto `LatLng` en el centro de la pantalla.
-- `zoom`: El nivel de magnificación. Va desde `1` (vista del mundo) hasta `20` (vista de edificios individuales). Un valor entre 15 y 17 es bueno para ver a nivel de calles.
-- `bearing`: La dirección a la que "apunta" la cámara, en grados en el sentido de las agujas del reloj desde el Norte (0 a 360). También se conoce como azimuth.
-- `tilt`: La inclinación de la cámara en grados. `0` es una vista cenital (directamente desde arriba), y puede ir hasta unos `90` grados para una vista en perspectiva.
+Al presionar el botón flotante, la cámara se moverá suavemente hacia las coordenadas del Parque Simón Bolívar y se agregará un marcador allí.
 
-Por ejemplo, para una vista más dramática, podrías hacer esto:
+[st] Ajustando la Vista de la Cámara
+
+Si quieres más control sobre cómo se ve el mapa (por ejemplo, su orientación o inclinación), puedes usar un objeto `CameraPosition` con propiedades como:
+
+- `target`: Coordenadas centrales (`LatLng`) del mapa.  
+- `zoom`: Nivel de acercamiento (1 = mundo, 20 = edificios).  
+- `bearing`: Dirección hacia la que mira la cámara (0–360°).  
+- `tilt`: Inclinación de la vista (0° = vista desde arriba, 45° o más = vista en perspectiva).
+
+Por ejemplo, para una vista inclinada y orientada al Este:
+
 [code:dart]
 mapController.animateCamera(
   CameraUpdate.newCameraPosition(
     CameraPosition(
-      target: userLocation,
+      target: _destination,
       zoom: 17.0,
-      bearing: 90.0, // Apuntando hacia el Este
-      tilt: 45.0,    // Vista en ángulo de 45 grados
+      bearing: 90.0, // Mira hacia el Este
+      tilt: 45.0,    // Vista inclinada
     ),
   ),
 );
 [endcode]
 
-[st] Resultado
-Al ejecutar la aplicación, te pedirá permisos de ubicación. Una vez que los concedas, el mapa se animará suavemente hasta centrarse en tu ubicación actual, mostrando un marcador que dice "Tú estás aquí".
+Con esto puedes crear efectos más dinámicos, como un paneo o una vista en perspectiva.
