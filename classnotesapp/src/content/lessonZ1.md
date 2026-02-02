@@ -34,11 +34,12 @@ Desarrollar y aplicar habilidades del diseño, construcción, arquitectura y des
 [list]
 Introducción al curso de Aplicaciones Móviles
 Instalación y familiarización con el entorno de desarrollo
-Uso del modo de depuración del IDE para identificar y solucionar errores de ejecución
-Uso de logs para rastrear y registrar errores durante la ejecución de la aplicación
 Estructura de una aplicación móvil y sus componentes principales
 Diseño de la interfaz de usuario para aplicaciones móviles
-Uso de actividades, fragmentos, persistencia y bases de datos en una aplicación
+Uso del kit de Flutter para la diagramación y composición de pantallas
+Navegación entre pantallas
+Uso de listas
+Administración de estados
 [endlist]
 
 `Unidad 2` Diseño, Ideación y Prototipado
@@ -49,14 +50,17 @@ Creación de prototipos no funcionales para visualizar y validar la experiencia 
 Diseño de la experiencia móvil teniendo en cuenta aspectos multidisciplinarios
 [endlist]
 
-`Unidad 3` Arquitectura de las Aplicaciones Móviles
+`Unidad 3` Arquitectura y servicios
 [list]
 Exploración de la arquitectura de soluciones móviles.
-Uso del patrón de arquitectura de software MVVM en el desarrollo de aplicaciones móviles.
+Uso del patrón de arquitectura de software BloC y Clena Architecture en el desarrollo de aplicaciones móviles.
 Utilización de bases de datos no relacionales en el contexto de aplicaciones móviles.
-Diseño de bases de datos NO relacionales.
-Integración de servicios Cloud utilizando Firebase.
-Consumo de Web Services REST y depuración de solicitudes, respuestas y deserialización de datos.
+Integración de servicios Cloud utilizando Supabase.
+Servicios de bases de datos en nube
+Servicios de almacenamiento en nube
+Servicios de autenticación en nube
+Notificaciones Push
+Consumo de Web Services REST y depuración de solicitudes, respuestas y deserialización de datos
 [endlist]
 
 `Unidad 4` Construcción y Despliegue
