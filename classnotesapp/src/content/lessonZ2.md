@@ -1,5 +1,5 @@
 [t] Pitch Elevator
-`25 de agosto de 2025`
+`Semana 5`
 
 [st] Consigna
 La presentación consiste en hacer un pitch elevator donde usted y su grupo debe presentar tres propuestas de proyecto final para el curso de aplicaciones móviles, de acuerdo a los requerimientos mínimos juntos a este documento en el repositorio de GitHub.

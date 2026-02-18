@@ -1,6 +1,6 @@
 [t] Curso
 [lesson] lessonZ1.md
-[lesson] lessonZ3.md
+*[lesson] lessonZ3.md
 [t] Asignaciones
 [lesson] lessonZ2.md
 [lesson] lessonZ4.md
