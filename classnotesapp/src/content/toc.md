@@ -53,6 +53,7 @@
 [lesson] lessonF3.md
 [lesson] lessonF4.md
 [t] Laboratorio 3
+[lesson] lab3concepts.md
 [lesson] lab3.md
 [t] BloC
 [lesson] lessonG1.md

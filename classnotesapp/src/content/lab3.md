@@ -1,17 +1,22 @@
 [t] Laboratorio 3: Manejo de listas
 [st] Introducción
 En este corto laboratorio nos enfocaremos en producir elementos de lista usando como base el laboratorio 2.
-El objetivo es que utilice la navegación entre pantallas para tener una pantalla donde tenga la `ListView` y otra donde tenga el formulario para producir los elementos de lista.
+El objetivo es añadir otra `Page` a la aplicación, de modo que sea un buscador de canciones
 
-[st] Pantalla con `ListView`
+[st] `Page` de búsqueda de canciones
 
-Cree un `StatefulWidget` para `PlayListPage` que permita almacenar una lista de `playlist`.
-[icon] lab3Image1.png
-Por medio del botón `Crear`, la aplicación debe navegar hasta la siguiente pantalla que consiste en un formulario
-[icon] lab3Image2.png
-Es un formulario común, pero note que en el campo de imagen, puede poner una URL de una imagen de la web. Al pulsar ese botón puede previsualizar la imagen que es la que se muestra en el top.
-Cuando le de al botón de `Crear playlist`, esto lleva nuevamente a la primera pantalla con la nueva playlist
+Para hacer la búsqueda haga uso de las siguientes URL
 
-Para representar cada Playlist debe crear el modelo de `Playlist`, el estado con el arreglo de `Playlist` y un `StatelessWidget` con la información de la playlist creada.
-[icon] lab2image3.png
+[code:plain]
+https://api.deezer.com/search?q=eminem
+(No tiene los header de CORS)
+o
+https://i2thub.icesi.edu.co:5443/deezer/search?q=eminem
+(Tiene todos los header de CORS)
+[endcode]
 
+Donde el Request Param `q` es el término de búsqueda.
+
+Prepare entonces la pantalla para que consista es `Column` > `Expanded` > `ListView` de modo que pueda mostrar las canciones que está buscando el usuario por medio de un TextField y un botón.
+
+De momento, sólo deberán mostrarse las canciones
