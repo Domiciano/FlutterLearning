@@ -57,7 +57,8 @@ const LoginScreen = () => {
               sx={{
                 position: 'absolute',
                 inset: 0,
-                background: `linear-gradient(180deg, ${theme.accent}22 0%, transparent 35%, rgba(0,0,0,0.28) 100%)`,
+                // subtle bottom scrim only, so the artwork stays vivid
+                background: 'linear-gradient(180deg, transparent 62%, rgba(0,0,0,0.30) 100%)',
               }}
             />
           </>

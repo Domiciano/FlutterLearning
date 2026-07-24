@@ -10,10 +10,10 @@
 //   motif:           mosaic pattern when backgroundImage is null —
 //                    'mobile' | 'network' | 'geometric'.
 
-import campus from '@/assets/login-bg.jpg';
+import cover from '@/assets/login-bg.png';
 
 export const loginBranding = {
   courseName: 'Aplicaciones Móviles',
-  backgroundImage: campus,
+  backgroundImage: cover,
   motif: 'mobile',
 };
