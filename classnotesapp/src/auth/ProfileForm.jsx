@@ -31,6 +31,23 @@ const ProfileForm = () => {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
+  // MUI's default palette is light, so on the dark theme the input text and
+  // borders come out dark-on-dark. Drive them from the app theme instead.
+  const fieldSx = {
+    '& .MuiInputBase-input': { color: theme.textPrimary },
+    '& .MuiInputBase-input::placeholder': { color: theme.textSecondary, opacity: 1 },
+    '& .MuiInputLabel-root': { color: theme.textSecondary },
+    '& .MuiInputLabel-root.Mui-focused': { color: theme.accent },
+    '& .MuiOutlinedInput-notchedOutline': { borderColor: theme.border },
+    '&:hover .MuiOutlinedInput-root:not(.Mui-focused) .MuiOutlinedInput-notchedOutline': { borderColor: theme.textSecondary },
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: theme.accent },
+    '& .MuiFormHelperText-root': { color: theme.textSecondary },
+    // keep error (red) feedback visible despite the overrides above
+    '& .MuiInputLabel-root.Mui-error': { color: theme.error },
+    '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': { borderColor: theme.error },
+    '& .MuiFormHelperText-root.Mui-error': { color: theme.error },
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const nextErrors = {};
@@ -96,7 +113,7 @@ const ProfileForm = () => {
           helperText={errors.fullName}
           fullWidth
           autoFocus
-          sx={{ mb: 2.5 }}
+          sx={{ mb: 2.5, ...fieldSx }}
         />
         <TextField
           label="Perfil de GitHub"
@@ -106,7 +123,7 @@ const ProfileForm = () => {
           error={!!errors.github}
           helperText={errors.github || 'Usuario o URL completa de tu perfil.'}
           fullWidth
-          sx={{ mb: 3 }}
+          sx={{ mb: 3, ...fieldSx }}
         />
 
         <Button
