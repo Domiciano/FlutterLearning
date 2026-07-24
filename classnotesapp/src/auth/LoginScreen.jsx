@@ -47,27 +47,18 @@ const LoginScreen = () => {
       >
         {loginBranding.backgroundImage ? (
           <>
-            {/* Blurred, zoomed copy fills the panel so the crisp image below can
-                be shown whole (contain) without hard empty bars or upscaling. */}
-            <Box
-              component="img"
-              src={loginBranding.backgroundImage}
-              aria-hidden
-              sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(26px)', transform: 'scale(1.12)' }}
-            />
-            <Box sx={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.22)' }} />
-            {/* The artwork itself, shown complete and un-upscaled. */}
             <Box
               component="img"
               src={loginBranding.backgroundImage}
               alt=""
-              sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain' }}
+              sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             />
             <Box
               sx={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(180deg, transparent 70%, rgba(0,0,0,0.22) 100%)',
+                // subtle bottom scrim only, so the artwork stays vivid
+                background: 'linear-gradient(180deg, transparent 62%, rgba(0,0,0,0.30) 100%)',
               }}
             />
           </>
