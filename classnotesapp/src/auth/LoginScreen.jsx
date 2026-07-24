@@ -11,6 +11,7 @@ import { useThemeMode } from '@/theme/ThemeContext';
 import { useAuth } from './AuthContext';
 import LoginBackground from './LoginBackground';
 import LoginIllustration from './LoginIllustration';
+import LoginSlideshow from './LoginSlideshow';
 import { loginBranding } from './loginBranding';
 import icesiLogo from '@/assets/icesi-logo.svg';
 
@@ -45,23 +46,8 @@ const LoginScreen = () => {
           borderRight: `3px solid ${theme.border}`,
         }}
       >
-        {loginBranding.backgroundImage ? (
-          <>
-            <Box
-              component="img"
-              src={loginBranding.backgroundImage}
-              alt=""
-              sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                // subtle bottom scrim only, so the artwork stays vivid
-                background: 'linear-gradient(180deg, transparent 62%, rgba(0,0,0,0.30) 100%)',
-              }}
-            />
-          </>
+        {loginBranding.backgroundImages?.length ? (
+          <LoginSlideshow images={loginBranding.backgroundImages} />
         ) : (
           <LoginIllustration />
         )}
