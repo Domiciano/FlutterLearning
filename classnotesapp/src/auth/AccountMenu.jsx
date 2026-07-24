@@ -13,9 +13,11 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from './AuthContext';
+import { useThemeMode } from '@/theme/ThemeContext';
 
 const AccountMenu = () => {
   const { configured, user, profile, signOutUser } = useAuth();
+  const { theme } = useThemeMode();
   const [anchorEl, setAnchorEl] = useState(null);
 
   if (!configured || !user) return null;
@@ -26,7 +28,13 @@ const AccountMenu = () => {
   return (
     <>
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small" aria-label="Cuenta">
-        <Avatar src={user.photoURL || undefined} sx={{ width: 32, height: 32, fontSize: '0.9rem' }}>
+        <Avatar
+          src={user.photoURL || undefined}
+          // Google avatar URLs (lh3.googleusercontent.com) 403 when a referrer is
+          // sent, which makes the Avatar fall back to the initial — suppress it.
+          imgProps={{ referrerPolicy: 'no-referrer' }}
+          sx={{ width: 32, height: 32, fontSize: '0.9rem', bgcolor: theme.accent, color: theme.appBarText }}
+        >
           {initial}
         </Avatar>
       </IconButton>
