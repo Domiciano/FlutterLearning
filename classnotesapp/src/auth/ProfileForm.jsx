@@ -5,6 +5,7 @@
 //   Step 2 to provide their código + GitHub username.
 
 import React, { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -15,12 +16,20 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import RadioGroup from '@mui/material/RadioGroup';
-import Radio from '@mui/material/Radio';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { alpha } from '@mui/material/styles';
 import { useThemeMode } from '@/theme/ThemeContext';
 import { useAuth } from './AuthContext';
 import LoginBackground from './LoginBackground';
+import { loginBranding, DISPLAY_FONT } from './loginBranding';
+import icesiLogo from '@/assets/icesi-logo.svg';
+
+const ROLES = [
+  ['profesor', 'Profesor'],
+  ['estudiante', 'Estudiante'],
+  ['otro', 'Otro'],
+];
 
 // Accepts "usuario", "github.com/usuario" or "https://github.com/usuario"
 // and returns the bare handle, or null.
@@ -38,12 +47,23 @@ const ProfileForm = () => {
 
   const [step, setStep] = useState(0);
   const [fullName, setFullName] = useState(user?.displayName ?? '');
-  const [role, setRole] = useState('');
+  // Students are the overwhelming majority → preselect that role.
+  const [role, setRole] = useState('estudiante');
   const [roleOther, setRoleOther] = useState('');
   const [codigo, setCodigo] = useState('');
   const [github, setGithub] = useState('');
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+
+  // Only used when the Google photo is missing or fails to load.
+  const avatarInitial = (fullName || user?.displayName || user?.email || '?')
+    .trim().charAt(0).toUpperCase();
+
+  // `theme.border` equals `theme.backgroundLight` in the dark palette, so an
+  // outline painted with it is invisible on the card. Derive the field borders
+  // from the text color instead, so they read at rest, on hover and on focus.
+  const restBorder = alpha(theme.textSecondary, 0.45);
+  const hoverBorder = alpha(theme.textSecondary, 0.8);
 
   // MUI's default palette is light → drive input colors from the app theme.
   const fieldSx = {
@@ -51,13 +71,40 @@ const ProfileForm = () => {
     '& .MuiInputBase-input::placeholder': { color: theme.textSecondary, opacity: 1 },
     '& .MuiInputLabel-root': { color: theme.textSecondary },
     '& .MuiInputLabel-root.Mui-focused': { color: theme.accent },
-    '& .MuiOutlinedInput-notchedOutline': { borderColor: theme.border },
-    '&:hover .MuiOutlinedInput-root:not(.Mui-focused) .MuiOutlinedInput-notchedOutline': { borderColor: theme.textSecondary },
+    '& .MuiOutlinedInput-notchedOutline': { borderColor: restBorder, borderWidth: 1.5 },
+    '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': { borderColor: hoverBorder },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: theme.accent },
     '& .MuiFormHelperText-root': { color: theme.textSecondary },
     '& .MuiInputLabel-root.Mui-error': { color: theme.error },
     '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': { borderColor: theme.error },
+    '& .MuiOutlinedInput-root.Mui-error:hover .MuiOutlinedInput-notchedOutline': { borderColor: theme.error },
     '& .MuiFormHelperText-root.Mui-error': { color: theme.error },
+  };
+
+  // Role picker: bordered, full-width option buttons instead of bare radios.
+  const roleButtonSx = {
+    flex: 1,
+    textTransform: 'none',
+    fontWeight: 600,
+    fontSize: '0.95rem',
+    py: 1.15,
+    borderRadius: '10px !important',
+    border: `1.5px solid ${errors.role ? theme.error : restBorder} !important`,
+    color: theme.textPrimary,
+    transition: 'background .15s ease, border-color .15s ease, color .15s ease',
+    '&:hover': {
+      background: alpha(theme.accent, 0.08),
+      borderColor: `${hoverBorder} !important`,
+    },
+    '&.Mui-selected': {
+      color: theme.accent,
+      background: alpha(theme.accent, 0.16),
+      borderColor: `${theme.accent} !important`,
+    },
+    '&.Mui-selected:hover': {
+      background: alpha(theme.accent, 0.24),
+      borderColor: `${theme.accent} !important`,
+    },
   };
 
   const finish = async (payload) => {
@@ -149,12 +196,64 @@ const ProfileForm = () => {
           boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
         }}
       >
-        <Typography variant="h5" sx={{ color: theme.textPrimary, fontWeight: 700, mb: 0.5 }}>
-          Completa tu perfil
-        </Typography>
-        <Typography sx={{ color: theme.textSecondary, mb: 3, fontSize: '0.95rem' }}>
-          Necesitamos estos datos para darte acceso al contenido.
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 2,
+            mb: 1.5,
+          }}
+        >
+          <Typography
+            component="p"
+            sx={{
+              fontFamily: DISPLAY_FONT,
+              color: theme.accent,
+              fontWeight: 700,
+              fontSize: { xs: '1.35rem', sm: '1.5rem' },
+              lineHeight: 1.15,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {loginBranding.courseName}
+          </Typography>
+          <img
+            src={icesiLogo}
+            alt="Universidad Icesi"
+            style={{ height: 30, width: 'auto', display: 'block', flexShrink: 0 }}
+          />
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+          <Avatar
+            src={user?.photoURL || undefined}
+            alt={user?.displayName || user?.email || 'Tu foto de perfil'}
+            // Google avatar URLs (lh3.googleusercontent.com) 403 when a referrer
+            // is sent, which makes the Avatar fall back to the initial.
+            imgProps={{ referrerPolicy: 'no-referrer' }}
+            sx={{
+              width: 56,
+              height: 56,
+              flexShrink: 0,
+              fontSize: '1.4rem',
+              fontWeight: 700,
+              bgcolor: theme.accent,
+              color: theme.appBarText,
+              border: `2px solid ${alpha(theme.accent, 0.55)}`,
+            }}
+          >
+            {avatarInitial}
+          </Avatar>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="h5" sx={{ color: theme.textPrimary, fontWeight: 700, mb: 0.5 }}>
+              Completa tu perfil
+            </Typography>
+            <Typography sx={{ color: theme.textSecondary, fontSize: '0.95rem' }}>
+              Necesitamos estos datos para darte acceso al contenido.
+            </Typography>
+          </Box>
+        </Box>
 
         <Stepper activeStep={step} sx={stepperSx}>
           <Step><StepLabel>Tu rol</StepLabel></Step>
@@ -177,24 +276,31 @@ const ProfileForm = () => {
             <FormControl error={!!errors.role} sx={{ mb: role === 'otro' ? 2 : 3, display: 'block' }}>
               <FormLabel
                 sx={{
-                  color: theme.textSecondary, mb: 0.5, fontSize: '0.9rem',
+                  color: theme.textSecondary, mb: 1, fontSize: '0.9rem',
                   '&.Mui-focused': { color: theme.textSecondary },
                   '&.Mui-error': { color: theme.error },
                 }}
               >
                 ¿Cuál es tu rol?
               </FormLabel>
-              <RadioGroup row value={role} onChange={(e) => setRole(e.target.value)}>
-                {[['profesor', 'Profesor'], ['estudiante', 'Estudiante'], ['otro', 'Otro']].map(([val, label]) => (
-                  <FormControlLabel
-                    key={val}
-                    value={val}
-                    control={<Radio sx={{ color: theme.textSecondary, '&.Mui-checked': { color: theme.accent } }} />}
-                    label={label}
-                    sx={{ '& .MuiFormControlLabel-label': { color: theme.textPrimary } }}
-                  />
+              <ToggleButtonGroup
+                exclusive
+                value={role || null}
+                onChange={(_, val) => { if (val) setRole(val); }}
+                aria-label="Rol"
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: 1,
+                  '& .MuiToggleButtonGroup-grouped': { m: 0 },
+                }}
+              >
+                {ROLES.map(([val, label]) => (
+                  <ToggleButton key={val} value={val} sx={roleButtonSx}>
+                    {label}
+                  </ToggleButton>
                 ))}
-              </RadioGroup>
+              </ToggleButtonGroup>
               {errors.role && (
                 <Typography sx={{ color: theme.error, fontSize: '0.75rem', mt: 0.5 }}>{errors.role}</Typography>
               )}

@@ -16,6 +16,9 @@ import cover2 from '@/assets/login-2.jpg';
 import cover3 from '@/assets/login-3.jpg';
 import cover4 from '@/assets/login-4.jpg';
 
+// Distinctive display face for the course title (loaded in index.html).
+export const DISPLAY_FONT = "'Space Grotesk', 'Segoe UI', sans-serif";
+
 export const loginBranding = {
   courseName: 'Aplicaciones Móviles',
   backgroundImages: [cover1, cover2, cover3, cover4],

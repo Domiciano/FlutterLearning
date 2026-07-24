@@ -12,11 +12,9 @@ import { useAuth } from './AuthContext';
 import LoginBackground from './LoginBackground';
 import LoginIllustration from './LoginIllustration';
 import LoginSlideshow from './LoginSlideshow';
-import { loginBranding } from './loginBranding';
+import { loginBranding, DISPLAY_FONT } from './loginBranding';
 import icesiLogo from '@/assets/icesi-logo.svg';
 
-// Distinctive display face for the course title (loaded in index.html).
-const DISPLAY_FONT = "'Space Grotesk', 'Segoe UI', sans-serif";
 const INK = '#141821';
 
 const GoogleG = () => (
