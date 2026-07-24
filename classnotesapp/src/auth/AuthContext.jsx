@@ -14,8 +14,14 @@ import { isFirebaseConfigured, courseId } from './firebaseConfig';
 const AuthContext = createContext(null);
 
 // status: 'loading' | 'signed-out' | 'need-profile' | 'ready'
-const isProfileComplete = (profile) =>
-  !!profile && !!profile.fullName?.trim() && !!profile.github?.trim();
+// Completeness depends on role: teachers/others just need name + role;
+// students must also provide their código and GitHub.
+const isProfileComplete = (p) => {
+  if (!p || !p.fullName?.trim() || !p.role) return false;
+  if (p.role === 'otro' && !p.roleOther?.trim()) return false;
+  if (p.role === 'estudiante' && (!p.codigo?.trim() || !p.github?.trim())) return false;
+  return true;
+};
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -68,15 +74,19 @@ export function AuthProvider({ children }) {
   }, []);
 
   const saveProfile = useCallback(
-    async ({ fullName, github }) => {
+    async (data) => {
       if (!isFirebaseConfigured || !user) return;
       const record = {
         uid: user.uid,
         email: user.email ?? null,
         displayName: user.displayName ?? null,
         photoURL: user.photoURL ?? null,
-        fullName: fullName.trim(),
-        github: github.trim(),
+        fullName: data.fullName.trim(),
+        role: data.role ?? null,
+        roleOther: data.roleOther ?? null,
+        codigo: data.codigo ?? null,
+        github: data.github ?? null,
+        githubUsername: data.githubUsername ?? null,
         courseId,
         updatedAt: serverTimestamp(),
       };
