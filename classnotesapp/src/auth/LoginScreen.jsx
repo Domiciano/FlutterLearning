@@ -24,6 +24,7 @@ import {
 import icesiLogo from '@/assets/icesi-logo.svg';
 
 const INK = '#141821';
+const PAPER = '#FFFFFF';
 
 const GoogleG = () => (
   <svg width="20" height="20" viewBox="0 0 18 18" aria-hidden="true">
@@ -69,9 +70,52 @@ const ComicSeam = ({ paper, ink }) => (
   </Box>
 );
 
+// Comic lettering: paper-white glyphs with a heavy ink outline and a hard
+// offset shadow in the course accent. It is built from three stacked copies of
+// the same text rather than -webkit-text-stroke alone, because that stroke is
+// centred on the glyph and would eat into the letterforms:
+//   1. accent silhouette, nudged down-right  → the drop shadow
+//   2. ink silhouette, in place              → the outline
+//   3. the real text, filled paper           → the letters
+// Only the third one is readable by assistive tech; the other two are hidden.
+const ComicTitle = ({ children, accent, font }) => {
+  const base = {
+    fontFamily: font,
+    fontWeight: 400,
+    fontSize: { xs: '2.6rem', sm: '3.2rem' },
+    lineHeight: 1.02,
+    letterSpacing: '0.015em',
+    m: 0,
+  };
+  const silhouette = (color, offset) => ({
+    ...base,
+    position: 'absolute',
+    left: offset,
+    top: offset,
+    right: offset === 0 ? 0 : `-${offset}px`,
+    color,
+    WebkitTextStroke: `9px ${color}`,
+    userSelect: 'none',
+  });
+
+  return (
+    <Box sx={{ position: 'relative', display: 'block', mb: 4.5 }}>
+      <Typography aria-hidden component="span" sx={silhouette(accent, 7)}>{children}</Typography>
+      <Typography aria-hidden component="span" sx={silhouette(INK, 0)}>{children}</Typography>
+      <Typography component="h1" sx={{ ...base, position: 'relative', color: PAPER }}>
+        {children}
+      </Typography>
+    </Box>
+  );
+};
+
 const LoginScreen = () => {
   const { theme } = useThemeMode();
   const { signInWithGoogle, authError } = useAuth();
+  // Per-course look: the comic treatment is a branding choice, like the cover
+  // images or the motif, so the component stays shared between courses.
+  const comic = !!loginBranding.comic;
+  const comicFont = loginBranding.comicFont || DISPLAY_FONT;
 
   return (
     <Box sx={{ position: 'relative', minHeight: '100vh', display: 'flex', background: theme.background }}>
@@ -99,7 +143,7 @@ const LoginScreen = () => {
           <LoginIllustration />
         )}
         {/* Painted last so the band sits on top of the cover. */}
-        <ComicSeam paper="#FFFFFF" ink={INK} />
+        <ComicSeam paper={PAPER} ink={INK} />
       </Box>
 
       {/* Right — sign-in panel */}
@@ -113,55 +157,87 @@ const LoginScreen = () => {
           p: { xs: 3, sm: 6 },
         }}
       >
-        <Box sx={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 380, textAlign: 'center' }}>
-          <img
-            src={icesiLogo}
-            alt="Universidad Icesi"
-            style={{ height: 40, width: 'auto', display: 'block', margin: '0 auto 28px' }}
-          />
+        <Box sx={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 420, textAlign: 'center' }}>
+          {comic ? (
+            // The logo is a single-color SVG, so it is used as a mask and the
+            // color comes from the CSS — over the dark panel it has to be paper
+            // white, and the file stays untouched for anywhere it is used plain.
+            <Box
+              role="img"
+              aria-label="Universidad Icesi"
+              sx={{
+                width: 180,
+                height: 68, // the logo's viewBox is 1536 x 584.44
+                mx: 'auto',
+                mb: 3.5,
+                backgroundColor: PAPER,
+                WebkitMask: `url(${icesiLogo}) center / contain no-repeat`,
+                mask: `url(${icesiLogo}) center / contain no-repeat`,
+              }}
+            />
+          ) : (
+            <img
+              src={icesiLogo}
+              alt="Universidad Icesi"
+              style={{ height: 40, width: 'auto', display: 'block', margin: '0 auto 28px' }}
+            />
+          )}
 
-          <Typography
-            component="h1"
-            sx={{
-              fontFamily: DISPLAY_FONT,
-              color: theme.textPrimary,
-              fontWeight: 700,
-              fontSize: { xs: '1.9rem', sm: '2.2rem' },
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-              mb: 1.5,
-            }}
-          >
-            {loginBranding.courseName}
-          </Typography>
-          <Typography sx={{ color: theme.textSecondary, mb: 4, fontSize: '1rem' }}>
-            Inicia sesión con tu cuenta de Google para entrar al contenido del curso.
-          </Typography>
+          {comic ? (
+            <ComicTitle accent={theme.accent} font={comicFont}>
+              {loginBranding.courseName}
+            </ComicTitle>
+          ) : (
+            <Typography
+              component="h1"
+              sx={{
+                fontFamily: DISPLAY_FONT,
+                color: theme.textPrimary,
+                fontWeight: 700,
+                fontSize: { xs: '1.9rem', sm: '2.2rem' },
+                lineHeight: 1.1,
+                letterSpacing: '-0.02em',
+                mb: 1.5,
+              }}
+            >
+              {loginBranding.courseName}
+            </Typography>
+          )}
+
+          {/* The comic panel goes straight from the lettering to the button —
+              the button already says what to do, so the instruction line only
+              appears in the plain layout. */}
+          {!comic && (
+            <Typography sx={{ color: theme.textSecondary, mb: 4, fontSize: '1rem' }}>
+              Inicia sesión con tu cuenta de Google para entrar al contenido del curso.
+            </Typography>
+          )}
 
           <Button
             onClick={signInWithGoogle}
             fullWidth
             startIcon={
-              <Box sx={{ display: 'flex', background: '#fff', borderRadius: '6px', p: '4px', border: `2px solid ${INK}` }}>
+              <Box sx={{ display: 'flex', background: PAPER, borderRadius: '6px', p: '4px', border: `2px solid ${INK}` }}>
                 <GoogleG />
               </Box>
             }
             disableRipple
             sx={{
               textTransform: 'none',
-              fontFamily: DISPLAY_FONT,
-              fontWeight: 600,
-              fontSize: '1rem',
+              fontFamily: comic ? comicFont : DISPLAY_FONT,
+              fontWeight: comic ? 400 : 600,
+              fontSize: comic ? '1.25rem' : '1rem',
+              letterSpacing: comic ? '0.04em' : 'normal',
               py: 1.35,
               gap: 0.5,
               color: INK,
-              background: '#fff',
+              background: PAPER,
               border: `2.5px solid ${INK}`,
               borderRadius: '14px',
               boxShadow: `5px 5px 0 ${theme.accent}`,
               transition: 'transform .12s ease, box-shadow .12s ease',
               '&:hover': {
-                background: '#fff',
+                background: PAPER,
                 transform: 'translate(2px, 2px)',
                 boxShadow: `3px 3px 0 ${theme.accent}`,
               },

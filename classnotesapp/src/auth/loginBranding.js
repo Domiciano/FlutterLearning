@@ -8,8 +8,13 @@
 //   backgroundImages: optional array of photos for the left panel. With more
 //                     than one they cross-fade as a slideshow. When null, the
 //                     generated prototype mosaic is used instead.
-//   motif:            mosaic pattern when backgroundImages is null —
-//                     'mobile' | 'network' | 'geometric'.
+//   motif:            backdrop pattern — 'mobile' | 'fullstack' | 'network' |
+//                     'geometric' | 'app-grid'.
+//   comic:            when true the sign-in side gets the comic treatment —
+//                     inked-and-outlined lettering for the course name and the
+//                     Icesi logo masked to paper white. Left out, the panel
+//                     keeps the plain look.
+//   comicFont:        display face for that lettering (loaded in index.html).
 
 import cover1 from '@/assets/login-1.jpg';
 import cover2 from '@/assets/login-2.jpg';
@@ -23,4 +28,6 @@ export const loginBranding = {
   courseName: 'Aplicaciones Móviles',
   backgroundImages: [cover1, cover2, cover3, cover4],
   motif: 'mobile',
+  comic: true,
+  comicFont: "'Bangers', 'Space Grotesk', system-ui, sans-serif",
 };
