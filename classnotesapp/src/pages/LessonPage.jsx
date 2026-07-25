@@ -51,8 +51,19 @@ const LessonPage = forwardRef(({ sections }, ref) => {
     return map;
   }, [sections]);
 
+  // Before SPEC-12 the route id was the lesson's position in toc.md, so links
+  // shared as /lesson/7 are still out there. When the id doesn't match anything,
+  // fall back to resolving a bare number as that ordinal.
+  const legacyOrdinalMap = useMemo(() => {
+    const map = new Map();
+    sections.forEach(sec => {
+      if (sec.type === 'lesson' && sec.ordinal != null) map.set(String(sec.ordinal), sec);
+    });
+    return map;
+  }, [sections]);
+
   useEffect(() => {
-    const section = lessonMap.get(lessonId);
+    const section = lessonMap.get(lessonId) ?? legacyOrdinalMap.get(lessonId);
 
     if (!section) {
       const error = `# Lección no encontrada\n\nLa lección con ID "${lessonId}" no fue encontrada.`;
@@ -63,12 +74,14 @@ const LessonPage = forwardRef(({ sections }, ref) => {
     }
 
     setLoading(true);
-    getOrFetch(lessonId, section.url).then(rawContent => {
+    // Keyed by the canonical id, not the route param, so an old ordinal link and
+    // the current id share one cache entry.
+    getOrFetch(section.id, section.url).then(rawContent => {
       setParsedContent(LessonParser({ content: rawContent }));
       setLoading(false);
       window.scrollTo(0, 0);
     });
-  }, [lessonId, lessonMap]);
+  }, [lessonId, lessonMap, legacyOrdinalMap]);
 
   useImperativeHandle(ref, () => ({
     openMobileToc: () => setShowMobileToc(true),

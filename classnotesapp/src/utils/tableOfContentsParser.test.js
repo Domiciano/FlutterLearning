@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import TableOfContentsParser from './tableOfContentsParser';
 
 // SPEC-11: parser is synchronous — no fetch calls, no async behavior.
@@ -54,19 +54,79 @@ describe('TableOfContentsParser — [lesson:url] with inline label (required for
     expect(sections[0].label).toBe('Spring Boot Setup');
   });
 
-  it('assigns sequential numeric ids', () => {
+  it('falls back to a sequential numeric id when none is authored', () => {
     const toc = '[lesson:url] https://example.com/a.md | Lección A\n[lesson:url] https://example.com/b.md | Lección B';
     const sections = TableOfContentsParser(toc);
     expect(sections[0].id).toBe('1');
     expect(sections[1].id).toBe('2');
   });
 
-  it('ids are sequential across [t] entries', () => {
+  it('fallback ids are sequential across [t] entries', () => {
     const toc = '[t] Semana 1\n[lesson:url] https://example.com/a.md | A\n[t] Semana 2\n[lesson:url] https://example.com/b.md | B';
     const sections = TableOfContentsParser(toc);
     const lessons = sections.filter(s => s.type === 'lesson');
     expect(lessons[0].id).toBe('1');
     expect(lessons[1].id).toBe('2');
+  });
+});
+
+// SPEC-12: [lesson:url] <url> | <label> | <id>
+describe('TableOfContentsParser — authored lesson ids', () => {
+  it('uses the third field as the lesson id', () => {
+    const toc = '[lesson:url] https://example.com/a.md | Lección A | 0001';
+    const sections = TableOfContentsParser(toc);
+    expect(sections[0].id).toBe('0001');
+    expect(sections[0].label).toBe('Lección A');
+    expect(sections[0].url).toBe('https://example.com/a.md');
+  });
+
+  it('trims whitespace around the id', () => {
+    const toc = '[lesson:url] https://example.com/a.md |  Lección A  |  0007  ';
+    const sections = TableOfContentsParser(toc);
+    expect(sections[0].id).toBe('0007');
+  });
+
+  it('keeps ids stable when a lesson is inserted above', () => {
+    const before = TableOfContentsParser('[lesson:url] https://example.com/b.md | B | 0002');
+    const after = TableOfContentsParser(
+      '[lesson:url] https://example.com/a.md | A | 0001\n[lesson:url] https://example.com/b.md | B | 0002'
+    );
+    expect(after[1].id).toBe(before[0].id);
+  });
+
+  it('exposes the legacy ordinal so old /lesson/<n> links can be redirected', () => {
+    const toc = '[lesson:url] https://example.com/a.md | A | 0001\n[lesson:url] https://example.com/b.md | B | 0002';
+    const sections = TableOfContentsParser(toc);
+    expect(sections[0].ordinal).toBe(1);
+    expect(sections[1].ordinal).toBe(2);
+  });
+
+  it('gives the same lesson listed twice the same id', () => {
+    const toc = [
+      '[t] Curso',
+      '[lesson:url] https://example.com/a.md | A | 0001',
+      '[t] Semana 1',
+      '[lesson:url] https://example.com/a.md | A | 0001',
+    ].join('\n');
+    const lessons = TableOfContentsParser(toc).filter(s => s.type === 'lesson');
+    expect(lessons).toHaveLength(2);
+    expect(lessons[0].id).toBe(lessons[1].id);
+  });
+
+  it('warns when one id is reused by two different lessons', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const toc = '[lesson:url] https://example.com/a.md | A | 0001\n[lesson:url] https://example.com/b.md | B | 0001';
+    TableOfContentsParser(toc);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('está repetido'));
+    warn.mockRestore();
+  });
+
+  it('warns when the same lesson is given two different ids', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const toc = '[lesson:url] https://example.com/a.md | A | 0001\n[lesson:url] https://example.com/a.md | A | 0009';
+    TableOfContentsParser(toc);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('dos ids distintos'));
+    warn.mockRestore();
   });
 });
 

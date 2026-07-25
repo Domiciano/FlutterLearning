@@ -2,11 +2,21 @@
 // SPEC-09: supports [lesson:url] for remote lesson files fetched at runtime.
 // SPEC-10: called with text fetched from a remote URL (configured in config.js).
 // SPEC-11: parser is now fully synchronous — no fetch calls. Content loaded on demand by LessonPage.
+// SPEC-12: lesson ids are authored in toc.md as a third field:
+//            [lesson:url] <url> | <label> | <id>
+//          The id is the key every analytics record is stored against, so it has to
+//          be stable. The old behaviour — a positional counter — made the id mean
+//          "position in toc.md": inserting a lesson silently renumbered every one
+//          below it, breaking deep links and re-pointing historical data at the
+//          wrong lesson. Entries without an explicit id still fall back to the
+//          counter so a half-migrated toc.md keeps working.
 
 const TableOfContentsParser = (tocContent) => {
   const lines = tocContent.split('\n').map(line => line.trim()).filter(line => line !== '');
   const sections = [];
   let lessonCounter = 0;
+  const idOwner = new Map(); // id -> url, to catch collisions
+  const urlIds = new Map();  // url -> id, to catch the same lesson under two ids
 
   for (const line of lines) {
     // Disabled entries (prefixed with **)
@@ -21,19 +31,46 @@ const TableOfContentsParser = (tocContent) => {
       sections.push({ type: 'divider' });
 
     } else if (line.startsWith('[lesson:url]')) {
-      // Parse optional inline label: [lesson:url] <url> | <label>
-      const raw = line.slice(12).trim();
-      const pipeIndex = raw.indexOf('|');
-      const url = (pipeIndex !== -1 ? raw.slice(0, pipeIndex) : raw).trim();
-      const inlineLabel = pipeIndex !== -1 ? raw.slice(pipeIndex + 1).trim() : null;
+      // [lesson:url] <url> | <label> | <id>   (label and id both optional)
+      const [rawUrl, rawLabel, rawId] = line.slice(12).split('|').map(part => part.trim());
+      const url = rawUrl;
       const filenameLabel = url.split('/').pop(); // e.g. "lesson7.md"
-      const lessonId = ++lessonCounter;
+      lessonCounter += 1;
+
+      let id = rawId || '';
+      if (!id) {
+        id = String(lessonCounter);
+        console.warn(
+          `[TableOfContentsParser] Lección sin id explícito, se usa el posicional "${id}": ${url}. ` +
+          `Añade un tercer campo en toc.md — [lesson:url] <url> | <título> | <id>`
+        );
+      }
+
+      // The same lesson listed twice (e.g. under "Curso" and under its week) must
+      // reuse one id, or the analytics split one lesson into two content units.
+      const previousId = urlIds.get(url);
+      if (previousId && previousId !== id) {
+        console.warn(
+          `[TableOfContentsParser] La lección ${url} aparece con dos ids distintos ` +
+          `("${previousId}" y "${id}"). Sus datos quedarán partidos en dos.`
+        );
+      }
+      const owner = idOwner.get(id);
+      if (owner && owner !== url) {
+        console.warn(
+          `[TableOfContentsParser] El id "${id}" está repetido en dos lecciones distintas ` +
+          `(${owner} y ${url}). Solo la última será alcanzable por la ruta.`
+        );
+      }
+      urlIds.set(url, id);
+      idOwner.set(id, url);
 
       sections.push({
         type: 'lesson',
         source: 'remote',
-        id: String(lessonId),
-        label: inlineLabel || filenameLabel,
+        id,
+        ordinal: lessonCounter, // legacy numeric id, kept to redirect old deep links
+        label: rawLabel || filenameLabel,
         url,
         rawContent: null, // loaded on demand by LessonPage via LessonContentCache
       });
