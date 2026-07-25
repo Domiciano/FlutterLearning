@@ -13,6 +13,14 @@ import LoginBackground from './LoginBackground';
 import LoginIllustration from './LoginIllustration';
 import LoginSlideshow from './LoginSlideshow';
 import { loginBranding, DISPLAY_FONT } from './loginBranding';
+import {
+  SEAM_INK,
+  SEAM_SPAN,
+  seamBandPath,
+  seamClipPath,
+  seamInnerPath,
+  seamOuterPath,
+} from './comicSeam';
 import icesiLogo from '@/assets/icesi-logo.svg';
 
 const INK = '#141821';
@@ -26,12 +34,53 @@ const GoogleG = () => (
   </svg>
 );
 
+// The viewBox is stretched vertically (preserveAspectRatio="none"), so the
+// outline is non-scaling to keep an even thickness. The two sides are stroked
+// separately: the outer one runs along the cover's clip boundary, which eats
+// the half of the stroke that falls outside it, so it is drawn double width to
+// come out the same weight as the inner side.
+const ComicSeam = ({ paper, ink }) => (
+  <Box aria-hidden sx={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: `${SEAM_SPAN}px` }}>
+    <svg
+      width="100%"
+      height="100%"
+      viewBox={`0 0 ${SEAM_SPAN} 100`}
+      preserveAspectRatio="none"
+      style={{ display: 'block' }}
+    >
+      <path d={seamBandPath} fill={paper} />
+      <path
+        d={seamInnerPath}
+        fill="none"
+        stroke={ink}
+        strokeWidth={SEAM_INK}
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
+      <path
+        d={seamOuterPath}
+        fill="none"
+        stroke={ink}
+        strokeWidth={SEAM_INK * 2}
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  </Box>
+);
+
 const LoginScreen = () => {
   const { theme } = useThemeMode();
   const { signInWithGoogle, authError } = useAuth();
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex' }}>
+    <Box sx={{ position: 'relative', minHeight: '100vh', display: 'flex', background: theme.background }}>
+      {/* The sign-in backdrop spans the whole screen, not just the right half,
+          so the zigzag notches cut into the cover reveal exactly the same
+          gradient as the panel next to them — clipping the cover against a
+          separately-painted panel makes the teeth read as off-color triangles. */}
+      <LoginBackground />
+
       {/* Left — decorative panel (hidden on small screens): a per-course photo
           if one is set in loginBranding, otherwise the prototype mosaic. */}
       <Box
@@ -41,7 +90,7 @@ const LoginScreen = () => {
           position: 'relative',
           overflow: 'hidden',
           background: theme.accent,
-          borderRight: `3px solid ${theme.border}`,
+          clipPath: seamClipPath,
         }}
       >
         {loginBranding.backgroundImages?.length ? (
@@ -49,6 +98,8 @@ const LoginScreen = () => {
         ) : (
           <LoginIllustration />
         )}
+        {/* Painted last so the band sits on top of the cover. */}
+        <ComicSeam paper="#FFFFFF" ink={INK} />
       </Box>
 
       {/* Right — sign-in panel */}
@@ -60,12 +111,8 @@ const LoginScreen = () => {
           alignItems: 'center',
           justifyContent: 'center',
           p: { xs: 3, sm: 6 },
-          background: theme.background,
-          overflow: 'hidden',
         }}
       >
-        <LoginBackground />
-
         <Box sx={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: 380, textAlign: 'center' }}>
           <img
             src={icesiLogo}
