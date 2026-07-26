@@ -15,12 +15,14 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// BeanVisualizer canvas uses ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+// BeanVisualizer canvas and TermsScreen use ResizeObserver.
+// Tiene que ser una clase de verdad: `vi.fn().mockImplementation(() => ({...}))`
+// deja de ser construible con `new` en Vitest 4.
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
 
 // useContentSpy uses IntersectionObserver
 global.IntersectionObserver = vi.fn().mockImplementation(() => ({

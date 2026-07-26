@@ -10,10 +10,11 @@ import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db, googleProvider } from './firebase';
 import { isFirebaseConfigured, courseId } from './firebaseConfig';
+import { TERMS_VERSION } from './terms';
 
 const AuthContext = createContext(null);
 
-// status: 'loading' | 'signed-out' | 'need-profile' | 'ready'
+// status: 'loading' | 'signed-out' | 'need-terms' | 'need-profile' | 'ready'
 // Completeness depends on role: teachers/others just need name + role;
 // students must also provide their código and GitHub.
 const isProfileComplete = (p) => {
@@ -21,6 +22,19 @@ const isProfileComplete = (p) => {
   if (p.role === 'otro' && !p.roleOther?.trim()) return false;
   if (p.role === 'estudiante' && (!p.codigo?.trim() || !p.github?.trim())) return false;
   return true;
+};
+
+// El acceso está condicionado a aceptar los términos vigentes. Comparar la
+// versión guardada contra `TERMS_VERSION` hace que subir la versión del
+// documento obligue a todos a leerlo y aceptarlo de nuevo en su siguiente
+// ingreso, en vez de dejar consentimientos dados sobre un texto que ya cambió.
+const hasAcceptedTerms = (p) =>
+  p?.analyticsConsent === true && p?.termsVersion === TERMS_VERSION;
+
+// Un perfil sin términos aceptados no llega a 'ready' aunque esté completo.
+const statusFor = (p) => {
+  if (!hasAcceptedTerms(p)) return 'need-terms';
+  return isProfileComplete(p) ? 'ready' : 'need-profile';
 };
 
 export function AuthProvider({ children }) {
@@ -47,12 +61,14 @@ export function AuthProvider({ children }) {
         const snap = await getDoc(doc(db, 'students', fbUser.uid));
         const data = snap.exists() ? snap.data() : null;
         setProfile(data);
-        setStatus(isProfileComplete(data) ? 'ready' : 'need-profile');
+        setStatus(statusFor(data));
       } catch (err) {
         console.error('[Auth] Error leyendo el perfil del estudiante:', err);
-        // Don't lock the user out on a read error — let them fill the form.
+        // On a read error we can't tell whether the terms were accepted. Send
+        // the user through the gate again rather than into the app: re-reading
+        // a document is a nuisance, entering without consent on record is not.
         setProfile(null);
-        setStatus('need-profile');
+        setStatus('need-terms');
       }
     });
 
@@ -87,9 +103,9 @@ export function AuthProvider({ children }) {
         codigo: data.codigo ?? null,
         github: data.github ?? null,
         githubUsername: data.githubUsername ?? null,
-        // Consentimiento informado para la analítica de uso. Sin `true` el módulo
-        // de analítica descarta todo evento en el origen. Ver analitics/plan.md.
-        analyticsConsent: data.analyticsConsent === true,
+        // `analyticsConsent` no se toca aquí a propósito: lo escribe `acceptTerms`
+        // y lo borra `withdrawConsent`. Si el formulario de perfil lo reescribiera,
+        // un guardado posterior podría pisar el consentimiento registrado.
         courseId,
         updatedAt: serverTimestamp(),
       };
@@ -103,22 +119,56 @@ export function AuthProvider({ children }) {
     [user]
   );
 
-  // El consentimiento tiene que ser reversible sin consecuencias (requisito ético
-  // de analitics/plan.md), así que se puede cambiar desde el menú de cuenta en
-  // cualquier momento, no solo al completar el perfil.
-  const setAnalyticsConsent = useCallback(
-    async (value) => {
-      if (!isFirebaseConfigured || !user) return;
-      const next = value === true;
-      await setDoc(
-        doc(db, 'students', user.uid),
-        { analyticsConsent: next, updatedAt: serverTimestamp() },
-        { merge: true }
-      );
-      setProfile((prev) => ({ ...prev, analyticsConsent: next }));
-    },
-    [user]
-  );
+  // Aceptación de los términos: es a la vez el consentimiento informado para la
+  // analítica (`analyticsConsent`, que el módulo de analítica exige en el origen)
+  // y el registro de qué versión del documento se aceptó y cuándo. Ver
+  // analitics/plan.md y src/auth/terms.js.
+  const acceptTerms = useCallback(async () => {
+    if (!isFirebaseConfigured || !user) return;
+    const record = {
+      // Las reglas de Firestore exigen `uid` en el documento, y este write puede
+      // ser el que lo cree (la aceptación va antes del formulario de perfil).
+      uid: user.uid,
+      email: user.email ?? null,
+      displayName: user.displayName ?? null,
+      photoURL: user.photoURL ?? null,
+      analyticsConsent: true,
+      termsVersion: TERMS_VERSION,
+      termsAcceptedAt: serverTimestamp(),
+      courseId,
+      updatedAt: serverTimestamp(),
+    };
+    const ref = doc(db, 'students', user.uid);
+    const existing = await getDoc(ref);
+    if (!existing.exists()) record.createdAt = serverTimestamp();
+    await setDoc(ref, record, { merge: true });
+    setProfile((prev) => ({ ...prev, ...record }));
+    // `record` solo añade campos de consentimiento, así que la completitud del
+    // perfil se decide con lo que ya había: quien aceptó y ya tenía perfil entra
+    // directo; quien es nuevo pasa al formulario.
+    setStatus(isProfileComplete(profile) ? 'ready' : 'need-profile');
+  }, [user, profile]);
+
+  // Retiro del consentimiento. Como el acceso está condicionado a la aceptación,
+  // retirar implica cerrar la sesión; dejarla abierta con el consentimiento en
+  // `false` sería un estado que la propia puerta rechaza. El perfil no se borra
+  // (las reglas no permiten delete y perderlo rompe las claves de unión): se
+  // deja constancia de que el consentimiento fue retirado y cuándo.
+  const withdrawConsent = useCallback(async () => {
+    if (!isFirebaseConfigured || !user) return;
+    await setDoc(
+      doc(db, 'students', user.uid),
+      {
+        uid: user.uid,
+        analyticsConsent: false,
+        termsVersion: null,
+        consentWithdrawnAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+    await signOut(auth);
+  }, [user]);
 
   const signOutUser = useCallback(async () => {
     if (!isFirebaseConfigured) return;
@@ -133,7 +183,8 @@ export function AuthProvider({ children }) {
     authError,
     signInWithGoogle,
     saveProfile,
-    setAnalyticsConsent,
+    acceptTerms,
+    withdrawConsent,
     signOutUser,
   };
 

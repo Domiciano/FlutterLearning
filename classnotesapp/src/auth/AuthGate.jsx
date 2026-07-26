@@ -9,6 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useThemeMode } from '@/theme/ThemeContext';
 import { useAuth } from './AuthContext';
 import LoginScreen from './LoginScreen';
+import TermsScreen from './TermsScreen';
 import ProfileForm from './ProfileForm';
 
 const AuthGate = ({ children }) => {
@@ -23,6 +24,8 @@ const AuthGate = ({ children }) => {
     );
   }
   if (status === 'signed-out') return <LoginScreen />;
+  // Los términos van antes del perfil: primero se acepta, después se dan datos.
+  if (status === 'need-terms') return <TermsScreen />;
   if (status === 'need-profile') return <ProfileForm />;
   return children;
 };

@@ -1,5 +1,6 @@
 // src/auth/ProfileForm.jsx
-// Two-step gate shown after Google sign-in.
+// Two-step gate shown after Google sign-in and after accepting the terms
+// (TermsScreen runs first — this form assumes consent is already on record).
 //   Step 1: name + role (profesor / estudiante / otro).
 //   Teachers and "otro" go straight into the course; students continue to
 //   Step 2 to provide their código + GitHub username.
@@ -15,9 +16,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
-import Checkbox from '@mui/material/Checkbox';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { alpha } from '@mui/material/styles';
@@ -54,9 +53,6 @@ const ProfileForm = () => {
   const [roleOther, setRoleOther] = useState('');
   const [codigo, setCodigo] = useState('');
   const [github, setGithub] = useState('');
-  // Opt-in real: arranca desmarcado y no es obligatorio. Negarse no tiene ninguna
-  // consecuencia sobre la nota y se puede cambiar después desde el menú de cuenta.
-  const [analyticsConsent, setAnalyticsConsent] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -133,7 +129,7 @@ const ProfileForm = () => {
     if (Object.keys(err).length) return;
 
     if (role === 'estudiante') { setStep(1); return; }
-    finish({ fullName, role, roleOther: role === 'otro' ? roleOther.trim() : null, analyticsConsent });
+    finish({ fullName, role, roleOther: role === 'otro' ? roleOther.trim() : null });
   };
 
   const submitStep2 = (e) => {
@@ -151,7 +147,6 @@ const ProfileForm = () => {
       codigo: codigo.trim(),
       github: `https://github.com/${handle}`,
       githubUsername: handle,
-      analyticsConsent,
     });
   };
 
@@ -323,39 +318,6 @@ const ProfileForm = () => {
                 sx={{ mb: 3, ...fieldSx }}
               />
             )}
-
-            <Box
-              sx={{
-                mb: 3, p: 2, borderRadius: 2,
-                border: `1px solid ${restBorder}`,
-                background: alpha(theme.textSecondary, 0.05),
-              }}
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={analyticsConsent}
-                    onChange={(e) => setAnalyticsConsent(e.target.checked)}
-                    sx={{ color: theme.textSecondary, '&.Mui-checked': { color: theme.accent }, pt: 0 }}
-                  />
-                }
-                sx={{ alignItems: 'flex-start', m: 0 }}
-                label={
-                  <Box>
-                    <Typography sx={{ color: theme.textPrimary, fontSize: '0.9rem', fontWeight: 600 }}>
-                      Quiero aportar a la investigación del curso
-                    </Typography>
-                    <Typography sx={{ color: theme.textSecondary, fontSize: '0.8rem', mt: 0.5, lineHeight: 1.5 }}>
-                      Se registra cómo usas el material: qué lecciones abres, cuánto
-                      tiempo activo pasas en cada una y con qué interactúas.{' '}
-                      <Box component="span" sx={{ fontWeight: 700 }}>No afecta tu nota</Box>,
-                      no se usa para decisiones individuales y puedes desactivarlo cuando
-                      quieras desde el menú de tu cuenta.
-                    </Typography>
-                  </Box>
-                }
-              />
-            </Box>
 
             <Button type="submit" fullWidth variant="contained" disabled={submitting} sx={primaryBtnSx}>
               {role === 'estudiante' ? 'Continuar' : (submitting ? 'Guardando…' : 'Entrar al curso')}

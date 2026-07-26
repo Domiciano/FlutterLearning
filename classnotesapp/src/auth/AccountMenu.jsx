@@ -11,16 +11,17 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import Switch from '@mui/material/Switch';
 import LogoutIcon from '@mui/icons-material/Logout';
-import InsightsIcon from '@mui/icons-material/Insights';
+import GavelIcon from '@mui/icons-material/Gavel';
 import { useAuth } from './AuthContext';
 import { useThemeMode } from '@/theme/ThemeContext';
+import TermsDialog from './TermsDialog';
 
 const AccountMenu = () => {
-  const { configured, user, profile, signOutUser, setAnalyticsConsent } = useAuth();
+  const { configured, user, profile, signOutUser } = useAuth();
   const { theme } = useThemeMode();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [termsOpen, setTermsOpen] = useState(false);
 
   if (!configured || !user) return null;
 
@@ -51,25 +52,18 @@ const AccountMenu = () => {
           )}
         </Box>
         <Divider />
-        {/* Reversible sin consecuencias: requisito ético de analitics/plan.md.
-            El menú no se cierra al alternarlo, para que se vea el cambio. */}
-        <MenuItem onClick={() => setAnalyticsConsent(!profile?.analyticsConsent)}>
-          <InsightsIcon fontSize="small" sx={{ mr: 1 }} />
-          <Typography sx={{ fontSize: '0.9rem', flexGrow: 1, mr: 1 }}>
-            Aportar a la investigación
-          </Typography>
-          <Switch
-            size="small"
-            edge="end"
-            checked={profile?.analyticsConsent === true}
-            inputProps={{ 'aria-label': 'Aportar a la investigación del curso' }}
-          />
+        {/* Consulta del documento aceptado y única vía de retiro del
+            consentimiento (requisito ético de analitics/plan.md). */}
+        <MenuItem onClick={() => { setAnchorEl(null); setTermsOpen(true); }}>
+          <GavelIcon fontSize="small" sx={{ mr: 1 }} />
+          <Typography sx={{ fontSize: '0.9rem' }}>Términos y condiciones</Typography>
         </MenuItem>
         <Divider />
         <MenuItem onClick={() => { setAnchorEl(null); signOutUser(); }}>
           <LogoutIcon fontSize="small" sx={{ mr: 1 }} /> Cerrar sesión
         </MenuItem>
       </Menu>
+      <TermsDialog open={termsOpen} onClose={() => setTermsOpen(false)} />
     </>
   );
 };
