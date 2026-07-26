@@ -11,6 +11,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 // SPEC-08 P4: use the context hook directly instead of window.useStudiedLessons
 import { useStudiedLessons } from '@/theme/StudiedLessonsContext';
+import { useAnalytics } from '@/analytics/AnalyticsProvider';
+import { EVENTS } from '@/analytics/events';
 
 const createSlug = (text) =>
   text
@@ -25,9 +27,13 @@ const createSlug = (text) =>
 const TableOfContents = ({ subtitles = [], lessonTitle, activeSection = '', lessonId }) => {
   const { theme } = useThemeMode();
   const { studiedLessons, toggleStudied } = useStudiedLessons();
+  const { track } = useAnalytics();
   const isStudied = lessonId != null && studiedLessons.includes(String(lessonId));
 
   const scrollToSubtitle = (id) => {
+    // Saltar a un apartado desde el índice es navegación dirigida: es lo que
+    // separa el modo consulta del modo aprendizaje (H13).
+    track(EVENTS.TOC_SUBTITLE_CLICK, {}, { contentId: lessonId ?? null, subsectionId: id });
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;

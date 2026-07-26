@@ -18,10 +18,13 @@ import "@/prism/languages/prism-java-enhanced.js";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import "@/styles/flutter-like.css"; 
+import "@/styles/flutter-like.css";
+import { useAnalytics } from "@/analytics/AnalyticsProvider";
+import { EVENTS } from "@/analytics/events";
 
 const CodeBlock = ({ children, language, className = "" }) => {
   const codeRef = useRef(null);
+  const { track } = useAnalytics();
 
   useEffect(() => {
     if (codeRef.current) {
@@ -31,6 +34,11 @@ const CodeBlock = ({ children, language, className = "" }) => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(children);
+    // `lines` distingue copiar un fragmento de copiar el ejercicio entero (H5).
+    track(EVENTS.CODE_COPY, {
+      lines: String(children ?? '').split('\n').length,
+      language: language ?? null,
+    });
   };
 
   return (

@@ -1,0 +1,14 @@
+// Reglas que estaban en producción en facelogprueba antes del despliegue del
+// módulo de analítica (2026-07-26). Se conservan como ruta de vuelta.
+//
+// Restaurar:  cp firestore.rules.backup-2026-07-26 firestore.rules
+//             npx firebase-tools deploy --only firestore:rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /students/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

@@ -16,6 +16,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useStudiedLessons } from '@/theme/StudiedLessonsContext';
+import { useAnalytics } from '@/analytics/AnalyticsProvider';
+import { EVENTS, LESSON_ORIGIN } from '@/analytics/events';
+import { setNavigationOrigin } from '@/analytics/navigationOrigin';
 
 const drawerWidth = 280;
 
@@ -26,6 +29,7 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
   const location = useLocation();
   const { theme } = useThemeMode();
   const { studiedLessons, toggleStudied } = useStudiedLessons();
+  const { track } = useAnalytics();
   const [expandedSections, setExpandedSections] = useState(() => {
     try {
       const saved = localStorage.getItem('drawer-expanded-sections');
@@ -37,12 +41,15 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
+  // El efecto va fuera del actualizador de estado a propósito: React invoca el
+  // actualizador dos veces en StrictMode, y ahí dentro cada apertura de sección
+  // se registraría duplicada.
   const toggleSection = (titleId) => {
-    setExpandedSections(prev => {
-      const next = { ...prev, [titleId]: !(prev[titleId] ?? true) };
-      localStorage.setItem('drawer-expanded-sections', JSON.stringify(next));
-      return next;
-    });
+    const open = !(expandedSections[titleId] ?? true);
+    const next = { ...expandedSections, [titleId]: open };
+    setExpandedSections(next);
+    localStorage.setItem('drawer-expanded-sections', JSON.stringify(next));
+    track(EVENTS.DRAWER_SECTION_TOGGLE, { sectionId: titleId, open });
   };
 
   useEffect(() => {
@@ -119,7 +126,13 @@ const Layout = ({ children, sections = [], onOpenMobileNav }) => {
                     display: 'flex',
                     alignItems: 'center',
                   }}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={() => {
+                    // Marcar el origen ANTES de que el router cambie de ruta:
+                    // desde LessonPage ya no se puede distinguir un clic del
+                    // drawer de una entrada por URL, y H13 vive de esa diferencia.
+                    setNavigationOrigin(LESSON_ORIGIN.DRAWER);
+                    setMobileOpen(false);
+                  }}
                 >
                   <ListItemText primary={sec.label} />
                   <IconButton

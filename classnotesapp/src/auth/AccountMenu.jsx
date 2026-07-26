@@ -11,12 +11,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Switch from '@mui/material/Switch';
 import LogoutIcon from '@mui/icons-material/Logout';
+import InsightsIcon from '@mui/icons-material/Insights';
 import { useAuth } from './AuthContext';
 import { useThemeMode } from '@/theme/ThemeContext';
 
 const AccountMenu = () => {
-  const { configured, user, profile, signOutUser } = useAuth();
+  const { configured, user, profile, signOutUser, setAnalyticsConsent } = useAuth();
   const { theme } = useThemeMode();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -48,6 +50,21 @@ const AccountMenu = () => {
             <Typography sx={{ fontSize: '0.78rem', color: 'text.secondary' }} noWrap>{profile.github}</Typography>
           )}
         </Box>
+        <Divider />
+        {/* Reversible sin consecuencias: requisito ético de analitics/plan.md.
+            El menú no se cierra al alternarlo, para que se vea el cambio. */}
+        <MenuItem onClick={() => setAnalyticsConsent(!profile?.analyticsConsent)}>
+          <InsightsIcon fontSize="small" sx={{ mr: 1 }} />
+          <Typography sx={{ fontSize: '0.9rem', flexGrow: 1, mr: 1 }}>
+            Aportar a la investigación
+          </Typography>
+          <Switch
+            size="small"
+            edge="end"
+            checked={profile?.analyticsConsent === true}
+            inputProps={{ 'aria-label': 'Aportar a la investigación del curso' }}
+          />
+        </MenuItem>
         <Divider />
         <MenuItem onClick={() => { setAnchorEl(null); signOutUser(); }}>
           <LogoutIcon fontSize="small" sx={{ mr: 1 }} /> Cerrar sesión

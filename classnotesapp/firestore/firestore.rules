@@ -1,0 +1,80 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore — curso Aplicaciones Móviles (proyecto
+// facelogprueba). Idénticas a las de Compunet2 a propósito: el esquema de datos
+// es el mismo en los dos cursos, así que comparar cursos es concatenar dos
+// exportaciones y no reconciliar dos modelos.
+//
+// Principio: el estudiante escribe lo suyo y solo lee lo suyo; el profesor lee
+// todo pero no escribe nada de nadie. Sin estas reglas, cualquier estudiante
+// autenticado puede leer las preguntas, los intentos de examen y la traza de uso
+// de sus compañeros.
+//
+// El profesor se identifica por un *custom claim*, no por una lista de correos en
+// las reglas. Para asignarlo, una sola vez y desde una consola con el Admin SDK:
+//
+//   admin.auth().setCustomUserClaims(uid, { profesor: true })
+//
+// El estudiante debe cerrar y reabrir sesión para que el claim entre en su token.
+//
+// Desplegar con:  firebase deploy --only firestore:rules
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isProfesor() {
+      return signedIn() && request.auth.token.profesor == true;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Perfil del estudiante. Es suyo: lo crea y lo actualiza él.
+    // No se permite borrarlo desde el cliente — perder el perfil rompe las claves
+    // de unión (codigo, githubUsername) con las notas y con GitHub.
+    match /students/{uid} {
+      allow read:   if isOwner(uid) || isProfesor();
+      allow create: if isOwner(uid) && request.resource.data.uid == uid;
+      allow update: if isOwner(uid) && request.resource.data.uid == uid;
+      allow delete: if false;
+    }
+
+    // Lotes de eventos de analítica. Solo creación: un evento ya escrito no se
+    // corrige ni se borra, o el registro deja de ser un registro.
+    match /eventBatches/{batchId} {
+      allow read:   if isProfesor();
+      allow create: if isOwner(request.resource.data.uid)
+                    && request.resource.data.count is int
+                    && request.resource.data.count > 0
+                    && request.resource.data.count <= 50;
+      allow update, delete: if false;
+    }
+
+    // Corpus de prompts y respuestas del módulo de IA (F2).
+    // El estudiante lee su propio historial; el profesor lee todo el corpus.
+    match /prompts/{promptId} {
+      allow read:   if isOwner(resource.data.uid) || isProfesor();
+      allow create: if isOwner(request.resource.data.uid);
+      allow update, delete: if false;
+    }
+
+    // Intentos de autoexamen (F3). Solo creación, por integridad de la medida:
+    // con update, un intento fallido podría reescribirse como aprobado.
+    match /examAttempts/{attemptId} {
+      allow read:   if isOwner(resource.data.uid) || isProfesor();
+      allow create: if isOwner(request.resource.data.uid);
+      allow update, delete: if false;
+    }
+
+    // Todo lo demás, cerrado. Una colección nueva sin regla explícita no debe
+    // heredar permisos por accidente.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

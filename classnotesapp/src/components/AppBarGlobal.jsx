@@ -13,10 +13,22 @@ import AccountMenu from '@/auth/AccountMenu';
 import techlogo from '@/assets/techlogo.svg';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme as useMuiTheme } from '@mui/material/styles';
+import { useAnalytics } from '@/analytics/AnalyticsProvider';
+import { EVENTS, THEME_MODE } from '@/analytics/events';
 
 const AppBarGlobal = ({ onOpenMobileToc, onOpenMobileNav }) => {
   const { mode, toggleTheme, theme } = useThemeMode();
+  const { track } = useAnalytics();
   const muiTheme = useMuiTheme();
+
+  // El evento se emite desde aquí y no desde ThemeContext porque el proveedor de
+  // tema envuelve al de auth, y sin uid no hay a quién atribuir el evento.
+  const handleToggleTheme = () => {
+    track(EVENTS.THEME_TOGGLE, {
+      to: mode === 'dark' ? THEME_MODE.LIGHT : THEME_MODE.DARK,
+    });
+    toggleTheme();
+  };
   const isMobile = useMediaQuery(muiTheme.breakpoints.down('lg'));
 
   return (
@@ -55,7 +67,7 @@ const AppBarGlobal = ({ onOpenMobileToc, onOpenMobileNav }) => {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <IconButton onClick={toggleTheme} color="inherit" aria-label="Alternar modo claro/oscuro">
+          <IconButton onClick={handleToggleTheme} color="inherit" aria-label="Alternar modo claro/oscuro">
             {mode === 'dark' ? <LightModeIcon sx={{ color: theme.accent }} /> : <DarkModeIcon sx={{ color: theme.accent }} />}
           </IconButton>
           {isMobile && (

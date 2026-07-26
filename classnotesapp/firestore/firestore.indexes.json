@@ -1,0 +1,59 @@
+{
+  "//": "Índices para las consultas de análisis. Desplegar con: firebase deploy --only firestore:indexes",
+  "indexes": [
+    {
+      "//": "Exportar la traza de un estudiante en orden temporal.",
+      "collectionGroup": "eventBatches",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "serverTs", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "//": "Barrido por curso para el volcado completo del semestre.",
+      "collectionGroup": "eventBatches",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "courseId", "order": "ASCENDING" },
+        { "fieldPath": "serverTs", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "//": "Historial de prompts del propio estudiante, más reciente primero.",
+      "collectionGroup": "prompts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "//": "Densidad de prompts por lección — H17, mapa de fricción.",
+      "collectionGroup": "prompts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "contentId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "//": "Intentos de un estudiante en un examen, en orden de intento.",
+      "collectionGroup": "examAttempts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "contentId", "order": "ASCENDING" },
+        { "fieldPath": "attemptNumber", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "//": "El arreglo de eventos no se indexa: es contenido para exportar, no para consultar, y un índice por elemento multiplicaría el coste de cada escritura.",
+      "collectionGroup": "eventBatches",
+      "fieldPath": "events",
+      "indexes": []
+    }
+  ]
+}

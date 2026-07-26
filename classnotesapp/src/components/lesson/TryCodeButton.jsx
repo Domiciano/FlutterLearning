@@ -3,18 +3,28 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DartPadEmbed from '../embed/DartPadEmbed';
 import { useThemeMode } from '@/theme/ThemeContext';
+import { useAnalytics } from '@/analytics/AnalyticsProvider';
+import { EVENTS, TRYCODE_TAB } from '@/analytics/events';
 
 const TryCodeButton = ({ gistId, codeBlock }) => {
   const [showDartPad, setShowDartPad] = useState(false);
   const { theme } = useThemeMode();
-  
+  const { track } = useAnalytics();
+
+  // Pasar a "Fire it up!" es intención de probar el código: es el predictor
+  // activo de H4, frente a la lectura pasiva.
+  const selectTab = (tab) => {
+    setShowDartPad(tab === TRYCODE_TAB.RUN);
+    track(EVENTS.TRYCODE_TAB_SWITCH, { to: tab });
+  };
+
   return (
     <Box sx={{ my: 2 }}>
       {/* Pestañas */}
       <Box sx={{ display: 'flex', borderBottom: 1, borderColor: 'divider', mb: 0 }}>
         <Button
           variant={!showDartPad ? 'contained' : 'text'}
-          onClick={() => setShowDartPad(false)}
+          onClick={() => selectTab(TRYCODE_TAB.CODE)}
           sx={{
             borderRadius: '8px 8px 0 0',
             borderBottom: !showDartPad ? 'none' : '1px solid',
@@ -45,7 +55,7 @@ const TryCodeButton = ({ gistId, codeBlock }) => {
         </Button>
         <Button
           variant={showDartPad ? 'contained' : 'text'}
-          onClick={() => setShowDartPad(true)}
+          onClick={() => selectTab(TRYCODE_TAB.RUN)}
           sx={{
             borderRadius: '8px 8px 0 0',
             borderBottom: showDartPad ? 'none' : '1px solid',

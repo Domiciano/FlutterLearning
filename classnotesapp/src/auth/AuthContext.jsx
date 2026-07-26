@@ -87,6 +87,9 @@ export function AuthProvider({ children }) {
         codigo: data.codigo ?? null,
         github: data.github ?? null,
         githubUsername: data.githubUsername ?? null,
+        // Consentimiento informado para la analítica de uso. Sin `true` el módulo
+        // de analítica descarta todo evento en el origen. Ver analitics/plan.md.
+        analyticsConsent: data.analyticsConsent === true,
         courseId,
         updatedAt: serverTimestamp(),
       };
@@ -96,6 +99,23 @@ export function AuthProvider({ children }) {
       await setDoc(ref, record, { merge: true });
       setProfile((prev) => ({ ...prev, ...record }));
       setStatus('ready');
+    },
+    [user]
+  );
+
+  // El consentimiento tiene que ser reversible sin consecuencias (requisito ético
+  // de analitics/plan.md), así que se puede cambiar desde el menú de cuenta en
+  // cualquier momento, no solo al completar el perfil.
+  const setAnalyticsConsent = useCallback(
+    async (value) => {
+      if (!isFirebaseConfigured || !user) return;
+      const next = value === true;
+      await setDoc(
+        doc(db, 'students', user.uid),
+        { analyticsConsent: next, updatedAt: serverTimestamp() },
+        { merge: true }
+      );
+      setProfile((prev) => ({ ...prev, analyticsConsent: next }));
     },
     [user]
   );
@@ -113,6 +133,7 @@ export function AuthProvider({ children }) {
     authError,
     signInWithGoogle,
     saveProfile,
+    setAnalyticsConsent,
     signOutUser,
   };
 

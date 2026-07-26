@@ -1,6 +1,6 @@
 // src/pages/LessonPage.jsx
 
-import React, { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import LessonParser from '@/components/lesson/LessonParser';
@@ -9,6 +9,7 @@ import { useThemeMode } from '@/theme/ThemeContext';
 import CloseIcon from '@mui/icons-material/Close';
 import { useContentSpy } from '@/hooks/useContentSpy';
 import { useLessonContentCache } from '@/theme/LessonContentCache';
+import { useLessonTelemetry } from '@/analytics/useLessonTelemetry';
 
 // Named constants — match Layout.jsx drawerWidth and TableOfContents desktop width
 const DRAWER_WIDTH = 280;
@@ -40,6 +41,7 @@ const LessonPage = forwardRef(({ sections }, ref) => {
   const [showMobileToc, setShowMobileToc] = useState(false);
   const { theme } = useThemeMode();
   const { getOrFetch } = useLessonContentCache();
+  const contentRef = useRef(null);
 
   const { activeSection } = useContentSpy(parsedContent.subtitles);
 
@@ -88,6 +90,21 @@ const LessonPage = forwardRef(({ sections }, ref) => {
     closeMobileToc: () => setShowMobileToc(false),
   }));
 
+  // El id que se guarda es el canónico de toc.md, no el de la ruta: un enlace
+  // viejo del tipo /lesson/7 tiene que registrar los mismos datos que /lesson/0014,
+  // o la misma lección quedaría partida en dos unidades de contenido.
+  const contentId = useMemo(() => {
+    const section = lessonMap.get(lessonId) ?? legacyOrdinalMap.get(lessonId);
+    return section?.id ?? null;
+  }, [lessonId, lessonMap, legacyOrdinalMap]);
+
+  useLessonTelemetry({
+    contentId,
+    activeSection,
+    scrollRef: contentRef,
+    ready: !loading,
+  });
+
   if (loading) {
     return (
       <Box sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 800 }}>
@@ -101,6 +118,7 @@ const LessonPage = forwardRef(({ sections }, ref) => {
   return (
     <Box sx={{ display: 'flex', width: '100%', flexDirection: { xs: 'column', lg: 'row' }, minWidth: 0 }}>
       <Box
+        ref={contentRef}
         sx={{
           flex: 1,
           right: { lg: CONTENT_RIGHT_OFFSET, xs: 10 },
