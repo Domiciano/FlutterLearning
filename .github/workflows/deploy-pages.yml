@@ -37,7 +37,14 @@ jobs:
         run: npm run build
         working-directory: classnotesapp
         env:
-          VITE_APP_BASE: /FlutterApps/
+          # Derivado del nombre del repo, no fijo. Este repo se publica desde dos
+          # remotos y cada uno sirve bajo su propio nombre: con un valor fijo, la
+          # copia del otro sirve un HTML que pide sus assets en una ruta que ahí
+          # no existe — 200 en la página y 404 en todo lo demás, pantalla en
+          # blanco. El sitio oficial no cambia (el repo `second` se llama
+          # FlutterApps), pero la copia de `origin`, hoy renombrada a `Apps`,
+          # pasa de rota a funcionar. Ver CLAUDE.md, eje 8.
+          VITE_APP_BASE: /${{ github.event.repository.name }}/
 
       - uses: actions/upload-pages-artifact@v3
         with:
