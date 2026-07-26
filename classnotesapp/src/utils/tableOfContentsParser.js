@@ -10,11 +10,23 @@
 //          below it, breaking deep links and re-pointing historical data at the
 //          wrong lesson. Entries without an explicit id still fall back to the
 //          counter so a half-migrated toc.md keeps working.
+// SPEC-13: los títulos [t] que nombran una semana ("SEMANA 3 · Spring Framework",
+//          "Navegación · SEMANA 2") le pasan ese número a las lecciones que van
+//          debajo, como `week`. Es la única fuente de la fecha planeada de cada
+//          lección, y sin fecha planeada no existe `scheduleLagDays` (H3), que es
+//          la hipótesis núcleo de la alerta temprana. Las secciones sin semana
+//          ("Curso", "Extras", "BloC") dejan `week: null`: no están programadas,
+//          y fingir una fecha sería peor que no tenerla.
+
+// Reconoce la semana en cualquier posición del título, porque los dos cursos la
+// escriben distinto: "SEMANA 3 · Tema" en Compunet2, "Tema · SEMANA 2" en Móviles.
+const WEEK_IN_TITLE = /SEMANA\s+(\d+)/i;
 
 const TableOfContentsParser = (tocContent) => {
   const lines = tocContent.split('\n').map(line => line.trim()).filter(line => line !== '');
   const sections = [];
   let lessonCounter = 0;
+  let currentWeek = null;
   const idOwner = new Map(); // id -> url, to catch collisions
   const urlIds = new Map();  // url -> id, to catch the same lesson under two ids
 
@@ -25,7 +37,11 @@ const TableOfContentsParser = (tocContent) => {
     if (line.startsWith('[t]')) {
       const label = line.slice(3).trim();
       const id = label.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-      sections.push({ type: 'title', id, label });
+      const weekMatch = label.match(WEEK_IN_TITLE);
+      // Un título sin semana corta el arrastre: si no, "Extras" al final heredaría
+      // la semana 16 y sus lecciones parecerían programadas para esa fecha.
+      currentWeek = weekMatch ? Number(weekMatch[1]) : null;
+      sections.push({ type: 'title', id, label, week: currentWeek });
 
     } else if (line.startsWith('[d]')) {
       sections.push({ type: 'divider' });
@@ -71,6 +87,7 @@ const TableOfContentsParser = (tocContent) => {
         id,
         ordinal: lessonCounter, // legacy numeric id, kept to redirect old deep links
         label: rawLabel || filenameLabel,
+        week: currentWeek, // SPEC-13: semana programada, o null si la sección no la nombra
         url,
         rawContent: null, // loaded on demand by LessonPage via LessonContentCache
       });

@@ -169,3 +169,59 @@ describe('TableOfContentsParser — mixed content', () => {
     expect(sections[0].label).toBe('Única');
   });
 });
+
+describe('TableOfContentsParser — SPEC-13: semana programada', () => {
+  it('arrastra la semana del título a las lecciones que van debajo', () => {
+    const toc = [
+      '[t] SEMANA 3 · Spring Framework',
+      '[lesson:url] https://example.com/a.md | A | lessonA',
+      '[lesson:url] https://example.com/b.md | B | lessonB',
+    ].join('\n');
+    const sections = TableOfContentsParser(toc);
+    expect(sections[0].week).toBe(3);
+    expect(sections[1].week).toBe(3);
+    expect(sections[2].week).toBe(3);
+  });
+
+  it('reconoce la semana al final del título, como la escribe Móviles', () => {
+    const toc = [
+      '[t] Navegación · SEMANA 2',
+      '[lesson:url] https://example.com/a.md | A | lessonA',
+    ].join('\n');
+    const sections = TableOfContentsParser(toc);
+    expect(sections[1].week).toBe(2);
+  });
+
+  it('un título sin semana corta el arrastre, no lo hereda', () => {
+    // "Extras" al final no está programado: heredar la semana 16 lo haría parecer
+    // atrasado o adelantado contra una fecha que nadie fijó.
+    const toc = [
+      '[t] SEMANA 16 · Deploy',
+      '[lesson:url] https://example.com/a.md | A | lessonA',
+      '[t] Extras',
+      '[lesson:url] https://example.com/b.md | B | lessonB',
+    ].join('\n');
+    const sections = TableOfContentsParser(toc);
+    expect(sections[1].week).toBe(16);
+    expect(sections[2].week).toBeNull();
+    expect(sections[3].week).toBeNull();
+  });
+
+  it('deja week en null cuando ninguna sección nombra semana', () => {
+    const toc = [
+      '[t] BloC',
+      '[lesson:url] https://example.com/a.md | A | lessonA',
+    ].join('\n');
+    const sections = TableOfContentsParser(toc);
+    expect(sections[1].week).toBeNull();
+  });
+
+  it('no confunde un número suelto del título con la semana', () => {
+    const toc = [
+      '[t] Laboratorio 2',
+      '[lesson:url] https://example.com/a.md | A | lessonA',
+    ].join('\n');
+    const sections = TableOfContentsParser(toc);
+    expect(sections[1].week).toBeNull();
+  });
+});
