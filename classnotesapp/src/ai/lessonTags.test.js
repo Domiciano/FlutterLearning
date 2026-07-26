@@ -25,8 +25,10 @@ describe('extractLessonTags', () => {
     expect(extractLessonTags(`<!-- tags: corta, ${larga} -->`)).toEqual(['corta']);
   });
 
-  it('corta en seis: más atajos que eso dejan de ser atajos', () => {
-    expect(extractLessonTags('<!-- tags: a,b,c,d,e,f,g,h -->')).toHaveLength(6);
+  it('admite un vocabulario amplio para el modelo, con tope', () => {
+    // El modelo agradece las etiquetas completas; la UI solo enseña MAX_CHIPS.
+    const muchas = Array.from({ length: 20 }, (_, i) => `t${i}`).join(',');
+    expect(extractLessonTags(`<!-- tags: ${muchas} -->`)).toHaveLength(12);
   });
 });
 

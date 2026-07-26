@@ -16,7 +16,12 @@
 
 const TAGS_COMMENT = /<!--\s*tags?\s*:\s*([^>]*?)\s*-->/i;
 
-const MAX_TAGS = 6;
+// Las etiquetas sirven a dos consumidores con necesidades opuestas: el modelo
+// agradece un vocabulario completo de la lección, y la interfaz se satura con
+// más de media docena de chips. Por eso se parsean hasta MAX_TAGS —todas van a
+// la instrucción del sistema— y la UI solo muestra las primeras MAX_CHIPS.
+const MAX_TAGS = 12;
+export const MAX_CHIPS = 6;
 // Un atajo más largo que esto deja de leerse como atajo y desborda el chip.
 const MAX_TAG_LENGTH = 42;
 

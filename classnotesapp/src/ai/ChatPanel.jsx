@@ -17,6 +17,7 @@ import StopIcon from '@mui/icons-material/Stop';
 import { alpha } from '@mui/material/styles';
 import { useThemeMode } from '@/theme/ThemeContext';
 import { useAi } from './AiProvider';
+import { MAX_CHIPS } from './lessonTags';
 
 const Turn = ({ turn, theme }) => {
   const mine = turn.role === 'user';
@@ -125,7 +126,8 @@ const ChatPanel = ({ draft, onDraftUsed }) => {
           hay, de los títulos de los apartados. Ver ai/lessonTags.js. */}
       {turns.length === 0 && lesson.topics?.length > 0 && (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mb: 1 }}>
-          {lesson.topics.map((topic) => (
+          {/* Todas las etiquetas van al modelo; aquí solo caben unas pocas. */}
+          {lesson.topics.slice(0, MAX_CHIPS).map((topic) => (
             <Chip
               key={topic}
               label={topic}
