@@ -17,7 +17,6 @@ import StopIcon from '@mui/icons-material/Stop';
 import { alpha } from '@mui/material/styles';
 import { useThemeMode } from '@/theme/ThemeContext';
 import { useAi } from './AiProvider';
-import { TEMPLATES } from './promptTemplates';
 
 const Turn = ({ turn, theme }) => {
   const mine = turn.role === 'user';
@@ -53,15 +52,13 @@ const Turn = ({ turn, theme }) => {
 
 const ChatPanel = ({ draft, onDraftUsed }) => {
   const { theme } = useThemeMode();
-  const { turns, sending, error, send, stop, lesson, assignedTemplate, clearError } = useAi();
+  const { turns, sending, error, send, stop, lesson, clearError } = useAi();
 
   const [text, setText] = useState('');
-  const [template, setTemplate] = useState(assignedTemplate ?? null);
+  // Tema del último atajo pulsado, solo para registrar por dónde entró la
+  // pregunta. No cambia cómo responde el asistente.
+  const [topicTag, setTopicTag] = useState(null);
   const bottomRef = useRef(null);
-
-  // La plantilla asignada al azar llega con el perfil, que puede cargar después
-  // del primer render.
-  useEffect(() => { setTemplate(assignedTemplate ?? null); }, [assignedTemplate]);
 
   // "Volver a preguntar" desde el historial deja el texto aquí, sin enviarlo: el
   // estudiante decide si lo reformula antes.
@@ -76,8 +73,16 @@ const ChatPanel = ({ draft, onDraftUsed }) => {
   const submit = (e) => {
     e.preventDefault();
     if (!text.trim() || sending) return;
-    send(text, template);
+    send(text, topicTag);
     setText('');
+    setTopicTag(null);
+  };
+
+  // Un atajo no envía nada: deja la pregunta escrita para que el estudiante la
+  // afine antes de mandarla. Enviar de golpe convierte el chip en una ruleta.
+  const useTopic = (topic) => {
+    setText(`Explícame «${topic}»`);
+    setTopicTag(topic);
   };
 
   const restBorder = alpha(theme.textSecondary, 0.45);
@@ -115,23 +120,28 @@ const ChatPanel = ({ draft, onDraftUsed }) => {
         </Box>
       )}
 
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mb: 1 }}>
-        {TEMPLATES.map((t) => (
-          <Chip
-            key={t.id ?? 'ninguna'}
-            label={t.label}
-            size="small"
-            onClick={() => setTemplate(template === t.id ? null : t.id)}
-            sx={{
-              fontSize: '0.75rem',
-              color: template === t.id ? theme.accent : theme.textSecondary,
-              borderColor: template === t.id ? theme.accent : restBorder,
-              background: template === t.id ? alpha(theme.accent, 0.14) : 'transparent',
-            }}
-            variant="outlined"
-          />
-        ))}
-      </Box>
+      {/* Atajos de la lección que se está leyendo, no cinco frases genéricas
+          iguales en todo el curso. Salen de las etiquetas del .md o, si no las
+          hay, de los títulos de los apartados. Ver ai/lessonTags.js. */}
+      {turns.length === 0 && lesson.topics?.length > 0 && (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, mb: 1 }}>
+          {lesson.topics.map((topic) => (
+            <Chip
+              key={topic}
+              label={topic}
+              size="small"
+              onClick={() => useTopic(topic)}
+              sx={{
+                fontSize: '0.75rem',
+                color: theme.textSecondary,
+                borderColor: restBorder,
+                '&:hover': { borderColor: theme.accent, color: theme.accent },
+              }}
+              variant="outlined"
+            />
+          ))}
+        </Box>
+      )}
 
       <Box component="form" onSubmit={submit} sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
         <TextField

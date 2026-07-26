@@ -11,6 +11,7 @@ import { useContentSpy } from '@/hooks/useContentSpy';
 import { useLessonContentCache } from '@/theme/LessonContentCache';
 import { useLessonTelemetry } from '@/analytics/useLessonTelemetry';
 import { useCurrentLesson } from '@/ai/CurrentLessonContext';
+import { topicsFor } from '@/ai/lessonTags';
 
 // Named constants — match Layout.jsx drawerWidth and TableOfContents desktop width
 const DRAWER_WIDTH = 280;
@@ -93,6 +94,9 @@ const LessonPage = forwardRef(({ sections }, ref) => {
         tocSection: section.tocSection ?? null,
         rawContent,
         subtitles: parsed.subtitles ?? [],
+        // Etiquetas declaradas en el .md, o los títulos de los apartados si la
+        // lección no las declara. Ver ai/lessonTags.js.
+        topics: topicsFor({ markdown: rawContent, subtitles: parsed.subtitles }),
       });
     });
   }, [lessonId, lessonMap, legacyOrdinalMap]);

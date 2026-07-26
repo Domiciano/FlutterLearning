@@ -17,6 +17,7 @@ const EMPTY = {
   tocSection: null,
   rawContent: null,
   subtitles: [],
+  topics: [],
   subsectionId: null,
   subsectionTitle: null,
 };

@@ -94,8 +94,11 @@ export function composeMaterial({ rawContent, subtitles, subsectionTitle }) {
 }
 
 /**
- * Instrucción del sistema completa. `templateInstruction` es la de la plantilla
- * elegida, o null.
+ * Instrucción del sistema completa.
+ *
+ * `topics` son las etiquetas de la lección (ver `lessonTags.js`). Decirle al
+ * modelo de qué va la lección es más fiable que dejarle deducirlo del texto, y
+ * es lo mismo que alimenta los atajos que ve el estudiante.
  */
 export function buildSystemInstruction({
   courseName,
@@ -103,8 +106,8 @@ export function buildSystemInstruction({
   tocSection,
   lessonTitle,
   subsectionTitle,
+  topics,
   material,
-  templateInstruction,
 }) {
   const parts = [];
 
@@ -112,7 +115,14 @@ export function buildSystemInstruction({
     `Eres el tutor del curso "${courseName}"${courseHint ? ` (${courseHint})` : ''}.\n` +
       'Respondes basándote en el material del curso que viene a continuación; si algo ' +
       'no está ahí, dilo en vez de inventarlo. Responde en español, en el mismo tono ' +
-      'del material, y usa bloques de código cuando ayuden.'
+      'del material, y usa bloques de código cuando ayuden.\n\n' +
+      // Sin esto el modelo tiende a devolver la pregunta al estudiante. Si alguien
+      // pregunta algo, quiere la respuesta: dársela y después, si acaso, invitar
+      // a profundizar. Nunca al revés.
+      'RESPONDE DIRECTAMENTE a lo que te preguntan. No devuelvas la pregunta, no ' +
+      'escondas la respuesta detrás de acertijos y no le pidas al estudiante que ' +
+      'adivine. Primero la respuesta clara; si después quieres proponerle algo para ' +
+      'profundizar, hazlo al final y en una sola frase.'
   );
 
   const ubicacion = [
@@ -121,6 +131,7 @@ export function buildSystemInstruction({
   ].filter(Boolean).join(' · ');
   if (ubicacion) parts.push(ubicacion);
   if (subsectionTitle) parts.push(`Apartado que el estudiante tiene en pantalla: "${subsectionTitle}"`);
+  if (topics?.length) parts.push(`Temas de esta lección: ${topics.join(', ')}.`);
 
   if (material) {
     parts.push(`--- MATERIAL ---\n${material}\n--- FIN DEL MATERIAL ---`);
@@ -130,8 +141,6 @@ export function buildSystemInstruction({
         'y limítate a lo que puedas afirmar con seguridad.'
     );
   }
-
-  if (templateInstruction) parts.push(templateInstruction);
 
   return parts.join('\n\n');
 }

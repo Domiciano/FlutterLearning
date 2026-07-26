@@ -1,5 +1,14 @@
 // src/ai/promptTemplates.js
 //
+// SUSPENDIDO (2026-07-26). Las plantillas ya NO se aplican: salían
+// preseleccionadas por el sorteo, así que a un estudiante que preguntaba algo
+// concreto le tocaba "dame una pista" y el asistente esquivaba la respuesta. Un
+// tutor que no responde es peor que una hipótesis menos.
+//
+// Lo que queda vivo es la asignación al azar en `students.promptTemplate`, que
+// no cuesta nada y deja la puerta abierta a recuperar RQ11 con una manipulación
+// que no degrade la ayuda. La propuesta está en features.md § F2.
+//
 // Las plantillas son el único diseño causal disponible en todo el estudio (RQ11).
 // Por eso se asignan **al azar por ESTUDIANTE, no por pregunta**, y la asignación
 // se fija al conectar la clave y se guarda en el perfil (`students.promptTemplate`).

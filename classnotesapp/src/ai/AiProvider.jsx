@@ -26,7 +26,6 @@ import { useCurrentLesson } from './CurrentLessonContext';
 import { readApiKey, writeApiKey, clearApiKey, readModel, writeModel } from './apiKeyStore';
 import { connectModel, streamGenerate } from './geminiClient';
 import { composeMaterial, buildSystemInstruction } from './buildContext';
-import { instructionFor } from './promptTemplates';
 import { derivePromptFeatures } from './promptText';
 import { hasPriorAttempt } from './priorAttempt';
 
@@ -55,7 +54,6 @@ export function AiProvider({ children }) {
   const abortRef = useRef(null);
 
   const aiConsent = profile?.aiConsent === true;
-  const assignedTemplate = profile?.promptTemplate ?? null;
 
   // El id de modelo de `content/config.js` es una PREFERENCIA, no un requisito:
   // los ids caducan y el que esté fijado puede no existir para la clave del
@@ -124,7 +122,7 @@ export function AiProvider({ children }) {
   // entero para codificarlo con rúbrica (H7), y una subcolección obligaría a
   // recorrer n conversaciones para armar el mismo CSV.
   const persistPrompt = useCallback(
-    async ({ question, features, templateId, priorAttempt, contextMode, conversation, turnIndex, result }) => {
+    async ({ question, features, topicTag, priorAttempt, contextMode, conversation, turnIndex, result }) => {
       if (!isFirebaseConfigured || !db || !uid || !aiConsent) return;
       try {
         await addDoc(collection(db, 'prompts'), {
@@ -138,7 +136,8 @@ export function AiProvider({ children }) {
           subsectionId: lesson.subsectionId ?? null,
           subsectionTitle: lesson.subsectionTitle ?? null,
           text: question,
-          template: templateId ?? null,
+          template: null,          // RQ11 suspendido: ver features.md § F2
+          topicTag: topicTag ?? null, // atajo de tema usado, si lo hubo
           createdAt: serverTimestamp(),
           ...features,
           priorAttempt,
@@ -162,7 +161,7 @@ export function AiProvider({ children }) {
   );
 
   const send = useCallback(
-    async (text, templateId) => {
+    async (text, topicTag) => {
       const question = (text ?? '').trim();
       if (!question || !apiKey || sending) return;
 
@@ -187,7 +186,8 @@ export function AiProvider({ children }) {
         {
           text: question,
           ...features,
-          template: templateId ?? null,
+          template: null, // RQ11 suspendido: ver features.md § F2
+          topicTag: topicTag ?? null,
           priorAttempt,
           conversationId: conversation.id,
           turnIndex,
@@ -205,8 +205,8 @@ export function AiProvider({ children }) {
         tocSection: lesson.tocSection,
         lessonTitle: lesson.lessonTitle,
         subsectionTitle: lesson.subsectionTitle,
+        topics: lesson.topics,
         material,
-        templateInstruction: instructionFor(templateId),
       });
 
       const controller = new AbortController();
@@ -256,7 +256,7 @@ export function AiProvider({ children }) {
         await persistPrompt({
           question,
           features,
-          templateId,
+          topicTag,
           priorAttempt,
           contextMode,
           conversation,
@@ -326,7 +326,6 @@ export function AiProvider({ children }) {
       apiKey,
       hasKey: Boolean(apiKey),
       aiConsent,
-      assignedTemplate,
       turns,
       sending,
       error,
@@ -341,7 +340,7 @@ export function AiProvider({ children }) {
       reusePrompt,
       clearError: () => setError(null),
     }),
-    [model, uid, apiKey, aiConsent, assignedTemplate, turns, sending, error, history, lesson,
+    [model, uid, apiKey, aiConsent, turns, sending, error, history, lesson,
      connectKey, forgetKey, acceptAiConsent, send, stop, loadHistory, reusePrompt]
   );
 

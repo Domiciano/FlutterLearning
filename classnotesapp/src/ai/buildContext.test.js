@@ -94,27 +94,35 @@ describe('composeMaterial', () => {
 });
 
 describe('buildSystemInstruction', () => {
-  it('mete ubicación y material, y prohíbe inventar', () => {
+  it('mete ubicación, temas y material, y prohíbe inventar', () => {
     const out = buildSystemInstruction({
       courseName: 'Computación en Internet II',
       courseHint: 'Java, Spring Boot',
       tocSection: 'SEMANA 3 · Spring Framework',
       lessonTitle: 'Inyección de dependencias',
       subsectionTitle: 'Beans',
+      topics: ['IoC Container', '@Autowired'],
       material: '# Contenido',
-      templateInstruction: 'Da una pista, no la solución.',
     });
     expect(out).toContain('Computación en Internet II');
     expect(out).toContain('SEMANA 3 · Spring Framework');
     expect(out).toContain('Inyección de dependencias');
     expect(out).toContain('Beans');
+    expect(out).toContain('Temas de esta lección: IoC Container, @Autowired.');
     expect(out).toContain('--- MATERIAL ---');
     expect(out).toContain('dilo en vez de inventarlo');
-    expect(out).toContain('Da una pista, no la solución.');
+  });
+
+  it('ordena responder directamente, sin devolver la pregunta', () => {
+    // Es el fallo que se vio en producción: al estudiante le tocaba la plantilla
+    // "dame una pista" y el asistente contestaba con otra pregunta.
+    const out = buildSystemInstruction({ courseName: 'X', material: '# m' });
+    expect(out).toContain('RESPONDE DIRECTAMENTE');
+    expect(out).toContain('No devuelvas la pregunta');
   });
 
   it('sin material, se lo dice al modelo explícitamente', () => {
-    const out = buildSystemInstruction({ courseName: 'X', material: null, templateInstruction: null });
+    const out = buildSystemInstruction({ courseName: 'X', material: null });
     expect(out).not.toContain('--- MATERIAL ---');
     expect(out).toContain('No tienes el texto de la lección delante');
   });
