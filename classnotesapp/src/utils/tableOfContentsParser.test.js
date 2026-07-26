@@ -225,3 +225,22 @@ describe('TableOfContentsParser — SPEC-13: semana programada', () => {
     expect(sections[1].week).toBeNull();
   });
 });
+
+describe('TableOfContentsParser — SPEC-14: sección del temario', () => {
+  it('arrastra el título de la sección a sus lecciones', () => {
+    const toc = [
+      '[t] SEMANA 3 · Spring Framework',
+      '[lesson:url] https://example.com/a.md | A | lessonA',
+      '[t] Extras',
+      '[lesson:url] https://example.com/b.md | B | lessonB',
+    ].join('\n');
+    const sections = TableOfContentsParser(toc);
+    expect(sections[1].tocSection).toBe('SEMANA 3 · Spring Framework');
+    expect(sections[3].tocSection).toBe('Extras');
+  });
+
+  it('una lección antes de cualquier título queda sin sección', () => {
+    const sections = TableOfContentsParser('[lesson:url] https://example.com/a.md | A | lessonA');
+    expect(sections[0].tocSection).toBeNull();
+  });
+});

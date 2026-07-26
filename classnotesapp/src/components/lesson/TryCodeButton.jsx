@@ -3,6 +3,8 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import DartPadEmbed from '../embed/DartPadEmbed';
 import { useThemeMode } from '@/theme/ThemeContext';
+import { useCurrentLesson } from '@/ai/CurrentLessonContext';
+import { markAttempt } from '@/ai/priorAttempt';
 import { useAnalytics } from '@/analytics/AnalyticsProvider';
 import { EVENTS, TRYCODE_TAB } from '@/analytics/events';
 
@@ -10,12 +12,16 @@ const TryCodeButton = ({ gistId, codeBlock }) => {
   const [showDartPad, setShowDartPad] = useState(false);
   const { theme } = useThemeMode();
   const { track } = useAnalytics();
+  const { lesson } = useCurrentLesson();
 
   // Pasar a "Fire it up!" es intención de probar el código: es el predictor
   // activo de H4, frente a la lectura pasiva.
   const selectTab = (tab) => {
     setShowDartPad(tab === TRYCODE_TAB.RUN);
     track(EVENTS.TRYCODE_TAB_SWITCH, { to: tab });
+    // Igual que el DartPad: ejecutar es intentarlo, y marca el `priorAttempt`
+    // de H8 para las preguntas que vengan después en esta lección.
+    if (tab === TRYCODE_TAB.RUN) markAttempt(lesson.contentId);
   };
 
   return (

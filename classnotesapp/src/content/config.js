@@ -28,6 +28,17 @@ const courseConfig = {
   // PENDIENTE: fechas sin definir. Mientras esté vacío H2 no se puede evaluar, pero no
   // se pierden datos: se calcula después sobre la traza ya recogida.
   assessments: [],
+
+  // --- Módulo de IA (F2) ---------------------------------------------------
+  // El id del modelo va aquí y no incrustado en un componente: cambiarlo por uno
+  // más nuevo o más barato no debería obligar a tocar la UI del chat.
+  // gemini-2.5-flash: rápido, cuota gratuita generosa y contexto de sobra para
+  // meter una lección entera (mediana ~6 KB, p90 ~15 KB).
+  aiModel: 'gemini-2.5-flash',
+
+  // Pista de dominio para la instrucción del sistema. Es lo único del prompt que
+  // cambia por curso; el resto del andamiaje es idéntico entre repos.
+  aiCourseHint: 'Flutter, Dart 3, null safety',
 };
 
 export default courseConfig;

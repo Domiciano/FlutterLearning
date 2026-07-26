@@ -17,6 +17,10 @@
 //          la hipótesis núcleo de la alerta temprana. Las secciones sin semana
 //          ("Curso", "Extras", "BloC") dejan `week: null`: no están programadas,
 //          y fingir una fecha sería peor que no tenerla.
+// SPEC-14: además de la semana, cada lección arrastra el TÍTULO de su sección
+//          (`tocSection`). La lista que devuelve el parser es plana y una lección
+//          no sabe bajo qué [t] cuelga; F2 lo necesita para anclar cada prompt a
+//          la sección del temario, y el análisis para agrupar por bloque.
 
 // Reconoce la semana en cualquier posición del título, porque los dos cursos la
 // escriben distinto: "SEMANA 3 · Tema" en Compunet2, "Tema · SEMANA 2" en Móviles.
@@ -27,6 +31,7 @@ const TableOfContentsParser = (tocContent) => {
   const sections = [];
   let lessonCounter = 0;
   let currentWeek = null;
+  let currentSection = null;
   const idOwner = new Map(); // id -> url, to catch collisions
   const urlIds = new Map();  // url -> id, to catch the same lesson under two ids
 
@@ -41,6 +46,7 @@ const TableOfContentsParser = (tocContent) => {
       // Un título sin semana corta el arrastre: si no, "Extras" al final heredaría
       // la semana 16 y sus lecciones parecerían programadas para esa fecha.
       currentWeek = weekMatch ? Number(weekMatch[1]) : null;
+      currentSection = label; // SPEC-14
       sections.push({ type: 'title', id, label, week: currentWeek });
 
     } else if (line.startsWith('[d]')) {
@@ -87,7 +93,8 @@ const TableOfContentsParser = (tocContent) => {
         id,
         ordinal: lessonCounter, // legacy numeric id, kept to redirect old deep links
         label: rawLabel || filenameLabel,
-        week: currentWeek, // SPEC-13: semana programada, o null si la sección no la nombra
+        week: currentWeek,          // SPEC-13: semana programada, o null si la sección no la nombra
+        tocSection: currentSection, // SPEC-14: título del [t] bajo el que cuelga
         url,
         rawContent: null, // loaded on demand by LessonPage via LessonContentCache
       });

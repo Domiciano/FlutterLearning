@@ -1,12 +1,15 @@
 // components/DartPadEmbed.jsx
 import React, { useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
+import { useCurrentLesson } from '@/ai/CurrentLessonContext';
+import { markAttempt } from '@/ai/priorAttempt';
 import { useAnalytics } from '@/analytics/AnalyticsProvider';
 import { EVENTS } from '@/analytics/events';
 
 const DartPadEmbed = ({ gistId, height = '800px' }) => {
   const src = `https://dartpad.dev/embed-flutter.html?split=50&theme=dark&id=${gistId}`;
   const { track } = useAnalytics();
+  const { lesson } = useCurrentLesson();
   const frameRef = useRef(null);
 
   // DartPad corre en un iframe de otro origen: no se puede leer el código escrito,
@@ -17,6 +20,9 @@ const DartPadEmbed = ({ gistId, height = '800px' }) => {
   // debe apoyarse solo en `focusMs`.
   useEffect(() => {
     track(EVENTS.DARTPAD_OPEN, { gistId });
+    // Abrir el editor cuenta como haberlo intentado por su cuenta: es lo que
+    // distingue pedir ayuda DESPUÉS de intentar (H8). Ver ai/priorAttempt.js.
+    markAttempt(lesson.contentId);
 
     let focusMs = 0;
     let enteredAt = null;

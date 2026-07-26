@@ -17,6 +17,8 @@ import { EVENTS } from './events';
 import { newId } from './ids';
 import { createEventQueue, FLUSH_INTERVAL_MS } from './eventQueue';
 import { SESSION_GAP_MS, useActivity } from './useActivity';
+import { redactSecrets } from './redactSecrets';
+import { readApiKey } from '@/ai/apiKeyStore';
 
 const AnalyticsContext = createContext(null);
 
@@ -120,7 +122,10 @@ export function AnalyticsProvider({ children }) {
           type,
           contentId: ctx.contentId ?? null,
           subsectionId: ctx.subsectionId ?? null,
-          payload,
+          // Filtro de salida: ninguna clave de API puede acabar escrita en
+          // Firestore, ni siquiera dentro del mensaje de un error. Ver
+          // redactSecrets.js y features.md § F2.
+          payload: redactSecrets(payload, [readApiKey(uidRef.current)]),
         },
       });
     },

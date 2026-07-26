@@ -11,6 +11,8 @@ import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db, googleProvider } from './firebase';
 import { isFirebaseConfigured, courseId } from './firebaseConfig';
 import { TERMS_VERSION } from './terms';
+import { assignTemplate } from '@/ai/promptTemplates';
+import { clearAllApiKeys } from '@/ai/apiKeyStore';
 
 const AuthContext = createContext(null);
 
@@ -170,8 +172,40 @@ export function AuthProvider({ children }) {
     await signOut(auth);
   }, [user]);
 
+  // Consentimiento específico del módulo de IA (F2). Es APARTE del general: aquí
+  // se guarda texto libre del estudiante y la respuesta de un modelo, un dato
+  // mucho más sensible que un `scroll_depth`. No se hereda de `analyticsConsent`.
+  //
+  // Al aceptarlo se fija de una vez la plantilla asignada al azar. Es el único
+  // diseño causal del estudio (RQ11) y se asigna **por estudiante, no por
+  // pregunta**: si variara dentro del mismo estudiante no habría contraste que
+  // medir. Por eso solo se sortea si el perfil aún no tiene una.
+  const setAiConsent = useCallback(
+    async (value) => {
+      if (!isFirebaseConfigured || !user) return;
+      const next = value === true;
+      const record = { uid: user.uid, aiConsent: next, updatedAt: serverTimestamp() };
+      if (next) {
+        record.aiConsentAt = serverTimestamp();
+        // `null` es una asignación válida —es la condición de control, "sin
+        // plantilla"—, así que la pregunta no es si es falsy sino si el sorteo
+        // ya ocurrió. Solo `undefined` significa "todavía no se asignó".
+        if (profile?.promptTemplate === undefined) {
+          record.promptTemplate = assignTemplate();
+        }
+      }
+      await setDoc(doc(db, 'students', user.uid), record, { merge: true });
+      setProfile((prev) => ({ ...prev, ...record }));
+    },
+    [user, profile]
+  );
+
   const signOutUser = useCallback(async () => {
     if (!isFirebaseConfigured) return;
+    // La clave de API del módulo de IA vive solo en este navegador y no puede
+    // sobrevivir al cierre de sesión: en un computador de sala quedaría
+    // disponible para el siguiente que entre. Ver ai/apiKeyStore.js.
+    clearAllApiKeys();
     await signOut(auth);
   }, []);
 
@@ -185,6 +219,7 @@ export function AuthProvider({ children }) {
     saveProfile,
     acceptTerms,
     withdrawConsent,
+    setAiConsent,
     signOutUser,
   };
 

@@ -6,6 +6,7 @@ import Layout from '@/components/drawer/Layout';
 import TableOfContentsParser from '@/utils/tableOfContentsParser';
 import courseConfig from '@/content/config.js';
 import LessonPage from '@/pages/LessonPage';
+import AiFab from '@/ai/AiFab';
 import AppBarGlobal from '@/components/AppBarGlobal';
 
 function App() {
@@ -95,6 +96,8 @@ function App() {
           } />
         </Routes>
       </Layout>
+      {/* Fuera del Layout: el FAB es global y no debe heredar su desplazamiento. */}
+      <AiFab />
     </>
   );
 }

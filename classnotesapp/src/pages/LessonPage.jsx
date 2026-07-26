@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useContentSpy } from '@/hooks/useContentSpy';
 import { useLessonContentCache } from '@/theme/LessonContentCache';
 import { useLessonTelemetry } from '@/analytics/useLessonTelemetry';
+import { useCurrentLesson } from '@/ai/CurrentLessonContext';
 
 // Named constants — match Layout.jsx drawerWidth and TableOfContents desktop width
 const DRAWER_WIDTH = 280;
@@ -44,6 +45,7 @@ const LessonPage = forwardRef(({ sections }, ref) => {
   const contentRef = useRef(null);
 
   const { activeSection } = useContentSpy(parsedContent.subtitles);
+  const { setCurrentLesson, setCurrentSubsection } = useCurrentLesson();
 
   const lessonMap = useMemo(() => {
     const map = new Map();
@@ -79,9 +81,19 @@ const LessonPage = forwardRef(({ sections }, ref) => {
     // Keyed by the canonical id, not the route param, so an old ordinal link and
     // the current id share one cache entry.
     getOrFetch(section.id, section.url).then(rawContent => {
-      setParsedContent(LessonParser({ content: rawContent }));
+      const parsed = LessonParser({ content: rawContent });
+      setParsedContent(parsed);
       setLoading(false);
       window.scrollTo(0, 0);
+      // El módulo de IA necesita el markdown tal cual para mandárselo al modelo,
+      // y `tocSection` (SPEC-14) para anclar el prompt a la sección del temario.
+      setCurrentLesson({
+        contentId: section.id,
+        lessonTitle: parsed.lessonTitle ?? section.label,
+        tocSection: section.tocSection ?? null,
+        rawContent,
+        subtitles: parsed.subtitles ?? [],
+      });
     });
   }, [lessonId, lessonMap, legacyOrdinalMap]);
 
@@ -97,6 +109,13 @@ const LessonPage = forwardRef(({ sections }, ref) => {
     const section = lessonMap.get(lessonId) ?? legacyOrdinalMap.get(lessonId);
     return section?.id ?? null;
   }, [lessonId, lessonMap, legacyOrdinalMap]);
+
+  // El apartado visible cambia con el scroll; se publica aparte para no
+  // reescribir el markdown entero en cada píxel.
+  useEffect(() => {
+    const subtitle = parsedContent.subtitles?.find(s => s.id === activeSection);
+    setCurrentSubsection(activeSection || null, subtitle?.text ?? null);
+  }, [activeSection, parsedContent.subtitles, setCurrentSubsection]);
 
   useLessonTelemetry({
     contentId,
