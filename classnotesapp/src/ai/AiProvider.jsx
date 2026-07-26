@@ -51,7 +51,7 @@ export function AiProvider({ children }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
   const [history, setHistory] = useState(null); // null = sin cargar
-  const conversationRef = useRef({ id: null, contentId: null, nextTurnIndex: 0 });
+  const conversationRef = useRef({ id: null, contentId: null, nextTurnIndex: 0, interactionId: null });
   const abortRef = useRef(null);
 
   const aiConsent = profile?.aiConsent === true;
@@ -75,7 +75,7 @@ export function AiProvider({ children }) {
   useEffect(() => {
     if (conversationRef.current.contentId === lesson.contentId) return;
     abortRef.current?.abort();
-    conversationRef.current = { id: null, contentId: lesson.contentId, nextTurnIndex: 0 };
+    conversationRef.current = { id: null, contentId: lesson.contentId, nextTurnIndex: 0, interactionId: null };
     setTurns([]);
     setError(null);
     setSending(false);
@@ -197,7 +197,6 @@ export function AiProvider({ children }) {
         { contentId: lesson.contentId, subsectionId: lesson.subsectionId }
       );
 
-      const historyTurns = [...turns.map((t) => ({ role: t.role, text: t.text })), { role: 'user', text: question }];
       setTurns((prev) => [...prev, { role: 'user', text: question }, { role: 'model', text: '', pending: true }]);
 
       const systemInstruction = buildSystemInstruction({
@@ -218,7 +217,11 @@ export function AiProvider({ children }) {
           apiKey,
           model,
           systemInstruction,
-          turns: historyTurns,
+          input: question,
+          // El hilo lo mantiene el servidor: la lección no se reenvía en cada
+          // turno, que con 40 KB de material es la diferencia entre gastar la
+          // cuota gratuita en tres preguntas o en treinta.
+          previousInteractionId: conversation.interactionId,
           signal: controller.signal,
           onDelta: (delta) => {
             setTurns((prev) => {
@@ -237,6 +240,7 @@ export function AiProvider({ children }) {
           return next;
         });
         conversation.nextTurnIndex = turnIndex + 1;
+        conversation.interactionId = result.interactionId ?? conversation.interactionId;
 
         track(
           EVENTS.AI_RESPONSE_RECEIVED,

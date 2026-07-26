@@ -35,9 +35,9 @@ const courseConfig = {
   // pregunta a la clave qué modelos tiene y usa este si está, o el mejor
   // disponible si no (ver ai/geminiClient.js → resolveModel). Fijarlo a ciegas
   // se manifestaba como un 404 opaco en la pantalla de conexión.
-  // gemini-2.5-flash: rápido, cuota gratuita generosa y contexto de sobra para
-  // meter una lección entera (mediana ~6 KB, p90 ~15 KB).
-  aiModel: 'gemini-2.5-flash',
+  // gemini-3.6-flash: el recomendado por Google hoy para código nuevo, rápido y
+  // con contexto de sobra para una lección entera (mediana ~6 KB, p90 ~15 KB).
+  aiModel: 'gemini-3.6-flash',
 
   // Pista de dominio para la instrucción del sistema. Es lo único del prompt que
   // cambia por curso; el resto del andamiaje es idéntico entre repos.
