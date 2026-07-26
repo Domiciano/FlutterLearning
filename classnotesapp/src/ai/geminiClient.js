@@ -47,15 +47,26 @@ const errorFor = (status) => {
 };
 
 /**
- * Comprobación barata de la clave antes de guardarla. Una clave mal pegada que
- * solo falle en la primera duda real es la peor forma de perder al estudiante.
+ * Comprobación de la clave antes de guardarla. Una clave mal pegada que solo
+ * falle en la primera duda real es la peor forma de perder al estudiante.
+ *
+ * Se verifica con un `generateContent` mínimo contra el MISMO modelo que usará
+ * el chat, y no con `models.list`: listar modelos es una operación distinta y
+ * puede permitirse con una clave que después no pueda generar —por ejemplo, si
+ * el proyecto no tiene habilitado ese modelo—. Verificar con otra operación deja
+ * pasar claves que fallarán en la primera pregunta, que es justo lo que esta
+ * pantalla existe para evitar.
  */
-export async function verifyApiKey(apiKey, { signal } = {}) {
+export async function verifyApiKey(apiKey, { model, signal } = {}) {
   let res;
   try {
-    res = await fetch(`${BASE}/models`, {
-      method: 'GET',
-      headers: { 'x-goog-api-key': apiKey },
+    res = await fetch(`${BASE}/models/${model}:generateContent`, {
+      method: 'POST',
+      headers: { 'x-goog-api-key': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: 'ping' }] }],
+        generationConfig: { maxOutputTokens: 1 },
+      }),
       signal,
     });
   } catch {

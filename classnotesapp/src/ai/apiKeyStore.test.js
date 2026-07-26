@@ -40,19 +40,31 @@ describe('apiKeyStore', () => {
 });
 
 describe('looksLikeApiKey', () => {
-  it('acepta una clave con la forma de AI Studio', () => {
+  it('acepta el formato clásico AIza…', () => {
     expect(looksLikeApiKey('AIzaSyC0000000000000000000000000000000')).toBe(true);
+  });
+
+  it('acepta el formato nuevo AQ.… , que lleva punto', () => {
+    // Regresión: la lista blanca [A-Za-z0-9_-] rechazaba estas claves, que son
+    // las que AI Studio entrega hoy. El usuario no podía conectarse.
+    expect(looksLikeApiKey('AQ.Ab0XX0XXXxxx0xXXXx0xXxX_x0XXXx0XxxX0xXxX0XxxXxX')).toBe(true);
   });
 
   it('rechaza pegados con espacios, comillas o saltos de línea', () => {
     expect(looksLikeApiKey('"AIzaSyC000000000000000000000"')).toBe(false);
     expect(looksLikeApiKey('AIza SyC000000000000000000000')).toBe(false);
+    expect(looksLikeApiKey('AIzaSyC000000000000000000000\n')).toBe(true); // el trim lo arregla
+    expect(looksLikeApiKey('AIzaSyC0000000\n00000000000000')).toBe(false); // salto en medio, no
     expect(looksLikeApiKey('')).toBe(false);
     expect(looksLikeApiKey('corta')).toBe(false);
   });
 
   it('tolera espacios alrededor, que es el pegado normal', () => {
     expect(looksLikeApiKey('  AIzaSyC0000000000000000000000000000000  ')).toBe(true);
+  });
+
+  it('no se cierra a formatos futuros: solo exige longitud y ausencia de basura', () => {
+    expect(looksLikeApiKey('zz~formato-que-google-invente/mañana:0123456789')).toBe(true);
   });
 });
 

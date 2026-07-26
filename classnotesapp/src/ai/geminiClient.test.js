@@ -98,11 +98,23 @@ describe('verifyApiKey', () => {
 
   it('acepta una clave que responde', async () => {
     globalThis.fetch.mockResolvedValue({ ok: true, status: 200 });
-    await expect(verifyApiKey('k')).resolves.toBe(true);
+    await expect(verifyApiKey('k', { model: 'gemini-2.5-flash' })).resolves.toBe(true);
   });
 
   it('rechaza una clave inválida antes de guardarla', async () => {
     globalThis.fetch.mockResolvedValue({ ok: false, status: 400 });
-    await expect(verifyApiKey('mala')).rejects.toMatchObject({ kind: 'key' });
+    await expect(verifyApiKey('mala', { model: 'gemini-2.5-flash' })).rejects.toMatchObject({ kind: 'key' });
+  });
+
+  it('verifica contra el mismo modelo que usará el chat, no contra models.list', async () => {
+    // Si se verificara con otra operación, una clave sin acceso a ESTE modelo
+    // pasaría el filtro y fallaría en la primera pregunta.
+    globalThis.fetch.mockResolvedValue({ ok: true, status: 200 });
+    await verifyApiKey('k', { model: 'gemini-2.5-flash' });
+    const [url, init] = globalThis.fetch.mock.calls[0];
+    expect(url).toContain('models/gemini-2.5-flash:generateContent');
+    expect(init.method).toBe('POST');
+    expect(init.headers['x-goog-api-key']).toBe('k');
+    expect(url).not.toMatch(/key=/);
   });
 });

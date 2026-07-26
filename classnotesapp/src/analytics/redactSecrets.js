@@ -15,15 +15,25 @@
 
 export const REDACTED = '[clave-eliminada]';
 
-// Claves de Google AI Studio: cadena larga sin espacios que empieza por "AIza".
-// Se busca por patrón además de por valor conocido, para cubrir el caso de una
-// clave que el estudiante pegó en el chat pero que no es la que tiene guardada.
-const GOOGLE_KEY_PATTERN = /AIza[0-9A-Za-z_-]{10,}/g;
+// Claves de Google, en los dos formatos que emite AI Studio: el clásico "AIza…"
+// y el nuevo "AQ.Ab8…" (con punto). Se busca por patrón ADEMÁS de por valor
+// conocido, para cubrir el caso de una clave que el estudiante pegó dentro del
+// chat y que no es la que tiene guardada — ese texto viaja como evento.
+//
+// Ojo al mantenerlo: el patrón es una red de seguridad, no la defensa principal.
+// Si Google saca otro formato, esta lista se queda corta en silencio; lo que no
+// falla es la coincidencia con la clave guardada. Añadir formatos aquí es barato
+// y conviene hacerlo en cuanto se vea uno nuevo.
+const GOOGLE_KEY_PATTERNS = [
+  /AIza[0-9A-Za-z_-]{10,}/g,
+  /\bAQ\.[0-9A-Za-z_-]{20,}/g,
+];
 
 const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const scrubString = (value, secrets) => {
-  let out = value.replace(GOOGLE_KEY_PATTERN, REDACTED);
+  let out = value;
+  for (const pattern of GOOGLE_KEY_PATTERNS) out = out.replace(pattern, REDACTED);
   for (const secret of secrets) {
     if (secret && secret.length >= 8 && out.includes(secret)) {
       out = out.replace(new RegExp(escapeRegExp(secret), 'g'), REDACTED);

@@ -18,6 +18,13 @@ describe('redactSecrets — filtro de salida de la analítica', () => {
     expect(out.text).not.toContain(otra);
   });
 
+  it('reconoce también el formato nuevo AQ.… , que lleva punto', () => {
+    const nueva = 'AQ.Ab0XX0XXXxxx0xXXXx0xXxX_x0XXXx0XxxX0xXxX0XxxXxX';
+    const out = redactSecrets({ text: `pegué ${nueva} aquí` }, []);
+    expect(out.text).not.toContain(nueva);
+    expect(out.text).toContain(REDACTED);
+  });
+
   it('la fuga típica: la clave dentro del mensaje de un error anidado', () => {
     const payload = { error: { detail: { url: `https://api/x?key=${KEY}` } } };
     const out = redactSecrets(payload, [KEY]);

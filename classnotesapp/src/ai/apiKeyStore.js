@@ -62,9 +62,19 @@ export function clearAllApiKeys() {
   }
 }
 
-// Una clave de AI Studio es una cadena larga sin espacios. Validar el formato
-// aquí evita una llamada de red por un pegado con salto de línea o comillas.
+// Esta comprobación solo existe para atajar un pegado defectuoso —comillas de
+// más, un salto de línea, media clave— antes de gastar una llamada de red. NO
+// valida el formato de Google, y no debe intentarlo: quien decide si la clave
+// sirve es `verifyApiKey`, contra la API.
+//
+// La versión anterior era una lista blanca `[A-Za-z0-9_-]` y rechazaba las claves
+// nuevas de AI Studio, que tienen forma `AQ.Ab8RN6...` — con punto. Una lista
+// blanca de caracteres apuesta a que Google no cambie el formato, y Google lo
+// cambió. Por eso ahora se describe lo que sí es un pegado roto: espacios,
+// comillas o signos de puntuación de prosa.
+const BAD_PASTE = /[\s"'`<>(),;]/;
+
 export function looksLikeApiKey(raw) {
   const key = (raw ?? '').trim();
-  return /^[A-Za-z0-9_-]{20,}$/.test(key);
+  return key.length >= 20 && !BAD_PASTE.test(key);
 }

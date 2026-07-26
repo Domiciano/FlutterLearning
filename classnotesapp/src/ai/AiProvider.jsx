@@ -89,7 +89,8 @@ export function AiProvider({ children }) {
   const connectKey = useCallback(
     async (rawKey) => {
       const key = rawKey.trim();
-      await verifyApiKey(key); // propaga GeminiError si no sirve
+      // Se verifica contra el mismo modelo que usará el chat: ver geminiClient.
+      await verifyApiKey(key, { model }); // propaga GeminiError si no sirve
       writeApiKey(uid, key);
       setApiKey(key);
       // `ai_key_connected` es el DENOMINADOR del sesgo de selección: sin él,
@@ -97,7 +98,7 @@ export function AiProvider({ children }) {
       track(EVENTS.AI_KEY_CONNECTED, {});
       return true;
     },
-    [uid, track]
+    [uid, track, model]
   );
 
   const forgetKey = useCallback(() => {
