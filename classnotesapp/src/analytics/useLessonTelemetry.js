@@ -32,24 +32,44 @@ export function useLessonTelemetry({ contentId, activeSection, scrollRef, ready 
   const { track, readClock } = useAnalytics();
   const navigationType = useNavigationType();
 
-  const navTypeRef = useRef(navigationType);
+  // Todo lo que no sea `contentId` se lee por referencia, para que el ciclo de vida
+  // de la visita dependa ÚNICAMENTE de qué lección se está viendo. Si `track` o
+  // `readClock` cambiaran de identidad entre renders —basta con que algún día el
+  // proveedor deje de memorizarlos— el efecto se reiniciaría y volverían las
+  // aperturas duplicadas. El invariante no debe depender de un detalle de otro
+  // archivo.
+  const api = useRef({ track, readClock, navigationType });
   useEffect(() => {
-    navTypeRef.current = navigationType;
-  }, [navigationType]);
+    api.current = { track, readClock, navigationType };
+  });
 
   const visitRef = useRef(null);
 
   // Apertura y cierre de la visita. La limpieza del efecto es la que emite el
   // resumen, así que cubre por igual cambiar de lección, cerrar la pestaña
   // (el volcado a localStorage lo rescata) y desmontar la página.
+  //
+  // La visita depende SOLO de `contentId`, nunca de si el contenido ya cargó.
+  // `LessonPage` llama a `setLoading(true)` en un efecto que corre después de que
+  // `contentId` ya cambió, así que `ready` hace false→true en mitad de la visita.
+  // Cuando esto dependía también de `ready`, cada lección se registraba así:
+  //
+  //     lesson_open  0007  origin=drawer      ← el efecto arranca
+  //     lesson_dwell 0007  activeMs=0         ← `ready` cae, se limpia
+  //     lesson_open  0007  origin=deeplink    ← `ready` sube, arranca otra vez
+  //
+  // Es decir: aperturas duplicadas, el origen perdido en la segunda (H13 se queda
+  // sin predictor), una permanencia fantasma de 0 ms que cuenta como abandono en
+  // `abandonRate` (H17, núcleo), y el scroll acumulado tirado a la basura junto
+  // con el objeto de visita. Detectado en datos reales el 2026-07-26.
   useEffect(() => {
-    if (!ready || !contentId) return undefined;
+    if (!contentId) return undefined;
 
     const origin =
       consumeNavigationOrigin() ??
-      (navTypeRef.current === 'POP' ? LESSON_ORIGIN.HISTORY : LESSON_ORIGIN.DEEPLINK);
+      (api.current.navigationType === 'POP' ? LESSON_ORIGIN.HISTORY : LESSON_ORIGIN.DEEPLINK);
 
-    const opened = readClock();
+    const opened = api.current.readClock();
     const visit = {
       contentId,
       openedActiveMs: opened.activeMs,
@@ -63,17 +83,17 @@ export function useLessonTelemetry({ contentId, activeSection, scrollRef, ready 
     };
     visitRef.current = visit;
 
-    track(EVENTS.LESSON_OPEN, { origin }, { contentId });
+    api.current.track(EVENTS.LESSON_OPEN, { origin }, { contentId });
 
     return () => {
-      const closed = readClock();
+      const closed = api.current.readClock();
       closeSubsection(visit, closed.activeMs);
 
       for (const [subsectionId, activeMs] of visit.subsections) {
-        track(EVENTS.SUBSECTION_DWELL, { activeMs }, { contentId, subsectionId });
+        api.current.track(EVENTS.SUBSECTION_DWELL, { activeMs }, { contentId, subsectionId });
       }
 
-      track(
+      api.current.track(
         EVENTS.LESSON_DWELL,
         {
           activeMs: closed.activeMs - visit.openedActiveMs,
@@ -86,18 +106,18 @@ export function useLessonTelemetry({ contentId, activeSection, scrollRef, ready 
 
       visitRef.current = null;
     };
-  }, [contentId, ready, track, readClock]);
+  }, [contentId]);
 
   // Cambio de apartado visible. `useContentSpy` ya calcula cuál lo está; aquí solo
   // se cierra el tramo anterior y se abre el siguiente.
   useEffect(() => {
     const visit = visitRef.current;
     if (!visit || !activeSection || visit.subsectionId === activeSection) return;
-    const { activeMs } = readClock();
+    const { activeMs } = api.current.readClock();
     closeSubsection(visit, activeMs);
     visit.subsectionId = activeSection;
     visit.subsectionOpenedAt = activeMs;
-  }, [activeSection, readClock]);
+  }, [activeSection]);
 
   // Profundidad de lectura. El contenido no scrollea en `window` sino dentro de su
   // propio contenedor, así que el listener va en el elemento, no en la ventana.
@@ -121,17 +141,23 @@ export function useLessonTelemetry({ contentId, activeSection, scrollRef, ready 
       for (const milestone of SCROLL_MILESTONES) {
         if (pct >= milestone && !visit.milestones.has(milestone)) {
           visit.milestones.add(milestone);
-          track(EVENTS.SCROLL_DEPTH, { pct: milestone }, { contentId: visit.contentId });
+          api.current.track(EVENTS.SCROLL_DEPTH, { pct: milestone }, { contentId: visit.contentId });
         }
       }
     };
 
     element.addEventListener('scroll', handleScroll, { passive: true });
-    // Una lección que cabe entera en pantalla está leída al 100 % sin scrollear.
-    // Sin esta llamada contaría como abandono a mitad y ensuciaría `abandonRate`,
-    // que es el indicador central de H17.
-    handleScroll();
 
-    return () => element.removeEventListener('scroll', handleScroll);
-  }, [ready, contentId, scrollRef, track]);
+    // Una lección que cabe entera en pantalla está leída al 100 % sin scrollear, y
+    // hay que registrarlo o contaría como abandono a mitad en `abandonRate` (H17).
+    // Pero se mide en el siguiente frame, no ahora: recién montado el contenido, el
+    // navegador todavía no ha hecho el layout y `scrollHeight` puede venir igual a
+    // `clientHeight` — con lo que TODA lección se marcaría como leída entera.
+    const frame = requestAnimationFrame(handleScroll);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      element.removeEventListener('scroll', handleScroll);
+    };
+  }, [ready, contentId, scrollRef]);
 }
