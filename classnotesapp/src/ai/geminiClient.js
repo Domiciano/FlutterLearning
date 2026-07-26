@@ -15,11 +15,15 @@
 const BASE = 'https://generativelanguage.googleapis.com/v1beta';
 
 export class GeminiError extends Error {
-  constructor(kind, message, status) {
+  constructor(kind, message, status, detail) {
     super(message);
     this.name = 'GeminiError';
     this.kind = kind; // 'key' | 'model' | 'quota' | 'network' | 'blocked' | 'unknown'
     this.status = status ?? null;
+    // Lo que dice Google, redactado. Se muestra bajo el mensaje amable: sin esto,
+    // un fallo inesperado obliga a abrir la consola del navegador, que es
+    // exactamente lo que un estudiante no va a hacer.
+    this.detail = detail ?? null;
   }
 }
 
@@ -34,43 +38,42 @@ const redactKeys = (text) =>
 // clave si alguna vez se llamara mal. Nunca se propaga el texto crudo del error
 // a la interfaz; sí se registra en consola, redactado, porque sin él un fallo
 // inesperado es indiagnosticable desde el navegador de un estudiante.
-const logApiError = async (res) => {
+// Lee el cuerpo del error una sola vez y saca el mensaje de Google, redactado.
+const readApiDetail = async (res) => {
   try {
     const body = await res.text();
-    console.warn('[AI] Error de la API', res.status, redactKeys(body).slice(0, 400));
+    const parsed = JSON.parse(body);
+    return redactKeys(parsed?.error?.message ?? body).slice(0, 300);
   } catch {
-    console.warn('[AI] Error de la API', res.status);
+    return null;
   }
 };
 
-const errorFor = (status) => {
+const errorFor = (status, detail) => {
+  const make = (kind, message) => {
+    if (detail) console.warn('[AI] Error de la API', status, detail);
+    return new GeminiError(kind, message, status, detail);
+  };
   if (status === 400 || status === 401 || status === 403) {
-    return new GeminiError(
-      'key',
-      'Tu clave no es válida o ya no tiene permiso. Genera una nueva en AI Studio y vuelve a conectarla.',
-      status
-    );
+    return make('key', 'Tu clave no es válida o ya no tiene permiso. Genera una nueva en AI Studio y vuelve a conectarla.');
   }
   if (status === 404) {
-    return new GeminiError(
-      'model',
-      'Tu clave no tiene acceso a ningún modelo compatible. Revisa que la creaste en AI Studio y no en otro proyecto.',
-      status
-    );
+    return make('model', 'Tu clave no tiene acceso a ningún modelo compatible.');
   }
   if (status === 429) {
-    return new GeminiError(
-      'quota',
-      'Se agotó la cuota gratuita de tu clave por ahora. Espera unos minutos y vuelve a intentarlo.',
-      status
-    );
+    return make('quota', 'Se agotó la cuota gratuita de tu clave por ahora. Espera unos minutos y vuelve a intentarlo.');
   }
   if (status >= 500) {
-    return new GeminiError('network', 'El servicio de Gemini no respondió. Inténtalo de nuevo en un momento.', status);
+    return make('network', 'El servicio de Gemini no respondió. Inténtalo de nuevo en un momento.');
   }
   // El código va en el mensaje a propósito: sin él, "no se pudo" es un callejón
   // sin salida tanto para el estudiante como para quien tenga que arreglarlo.
-  return new GeminiError('unknown', `No se pudo completar la consulta (HTTP ${status}).`, status);
+  return make('unknown', `No se pudo completar la consulta (HTTP ${status}).`);
+};
+
+// Azúcar para el patrón "no ok → leer detalle → lanzar".
+const throwForResponse = async (res) => {
+  throw errorFor(res.status, await readApiDetail(res));
 };
 
 /** Modelos que la clave puede usar para generar. Nombres ya sin el prefijo `models/`. */
@@ -81,7 +84,7 @@ export async function listGenerativeModels(apiKey, { signal } = {}) {
   } catch {
     throw new GeminiError('network', 'No se pudo contactar a Gemini. Revisa tu conexión.');
   }
-  if (!res.ok) { await logApiError(res); throw errorFor(res.status); }
+  if (!res.ok) await throwForResponse(res);
   const data = await res.json();
   return (data.models ?? [])
     .filter((m) => (m.supportedGenerationMethods ?? []).includes('generateContent'))
@@ -105,45 +108,29 @@ const scoreModel = (name) => {
 };
 
 /**
- * Verifica la clave y decide con qué modelo se va a hablar.
- *
- * Los ids de modelo caducan: el que estaba fijado en `content/config.js` puede
- * no existir para la clave del estudiante, y eso se manifestaba como un 404 con
- * un mensaje inútil. En vez de apostar por un id, se le pregunta a la clave qué
- * puede usar y se escoge — el valor de la configuración pasa a ser una
- * preferencia, no un requisito.
- *
- * @returns {Promise<string>} el id de modelo con el que hay que hablar
+ * Modelos candidatos, del mejor al peor. Los ids caducan y no todas las claves
+ * tienen los mismos, así que el valor de `content/config.js` es una preferencia
+ * y no un requisito: se le pregunta a la clave qué puede usar y se ordena.
  */
-export async function resolveModel(apiKey, { preferred, signal } = {}) {
+export async function resolveModelCandidates(apiKey, { preferred, signal } = {}) {
   const available = await listGenerativeModels(apiKey, { signal });
-  if (available.length === 0) {
-    throw new GeminiError(
-      'model',
-      'Tu clave no tiene acceso a ningún modelo de texto. Revisa que la creaste en AI Studio.',
-      404
-    );
-  }
-  if (preferred && available.includes(preferred)) return preferred;
-
-  const best = available
+  const ranked = available
     .map((name) => ({ name, score: scoreModel(name) }))
     .filter((m) => m.score >= 0)
-    .sort((a, b) => b.score - a.score)[0];
+    .sort((a, b) => b.score - a.score)
+    .map((m) => m.name);
 
-  if (!best) {
-    throw new GeminiError('model', 'Tu clave no tiene acceso a ningún modelo de texto compatible.', 404);
+  // El preferido va primero si existe; si no, manda el orden por puntaje.
+  if (preferred && ranked.includes(preferred)) {
+    return [preferred, ...ranked.filter((n) => n !== preferred)];
   }
-  if (preferred) {
-    console.warn(`[AI] El modelo preferido "${preferred}" no está disponible; se usa "${best.name}".`);
-  }
-  return best.name;
+  return ranked;
 }
 
 /**
- * Comprobación de la clave antes de guardarla, con el MISMO tipo de llamada que
- * hará el chat: listar modelos puede permitirse con una clave que después no
- * pueda generar, y dejaría pasar claves que fallan en la primera pregunta.
+ * Comprobación de la clave con el MISMO tipo de llamada que hará el chat:
+ * listar modelos puede permitirse con una clave que después no pueda generar, y
+ * dejaría pasar claves que fallan en la primera pregunta.
  */
 export async function verifyApiKey(apiKey, { model, signal } = {}) {
   let res;
@@ -160,8 +147,44 @@ export async function verifyApiKey(apiKey, { model, signal } = {}) {
   } catch {
     throw new GeminiError('network', 'No se pudo contactar a Gemini. Revisa tu conexión.');
   }
-  if (!res.ok) { await logApiError(res); throw errorFor(res.status); }
+  if (!res.ok) await throwForResponse(res);
   return true;
+}
+
+/**
+ * Conecta: encuentra un modelo que esta clave pueda usar DE VERDAD.
+ *
+ * No basta con que el modelo salga en el listado — que salga solo dice que
+ * existe, no que la clave pueda generar con él—, así que se prueba en orden
+ * hasta que uno responda. Rendirse con el primero era justo el fallo que dejaba
+ * la pantalla en "no tienes acceso a ningún modelo" teniendo la clave bien.
+ *
+ * @returns {Promise<string>} el id de modelo con el que hablar
+ */
+export async function connectModel(apiKey, { preferred, maxAttempts = 4, signal } = {}) {
+  const candidates = await resolveModelCandidates(apiKey, { preferred, signal });
+  if (candidates.length === 0) {
+    throw new GeminiError(
+      'model',
+      'Tu clave no tiene acceso a ningún modelo de texto. Revisa que la creaste en AI Studio.',
+      404
+    );
+  }
+
+  let lastError = null;
+  for (const model of candidates.slice(0, maxAttempts)) {
+    try {
+      await verifyApiKey(apiKey, { model, signal });
+      if (model !== preferred) console.warn(`[AI] Se conecta con "${model}" (preferido: "${preferred}").`);
+      return model;
+    } catch (err) {
+      // Un problema de clave o de cuota no mejora probando otro modelo: cortar
+      // aquí evita gastar cuatro llamadas para dar el mismo error.
+      if (err?.kind === 'key' || err?.kind === 'quota' || err?.kind === 'network') throw err;
+      lastError = err;
+    }
+  }
+  throw lastError ?? new GeminiError('model', 'Ningún modelo de tu clave respondió.', 404);
 }
 
 // El stream llega como SSE: líneas `data: {json}` separadas por líneas en blanco.
@@ -211,7 +234,7 @@ export async function streamGenerate({ apiKey, model, systemInstruction, turns, 
     throw new GeminiError('network', 'No se pudo contactar a Gemini. Revisa tu conexión.');
   }
 
-  if (!res.ok) { await logApiError(res); throw errorFor(res.status); }
+  if (!res.ok) await throwForResponse(res);
   if (!res.body) throw new GeminiError('network', 'La respuesta llegó vacía.');
 
   const reader = res.body.getReader();

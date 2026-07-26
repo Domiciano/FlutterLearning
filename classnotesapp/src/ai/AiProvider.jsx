@@ -24,7 +24,7 @@ import { loginBranding } from '@/auth/loginBranding';
 import courseConfig from '@/content/config';
 import { useCurrentLesson } from './CurrentLessonContext';
 import { readApiKey, writeApiKey, clearApiKey, readModel, writeModel } from './apiKeyStore';
-import { resolveModel, streamGenerate, verifyApiKey } from './geminiClient';
+import { connectModel, streamGenerate } from './geminiClient';
 import { composeMaterial, buildSystemInstruction } from './buildContext';
 import { instructionFor } from './promptTemplates';
 import { derivePromptFeatures } from './promptText';
@@ -97,8 +97,10 @@ export function AiProvider({ children }) {
       // Primero se averigua con qué modelo puede hablar esta clave, y luego se
       // comprueba con ese mismo modelo. Al revés —fijando el id de antemano— un
       // modelo retirado o no habilitado se manifestaba como un 404 opaco.
-      const chosen = await resolveModel(key, { preferred: courseConfig.aiModel });
-      await verifyApiKey(key, { model: chosen }); // propaga GeminiError si no sirve
+      // Prueba los modelos de esta clave en orden hasta que uno responda de
+      // verdad. Salir en el primero dejaba la pantalla en "no tienes acceso a
+      // ningún modelo" con la clave perfectamente buena.
+      const chosen = await connectModel(key, { preferred: courseConfig.aiModel });
       writeApiKey(uid, key);
       writeModel(uid, chosen);
       setApiKey(key);

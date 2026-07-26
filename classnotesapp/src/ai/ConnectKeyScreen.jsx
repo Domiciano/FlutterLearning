@@ -30,6 +30,10 @@ const ConnectKeyScreen = ({ onDone, onDismiss }) => {
   const [consent, setConsent] = useState(aiConsent);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState(null);
+  // Lo que dice Google, textual. Va debajo del mensaje amable porque es lo único
+  // que permite diagnosticar un fallo sin abrir la consola del navegador — y un
+  // estudiante no la va a abrir.
+  const [detail, setDetail] = useState(null);
 
   const restBorder = alpha(theme.textSecondary, 0.45);
   const fieldSx = {
@@ -44,6 +48,7 @@ const ConnectKeyScreen = ({ onDone, onDismiss }) => {
   const submit = async (e) => {
     e.preventDefault();
     setError(null);
+    setDetail(null);
     if (!looksLikeApiKey(key)) {
       setError('Eso no parece una clave de API. Cópiala completa, sin espacios ni comillas.');
       return;
@@ -57,6 +62,7 @@ const ConnectKeyScreen = ({ onDone, onDismiss }) => {
       onDone?.();
     } catch (err) {
       setError(err?.message ?? 'No se pudo verificar la clave.');
+      setDetail(err?.detail ?? null);
     } finally {
       setChecking(false);
     }
@@ -96,8 +102,31 @@ const ConnectKeyScreen = ({ onDone, onDismiss }) => {
         spellCheck={false}
         error={!!error}
         helperText={error || ' '}
-        sx={{ mb: 1, ...fieldSx }}
+        sx={{ mb: detail ? 0.5 : 1, ...fieldSx }}
       />
+
+      {detail && (
+        <Box
+          sx={{
+            mb: 1.5, p: 1.25, borderRadius: 1.5,
+            border: `1px solid ${alpha(theme.error, 0.4)}`,
+            background: alpha(theme.error, 0.08),
+          }}
+        >
+          <Typography sx={{ color: theme.textSecondary, fontSize: '0.72rem', mb: 0.5 }}>
+            Respuesta de Google:
+          </Typography>
+          <Typography
+            sx={{
+              color: theme.textPrimary, fontSize: '0.75rem', lineHeight: 1.5,
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+              wordBreak: 'break-word',
+            }}
+          >
+            {detail}
+          </Typography>
+        </Box>
+      )}
 
       <FormControlLabel
         control={

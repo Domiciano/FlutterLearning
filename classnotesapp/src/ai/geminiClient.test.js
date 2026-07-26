@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { streamGenerate, verifyApiKey, resolveModel, GeminiError } from './geminiClient';
+import { streamGenerate, verifyApiKey, resolveModelCandidates, connectModel, GeminiError } from './geminiClient';
 
 // Convierte trozos de texto en el ReadableStream que devuelve fetch.
 const streamOf = (chunks) => {
@@ -119,7 +119,7 @@ describe('verifyApiKey', () => {
   });
 });
 
-describe('resolveModel — el id de modelo no se adivina, se pregunta', () => {
+describe('resolveModelCandidates — el id de modelo no se adivina, se pregunta', () => {
   const modelsResponse = (names) => ({
     ok: true,
     status: 200,
@@ -130,25 +130,29 @@ describe('resolveModel — el id de modelo no se adivina, se pregunta', () => {
 
   beforeEach(() => { globalThis.fetch = vi.fn(); });
 
-  it('usa el preferido cuando la clave lo tiene', async () => {
-    globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-2.5-flash', 'gemini-2.5-pro']));
-    await expect(resolveModel('k', { preferred: 'gemini-2.5-flash' })).resolves.toBe('gemini-2.5-flash');
+  it('pone el preferido primero cuando la clave lo tiene', async () => {
+    globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-2.5-pro', 'gemini-2.5-flash']));
+    const out = await resolveModelCandidates('k', { preferred: 'gemini-2.5-flash' });
+    expect(out[0]).toBe('gemini-2.5-flash');
   });
 
-  it('si el preferido no existe, elige otro en vez de fallar con un 404 opaco', async () => {
+  it('si el preferido no existe, ordena por puntaje en vez de fallar', async () => {
     // Este es el fallo real: config.js fijaba un id que la clave no tenía.
-    globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-2.0-flash', 'gemini-1.5-pro']));
-    await expect(resolveModel('k', { preferred: 'gemini-2.5-flash' })).resolves.toBe('gemini-2.0-flash');
+    globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-1.5-pro', 'gemini-2.0-flash']));
+    const out = await resolveModelCandidates('k', { preferred: 'gemini-2.5-flash' });
+    expect(out[0]).toBe('gemini-2.0-flash');
   });
 
   it('prefiere flash sobre pro, y la versión más alta sobre la más baja', async () => {
     globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-1.5-flash', 'gemini-2.5-pro', 'gemini-2.5-flash']));
-    await expect(resolveModel('k', { preferred: 'inexistente' })).resolves.toBe('gemini-2.5-flash');
+    const out = await resolveModelCandidates('k', { preferred: 'inexistente' });
+    expect(out[0]).toBe('gemini-2.5-flash');
   });
 
   it('descarta modelos que no sirven para un chat de texto', async () => {
     globalThis.fetch.mockResolvedValue(modelsResponse(['embedding-001', 'imagen-3.0', 'gemini-2.0-flash']));
-    await expect(resolveModel('k', { preferred: null })).resolves.toBe('gemini-2.0-flash');
+    const out = await resolveModelCandidates('k', { preferred: null });
+    expect(out).toEqual(['gemini-2.0-flash']);
   });
 
   it('ignora los modelos que no pueden generar contenido', async () => {
@@ -161,17 +165,57 @@ describe('resolveModel — el id de modelo no se adivina, se pregunta', () => {
         ],
       }),
     });
-    await expect(resolveModel('k', {})).resolves.toBe('gemini-2.0-flash');
-  });
-
-  it('una clave sin ningún modelo de texto da un error explicable', async () => {
-    globalThis.fetch.mockResolvedValue(modelsResponse([]));
-    await expect(resolveModel('k', {})).rejects.toMatchObject({ kind: 'model' });
+    expect(await resolveModelCandidates('k', {})).toEqual(['gemini-2.0-flash']);
   });
 
   it('propaga el error de clave si el listado falla', async () => {
-    globalThis.fetch.mockResolvedValue({ ok: false, status: 403, text: async () => 'denied' });
-    await expect(resolveModel('mala', {})).rejects.toMatchObject({ kind: 'key' });
+    globalThis.fetch.mockResolvedValue({ ok: false, status: 403, text: async () => '{"error":{"message":"denied"}}' });
+    await expect(resolveModelCandidates('mala', {})).rejects.toMatchObject({ kind: 'key' });
+  });
+});
+
+describe('connectModel — no se rinde con el primer modelo', () => {
+  const listing = (names) => ({
+    ok: true, status: 200,
+    json: async () => ({
+      models: names.map((n) => ({ name: `models/${n}`, supportedGenerationMethods: ['generateContent'] })),
+    }),
+  });
+  const notFound = { ok: false, status: 404, text: async () => '{"error":{"message":"not found for API version v1beta"}}' };
+  const ok = { ok: true, status: 200, text: async () => '{}' };
+
+  beforeEach(() => { globalThis.fetch = vi.fn(); });
+
+  it('devuelve el primer modelo que responde de verdad', async () => {
+    // Salir de la lista no garantiza poder generar: el primero 404 y el segundo sí.
+    globalThis.fetch
+      .mockResolvedValueOnce(listing(['gemini-2.5-flash', 'gemini-2.0-flash']))
+      .mockResolvedValueOnce(notFound)
+      .mockResolvedValueOnce(ok);
+    await expect(connectModel('k', { preferred: 'gemini-2.5-flash' })).resolves.toBe('gemini-2.0-flash');
+  });
+
+  it('no insiste con otros modelos si el problema es la clave', async () => {
+    const denied = { ok: false, status: 403, text: async () => '{"error":{"message":"denied"}}' };
+    globalThis.fetch
+      .mockResolvedValueOnce(listing(['a-flash-2.0', 'b-flash-2.0']))
+      .mockResolvedValueOnce(denied);
+    await expect(connectModel('k', {})).rejects.toMatchObject({ kind: 'key' });
+    expect(globalThis.fetch).toHaveBeenCalledTimes(2); // listado + un intento, no cuatro
+  });
+
+  it('una clave sin modelos de texto da un error explicable', async () => {
+    globalThis.fetch.mockResolvedValue(listing([]));
+    await expect(connectModel('k', {})).rejects.toMatchObject({ kind: 'model' });
+  });
+
+  it('si ninguno responde, el error lleva lo que dijo Google', async () => {
+    globalThis.fetch
+      .mockResolvedValueOnce(listing(['a-flash-2.0']))
+      .mockResolvedValue(notFound);
+    const err = await connectModel('k', {}).catch((e) => e);
+    expect(err.kind).toBe('model');
+    expect(err.detail).toContain('not found');
   });
 });
 
