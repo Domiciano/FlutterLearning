@@ -30,8 +30,11 @@ const courseConfig = {
   assessments: [],
 
   // --- Módulo de IA (F2) ---------------------------------------------------
-  // El id del modelo va aquí y no incrustado en un componente: cambiarlo por uno
-  // más nuevo o más barato no debería obligar a tocar la UI del chat.
+  // PREFERENCIA de modelo, no requisito. Los ids caducan y el que esté aquí puede
+  // no existir para la clave de un estudiante concreto; al conectar, la app le
+  // pregunta a la clave qué modelos tiene y usa este si está, o el mejor
+  // disponible si no (ver ai/geminiClient.js → resolveModel). Fijarlo a ciegas
+  // se manifestaba como un 404 opaco en la pantalla de conexión.
   // gemini-2.5-flash: rápido, cuota gratuita generosa y contexto de sobra para
   // meter una lección entera (mediana ~6 KB, p90 ~15 KB).
   aiModel: 'gemini-2.5-flash',

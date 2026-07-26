@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { streamGenerate, verifyApiKey, GeminiError } from './geminiClient';
+import { streamGenerate, verifyApiKey, resolveModel, GeminiError } from './geminiClient';
 
 // Convierte trozos de texto en el ReadableStream que devuelve fetch.
 const streamOf = (chunks) => {
@@ -116,5 +116,77 @@ describe('verifyApiKey', () => {
     expect(init.method).toBe('POST');
     expect(init.headers['x-goog-api-key']).toBe('k');
     expect(url).not.toMatch(/key=/);
+  });
+});
+
+describe('resolveModel — el id de modelo no se adivina, se pregunta', () => {
+  const modelsResponse = (names) => ({
+    ok: true,
+    status: 200,
+    json: async () => ({
+      models: names.map((n) => ({ name: `models/${n}`, supportedGenerationMethods: ['generateContent'] })),
+    }),
+  });
+
+  beforeEach(() => { globalThis.fetch = vi.fn(); });
+
+  it('usa el preferido cuando la clave lo tiene', async () => {
+    globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-2.5-flash', 'gemini-2.5-pro']));
+    await expect(resolveModel('k', { preferred: 'gemini-2.5-flash' })).resolves.toBe('gemini-2.5-flash');
+  });
+
+  it('si el preferido no existe, elige otro en vez de fallar con un 404 opaco', async () => {
+    // Este es el fallo real: config.js fijaba un id que la clave no tenía.
+    globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-2.0-flash', 'gemini-1.5-pro']));
+    await expect(resolveModel('k', { preferred: 'gemini-2.5-flash' })).resolves.toBe('gemini-2.0-flash');
+  });
+
+  it('prefiere flash sobre pro, y la versión más alta sobre la más baja', async () => {
+    globalThis.fetch.mockResolvedValue(modelsResponse(['gemini-1.5-flash', 'gemini-2.5-pro', 'gemini-2.5-flash']));
+    await expect(resolveModel('k', { preferred: 'inexistente' })).resolves.toBe('gemini-2.5-flash');
+  });
+
+  it('descarta modelos que no sirven para un chat de texto', async () => {
+    globalThis.fetch.mockResolvedValue(modelsResponse(['embedding-001', 'imagen-3.0', 'gemini-2.0-flash']));
+    await expect(resolveModel('k', { preferred: null })).resolves.toBe('gemini-2.0-flash');
+  });
+
+  it('ignora los modelos que no pueden generar contenido', async () => {
+    globalThis.fetch.mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({
+        models: [
+          { name: 'models/solo-embeddings', supportedGenerationMethods: ['embedContent'] },
+          { name: 'models/gemini-2.0-flash', supportedGenerationMethods: ['generateContent'] },
+        ],
+      }),
+    });
+    await expect(resolveModel('k', {})).resolves.toBe('gemini-2.0-flash');
+  });
+
+  it('una clave sin ningún modelo de texto da un error explicable', async () => {
+    globalThis.fetch.mockResolvedValue(modelsResponse([]));
+    await expect(resolveModel('k', {})).rejects.toMatchObject({ kind: 'model' });
+  });
+
+  it('propaga el error de clave si el listado falla', async () => {
+    globalThis.fetch.mockResolvedValue({ ok: false, status: 403, text: async () => 'denied' });
+    await expect(resolveModel('mala', {})).rejects.toMatchObject({ kind: 'key' });
+  });
+});
+
+describe('errores diagnosticables', () => {
+  beforeEach(() => { globalThis.fetch = vi.fn(); });
+
+  it('un estado inesperado lleva el código en el mensaje', async () => {
+    // Sin el código, "no se pudo completar la consulta" es un callejón sin salida.
+    globalThis.fetch.mockResolvedValue({ ok: false, status: 418, text: async () => 'x' });
+    const err = await verifyApiKey('k', { model: 'm' }).catch((e) => e);
+    expect(err.message).toContain('418');
+  });
+
+  it('404 se explica como problema de modelo, no de clave', async () => {
+    globalThis.fetch.mockResolvedValue({ ok: false, status: 404, text: async () => 'not found' });
+    await expect(verifyApiKey('k', { model: 'no-existe' })).rejects.toMatchObject({ kind: 'model' });
   });
 });

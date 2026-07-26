@@ -23,8 +23,8 @@ import { newId } from '@/analytics/ids';
 import { loginBranding } from '@/auth/loginBranding';
 import courseConfig from '@/content/config';
 import { useCurrentLesson } from './CurrentLessonContext';
-import { readApiKey, writeApiKey, clearApiKey } from './apiKeyStore';
-import { streamGenerate, verifyApiKey } from './geminiClient';
+import { readApiKey, writeApiKey, clearApiKey, readModel, writeModel } from './apiKeyStore';
+import { resolveModel, streamGenerate, verifyApiKey } from './geminiClient';
 import { composeMaterial, buildSystemInstruction } from './buildContext';
 import { instructionFor } from './promptTemplates';
 import { derivePromptFeatures } from './promptText';
@@ -56,12 +56,17 @@ export function AiProvider({ children }) {
 
   const aiConsent = profile?.aiConsent === true;
   const assignedTemplate = profile?.promptTemplate ?? null;
-  const model = courseConfig.aiModel;
+
+  // El id de modelo de `content/config.js` es una PREFERENCIA, no un requisito:
+  // los ids caducan y el que esté fijado puede no existir para la clave del
+  // estudiante. El bueno se resuelve al conectar y se recuerda junto a la clave.
+  const [model, setModel] = useState(courseConfig.aiModel);
 
   // La clave se lee al identificarse y se suelta al cerrar sesión: sin eso, un
   // computador de sala queda con la clave de quien lo usó antes.
   useEffect(() => {
     setApiKey(uid ? readApiKey(uid) : null);
+    setModel((uid && readModel(uid)) || courseConfig.aiModel);
   }, [uid]);
 
   // --- Conversación --------------------------------------------------------
@@ -89,16 +94,21 @@ export function AiProvider({ children }) {
   const connectKey = useCallback(
     async (rawKey) => {
       const key = rawKey.trim();
-      // Se verifica contra el mismo modelo que usará el chat: ver geminiClient.
-      await verifyApiKey(key, { model }); // propaga GeminiError si no sirve
+      // Primero se averigua con qué modelo puede hablar esta clave, y luego se
+      // comprueba con ese mismo modelo. Al revés —fijando el id de antemano— un
+      // modelo retirado o no habilitado se manifestaba como un 404 opaco.
+      const chosen = await resolveModel(key, { preferred: courseConfig.aiModel });
+      await verifyApiKey(key, { model: chosen }); // propaga GeminiError si no sirve
       writeApiKey(uid, key);
+      writeModel(uid, chosen);
       setApiKey(key);
+      setModel(chosen);
       // `ai_key_connected` es el DENOMINADOR del sesgo de selección: sin él,
       // `promptCount = 0` no distingue "no pide ayuda" de "no activó el módulo".
       track(EVENTS.AI_KEY_CONNECTED, {});
       return true;
     },
-    [uid, track, model]
+    [uid, track]
   );
 
   const forgetKey = useCallback(() => {

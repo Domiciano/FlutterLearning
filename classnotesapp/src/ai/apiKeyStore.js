@@ -19,6 +19,30 @@ const KEY = 'aiApiKey';
 // disponible para el siguiente que inicie sesión.
 const storageKey = (uid) => `${KEY}:${uid}`;
 
+// El modelo que se resolvió para esta clave. Se recuerda junto a ella para no
+// volver a listar modelos en cada arranque; se descarta al olvidar la clave,
+// porque otra clave puede tener acceso a otros modelos.
+const MODEL_KEY = 'aiModel';
+const modelStorageKey = (uid) => `${MODEL_KEY}:${uid}`;
+
+export function readModel(uid) {
+  if (!uid || typeof localStorage === 'undefined') return null;
+  try {
+    return localStorage.getItem(modelStorageKey(uid)) || null;
+  } catch {
+    return null;
+  }
+}
+
+export function writeModel(uid, model) {
+  if (!uid || !model || typeof localStorage === 'undefined') return;
+  try {
+    localStorage.setItem(modelStorageKey(uid), model);
+  } catch {
+    /* sin almacenamiento: se resolverá otra vez en el próximo arranque */
+  }
+}
+
 export function readApiKey(uid) {
   if (!uid || typeof localStorage === 'undefined') return null;
   try {
@@ -41,6 +65,8 @@ export function clearApiKey(uid) {
   if (!uid || typeof localStorage === 'undefined') return;
   try {
     localStorage.removeItem(storageKey(uid));
+    // El modelo resuelto pertenece a esa clave: otra puede tener acceso a otros.
+    localStorage.removeItem(modelStorageKey(uid));
   } catch {
     /* nada que borrar */
   }
@@ -54,7 +80,7 @@ export function clearAllApiKeys() {
     const doomed = [];
     for (let i = 0; i < localStorage.length; i += 1) {
       const k = localStorage.key(i);
-      if (k && k.startsWith(`${KEY}:`)) doomed.push(k);
+      if (k && (k.startsWith(`${KEY}:`) || k.startsWith(`${MODEL_KEY}:`))) doomed.push(k);
     }
     doomed.forEach((k) => localStorage.removeItem(k));
   } catch {
