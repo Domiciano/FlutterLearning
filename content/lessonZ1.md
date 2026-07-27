@@ -58,13 +58,7 @@ Desarrollar y aplicar habilidades del diseño, construcción, arquitectura y des
 - Servicios de autenticación en nube
 - Notificaciones Push
 - Consumo de Web Services REST y depuración de solicitudes, respuestas y deserialización de datos
-
-`Unidad 4` Construcción y Despliegue
-
-- Desarrollo de un Producto Mínimo Viable (MVP) en el proceso de construcción de una aplicación móvil
-- Fase de lanzamiento de aplicaciones, considerando aspectos como pruebas, ajustes finales y optimización del rendimiento
-- Firma digital de aplicaciones para garantizar la autenticidad y seguridad en el despliegue
-- Preparación de la aplicación previo al lanzamiento en tiendas de aplicaciones como Google Play Store o App Store
+- Arquitecturas de referencia. `Clean Architecture`
 
 ## Metodologías de aprendizajes
 
