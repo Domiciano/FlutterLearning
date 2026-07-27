@@ -91,13 +91,13 @@ const AiFab = () => {
                   pb: 'env(safe-area-inset-bottom, 0px)',
                 }
               : {
-                  // Ancho relativo con tope: en un portátil de 1280 px ocupa
-                  // casi todo, y en un monitor grande no se estira hasta hacer
-                  // ilegibles las líneas de texto.
-                  width: '90vw',
-                  maxWidth: 960,
-                  height: '85vh',
-                  maxHeight: 900,
+                  // Toda la pantalla menos un margen, para que quepan los
+                  // bloques de código sin envolver cada línea en tres.
+                  m: 3,
+                  width: 'calc(100% - 48px)',
+                  maxWidth: 'calc(100% - 48px)',
+                  height: 'calc(100% - 48px)',
+                  maxHeight: 'calc(100% - 48px)',
                 }),
           },
         }}

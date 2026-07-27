@@ -22,7 +22,11 @@ import "@/styles/flutter-like.css";
 import { useAnalytics } from "@/analytics/AnalyticsProvider";
 import { EVENTS } from "@/analytics/events";
 
-const CodeBlock = ({ children, language, className = "" }) => {
+// `source` distingue el código de una lección del que devuelve el asistente de
+// IA. Copiar del material y copiar la solución que te dio el modelo son dos
+// conductas distintas; mezclarlas en el mismo evento estropea H5 (razón
+// copiar/ejecutar) y H7 (ayuda ejecutiva). Ver datadict.md § 2.3.
+const CodeBlock = ({ children, language, className = "", source = "lesson" }) => {
   const codeRef = useRef(null);
   const { track } = useAnalytics();
 
@@ -38,6 +42,7 @@ const CodeBlock = ({ children, language, className = "" }) => {
     track(EVENTS.CODE_COPY, {
       lines: String(children ?? '').split('\n').length,
       language: language ?? null,
+      source,
     });
   };
 

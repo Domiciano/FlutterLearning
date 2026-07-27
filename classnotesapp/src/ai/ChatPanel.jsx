@@ -18,14 +18,22 @@ import { alpha } from '@mui/material/styles';
 import { useThemeMode } from '@/theme/ThemeContext';
 import { useAi } from './AiProvider';
 import { MAX_CHIPS } from './lessonTags';
+import AiMarkdown from './AiMarkdown';
 
 const Turn = ({ turn, theme }) => {
   const mine = turn.role === 'user';
+  // La respuesta se muestra como Markdown solo cuando ha terminado de llegar.
+  // Mientras streamea, el texto está a medias —una valla ``` sin cerrar, una
+  // tabla incompleta— y reparsear en cada fragmento haría parpadear el bloque y
+  // reejecutar el resaltado decenas de veces por respuesta.
+  const asMarkdown = !mine && !turn.pending && turn.text;
+
   return (
     <Box sx={{ display: 'flex', justifyContent: mine ? 'flex-end' : 'flex-start', mb: 1.5 }}>
       <Box
         sx={{
-          maxWidth: '85%',
+          maxWidth: mine ? '85%' : '100%',
+          width: mine ? 'auto' : '100%',
           px: 1.75, py: 1.25,
           borderRadius: 2,
           background: mine ? alpha(theme.accent, 0.18) : alpha(theme.textSecondary, 0.08),
@@ -33,13 +41,12 @@ const Turn = ({ turn, theme }) => {
           color: theme.textPrimary,
           fontSize: '0.9rem',
           lineHeight: 1.6,
-          // La respuesta trae markdown y saltos de línea; se muestra tal cual en
-          // vez de renderizarla, para no reinterpretar el código que devuelve.
-          whiteSpace: 'pre-wrap',
+          ...(asMarkdown ? {} : { whiteSpace: 'pre-wrap' }),
           wordBreak: 'break-word',
+          minWidth: 0,
         }}
       >
-        {turn.text}
+        {asMarkdown ? <AiMarkdown>{turn.text}</AiMarkdown> : turn.text}
         {turn.pending && !turn.text && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: theme.textSecondary }}>
             <CircularProgress size={14} sx={{ color: theme.accent }} />
