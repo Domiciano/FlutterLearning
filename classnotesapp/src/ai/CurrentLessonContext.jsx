@@ -24,6 +24,9 @@ const EMPTY = {
 
 export function CurrentLessonProvider({ children }) {
   const [lesson, setLesson] = useState(EMPTY);
+  // El temario completo del curso. Es constante durante la sesión y se publica
+  // una vez, cuando `App` termina de descargar y parsear `toc.md`.
+  const [courseOutline, setCourseOutline] = useState(null);
 
   // La lección y el apartado cambian por caminos distintos —una al navegar, el
   // otro al hacer scroll—, así que se actualizan por separado para no reescribir
@@ -41,8 +44,8 @@ export function CurrentLessonProvider({ children }) {
   const clearCurrentLesson = useCallback(() => setLesson(EMPTY), []);
 
   const value = useMemo(
-    () => ({ lesson, setCurrentLesson, setCurrentSubsection, clearCurrentLesson }),
-    [lesson, setCurrentLesson, setCurrentSubsection, clearCurrentLesson]
+    () => ({ lesson, courseOutline, setCourseOutline, setCurrentLesson, setCurrentSubsection, clearCurrentLesson }),
+    [lesson, courseOutline, setCurrentLesson, setCurrentSubsection, clearCurrentLesson]
   );
 
   return <CurrentLessonContext.Provider value={value}>{children}</CurrentLessonContext.Provider>;
@@ -53,6 +56,8 @@ export function CurrentLessonProvider({ children }) {
 export function useCurrentLesson() {
   return useContext(CurrentLessonContext) ?? {
     lesson: EMPTY,
+    courseOutline: null,
+    setCourseOutline: () => {},
     setCurrentLesson: () => {},
     setCurrentSubsection: () => {},
     clearCurrentLesson: () => {},

@@ -7,6 +7,8 @@ import TableOfContentsParser from '@/utils/tableOfContentsParser';
 import courseConfig from '@/content/config.js';
 import LessonPage from '@/pages/LessonPage';
 import AiFab from '@/ai/AiFab';
+import { useCurrentLesson } from '@/ai/CurrentLessonContext';
+import { buildCourseOutline } from '@/ai/buildContext';
 import AppBarGlobal from '@/components/AppBarGlobal';
 
 function App() {
@@ -41,6 +43,13 @@ function App() {
     const firstLesson = sections.find(s => s.type === 'lesson');
     return firstLesson ? firstLesson.id : null;
   }, [sections]);
+
+  // El asistente necesita el temario entero para poder situar cualquier pregunta:
+  // sin él solo conoce la lección abierta y da por inexistente el resto del curso.
+  const { setCourseOutline } = useCurrentLesson();
+  useEffect(() => {
+    setCourseOutline(buildCourseOutline(sections));
+  }, [sections, setCourseOutline]);
 
   // Deep-link redirect: GitHub Pages 404.html appends ?p=<path>
   useEffect(() => {

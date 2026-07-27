@@ -42,7 +42,7 @@ const deviceOf = () => {
 export function AiProvider({ children }) {
   const { user, profile, setAiConsent } = useAuth();
   const { track } = useAnalytics();
-  const { lesson } = useCurrentLesson();
+  const { lesson, courseOutline } = useCurrentLesson();
 
   const uid = user?.uid ?? null;
   const [apiKey, setApiKey] = useState(null);
@@ -207,6 +207,7 @@ export function AiProvider({ children }) {
         subsectionTitle: lesson.subsectionTitle,
         topics: lesson.topics,
         material,
+        courseOutline,
       });
 
       const controller = new AbortController();
@@ -282,7 +283,7 @@ export function AiProvider({ children }) {
         abortRef.current = null;
       }
     },
-    [apiKey, sending, turns, lesson, model, track, ensureConversation, forgetKey, persistPrompt]
+    [apiKey, sending, turns, lesson, courseOutline, model, track, ensureConversation, forgetKey, persistPrompt]
   );
 
   // --- Historial -----------------------------------------------------------

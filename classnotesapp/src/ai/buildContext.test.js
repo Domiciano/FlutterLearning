@@ -5,6 +5,8 @@ import {
   composeMaterial,
   extractSubsection,
   buildSystemInstruction,
+  buildCourseOutline,
+  MAX_OUTLINE_CHARS,
 } from './buildContext';
 
 const LESSON = [
@@ -110,7 +112,8 @@ describe('buildSystemInstruction', () => {
     expect(out).toContain('Beans');
     expect(out).toContain('Temas de esta lección: IoC Container, @Autowired.');
     expect(out).toContain('--- MATERIAL ---');
-    expect(out).toContain('dilo en vez de inventarlo');
+    // Sigue prohibido inventar, pero ya no como excusa para no responder.
+    expect(out).toContain('no debes hacer es inventar');
   });
 
   it('ordena responder directamente, sin devolver la pregunta', () => {
@@ -125,5 +128,59 @@ describe('buildSystemInstruction', () => {
     const out = buildSystemInstruction({ courseName: 'X', material: null });
     expect(out).not.toContain('--- MATERIAL ---');
     expect(out).toContain('No tienes el texto de la lección delante');
+  });
+});
+
+describe('buildCourseOutline', () => {
+  const sections = [
+    { type: 'title', label: 'SEMANA 2 · Aplicaciones' },
+    { type: 'lesson', label: 'Repasito de JS' },
+    { type: 'divider' },
+    { type: 'title', label: 'SEMANA 14 · React' },
+    { type: 'lesson', label: 'Componentes y JSX' },
+  ];
+
+  it('arma un índice con secciones y lecciones', () => {
+    const out = buildCourseOutline(sections);
+    expect(out).toContain('SEMANA 2 · Aplicaciones');
+    expect(out).toContain('  - Repasito de JS');
+    expect(out).toContain('SEMANA 14 · React');
+    expect(out).toContain('  - Componentes y JSX');
+  });
+
+  it('sin secciones devuelve null, no una cadena vacía', () => {
+    expect(buildCourseOutline([])).toBeNull();
+    expect(buildCourseOutline(undefined)).toBeNull();
+  });
+
+  it('recorta un temario desmesurado en vez de comerse el contexto', () => {
+    const enorme = Array.from({ length: 2000 }, (_, i) => ({ type: 'lesson', label: `Lección ${i}` }));
+    const out = buildCourseOutline(enorme);
+    expect(out.length).toBeLessThan(MAX_OUTLINE_CHARS + 60);
+    expect(out).toContain('temario recortado');
+  });
+});
+
+describe('buildSystemInstruction — alcance de lo que se puede preguntar', () => {
+  it('prohíbe negarse a responder por estar fuera de la lección', () => {
+    // El fallo real: a "dame un holamundo de React" contestaba que eso no estaba
+    // en la lección de repaso de JS, estando React en el mismo curso.
+    const out = buildSystemInstruction({ courseName: 'X', material: '# m' });
+    expect(out).toContain('NUNCA te niegues a responder');
+    expect(out).not.toContain('si algo no está ahí, dilo en vez de inventarlo');
+  });
+
+  it('incluye el temario cuando se le pasa, para poder situar la pregunta', () => {
+    const out = buildSystemInstruction({
+      courseName: 'X', material: '# m',
+      courseOutline: 'SEMANA 14 · React\n  - Componentes y JSX',
+    });
+    expect(out).toContain('--- TEMARIO ---');
+    expect(out).toContain('SEMANA 14 · React');
+  });
+
+  it('sin temario no deja una sección vacía colgando', () => {
+    const out = buildSystemInstruction({ courseName: 'X', material: '# m' });
+    expect(out).not.toContain('--- TEMARIO ---');
   });
 });
