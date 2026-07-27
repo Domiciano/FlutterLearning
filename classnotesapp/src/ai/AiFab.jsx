@@ -72,7 +72,11 @@ const AiFab = () => {
         open={open}
         onClose={close}
         fullWidth
-        maxWidth="sm"
+        // `maxWidth={false}` desactiva el tope por breakpoint de MUI; el tamaño
+        // real lo fija el `sx` de abajo. Con el preajuste "sm" el panel se
+        // quedaba en 640 px, y una respuesta con un bloque de código dentro
+        // salía envuelta en tres líneas por cada una.
+        maxWidth={false}
         PaperProps={{
           sx: {
             background: theme.backgroundLight,
@@ -80,13 +84,21 @@ const AiFab = () => {
             ...(isMobile
               ? {
                   position: 'fixed',
-                  left: 0, right: 0, bottom: 0, top: 24,
+                  left: 0, right: 0, bottom: 0, top: 12,
                   m: 0,
                   maxWidth: '100%',
                   borderRadius: '16px 16px 0 0',
                   pb: 'env(safe-area-inset-bottom, 0px)',
                 }
-              : { maxWidth: 640, height: '70vh' }),
+              : {
+                  // Ancho relativo con tope: en un portátil de 1280 px ocupa
+                  // casi todo, y en un monitor grande no se estira hasta hacer
+                  // ilegibles las líneas de texto.
+                  width: '90vw',
+                  maxWidth: 960,
+                  height: '85vh',
+                  maxHeight: 900,
+                }),
           },
         }}
       >
