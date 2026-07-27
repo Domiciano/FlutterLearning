@@ -76,7 +76,7 @@ El uso de la IA en este curso se define como Uso Colaborativo, lo que implica qu
 ## Evaluación de aprendizajes
 
 Pitch
-`10%      ` 
+`15%      ` 
 Un pitch elevator junto con su grupo en el que proponga sus ideas de proyecto final
 
 DB
@@ -100,7 +100,7 @@ Sprint 3
 De acuerdo al backlog, deberá escoger qué módulos de la aplicación incluirá en el segundo sprint. Esa declaración debe ser presentada en moodle como Kick off del sprint 3.
 
 Exhibición
-`15%            `
+`10%            `
 La actividad final del curso es exponer su aplicación en una exibición de las funcionalidades alcanzadas
 
 ## Recursos de apoyo
