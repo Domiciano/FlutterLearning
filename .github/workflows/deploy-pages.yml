@@ -13,9 +13,15 @@ permissions:
   pages: write
   id-token: write
 
+# Los despliegues de Pages se ENCOLAN, no se cancelan. Con
+# `cancel-in-progress: true` un push seguido de otro aborta el workflow mientras
+# la publicación ya está en marcha, y la API de Pages se queda creyendo que sigue
+# en curso: a partir de ahí todo despliegue posterior falla con "due to in
+# progress deployment" y el sitio se queda con el bundle viejo. Pasó el
+# 2026-07-26 en FlutterApps y el 2026-07-27 en Computacion2.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
