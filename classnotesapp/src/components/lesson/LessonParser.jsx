@@ -19,6 +19,7 @@ import TryCodeButton from "./TryCodeButton";
 import Typography from "@mui/material/Typography";
 import BeanVisualizer from "@/components/BeanVisualizer/BeanVisualizer";
 import MermaidBlock from "@/components/lesson/MermaidBlock";
+import remarkStripComments from "@/utils/remarkStripComments";
 
 // Reused across calls — plugins are registered once at freeze() time.
 const headingProcessor = unified().use(remarkParse).use(remarkGfm);
@@ -193,7 +194,10 @@ const LessonParser = ({ content }) => {
   return {
     elements: (
       <LessonContainer>
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkStripComments]}
+          components={components}
+        >
           {content}
         </ReactMarkdown>
       </LessonContainer>

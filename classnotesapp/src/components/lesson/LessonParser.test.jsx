@@ -163,3 +163,41 @@ describe('LessonParser — inline formatting', () => {
     expect(link.getAttribute('href')).toBe('https://example.com');
   });
 });
+
+describe('LessonParser — comentarios HTML', () => {
+  // react-markdown no descarta el HTML crudo: lo escapa. Sin el plugin, el
+  // comentario de etiquetas salía como texto literal encima del primer párrafo.
+  it('no renderiza el comentario de tags', () => {
+    const { elements } = parse(
+      '# Título\n\n<!-- tags: ServerSocket, Socket, accept -->\n\nPárrafo de entrada.'
+    );
+    const { container } = renderElements(elements);
+    expect(container.textContent).not.toContain('tags:');
+    expect(container.textContent).not.toContain('<!--');
+    expect(screen.getByText('Párrafo de entrada.')).toBeTruthy();
+  });
+
+  it('no renderiza un comentario que ocupa varias líneas', () => {
+    const { elements } = parse(
+      '# T\n\n<!-- tags: Stream, StreamController,\n     await for -->\n\nTexto.'
+    );
+    const { container } = renderElements(elements);
+    expect(container.textContent).not.toContain('await for');
+    expect(container.textContent).toContain('Texto.');
+  });
+
+  it('quita el comentario intercalado en un párrafo', () => {
+    const { elements } = parse('Antes <!-- nota interna --> después.');
+    const { container } = renderElements(elements);
+    expect(container.textContent).not.toContain('nota interna');
+    expect(container.textContent).toContain('Antes');
+    expect(container.textContent).toContain('después.');
+  });
+
+  // El markdown crudo no se toca: es lo que reciben extractLessonTags y el modelo.
+  it('deja intacto un comentario dentro de un bloque de código', () => {
+    const { elements } = parse('```html\n<!-- esto es contenido de la lección -->\n```');
+    const { container } = renderElements(elements);
+    expect(container.textContent).toContain('esto es contenido de la lección');
+  });
+});
