@@ -58,7 +58,7 @@ Desarrollar y aplicar habilidades del diseño, construcción, arquitectura y des
 - Servicios de autenticación en nube
 - Notificaciones Push
 - Consumo de Web Services REST y depuración de solicitudes, respuestas y deserialización de datos
-- Arquitecturas de referencia. `Clean Architecture`
+- Arquitecturas de referencia. Clean Architec
 
 ## Metodologías de aprendizajes
 

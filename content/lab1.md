@@ -35,7 +35,9 @@ Con estas tres piezas listas, combínelas para construir componentes más grande
 
 Reutilice el indicador numérico tres veces para formar una fila con publicaciones, seguidores y seguidos.
 
-![Imagen](Lab1Block1.png "frame60")
+Lab1Block3
+![Imagen](Lab1Block3.png "frame60")
+
 
 ### Tarjeta de perfil
 
@@ -47,7 +49,7 @@ Reutilice el bloque de información de perfil dentro de una tarjeta, agregando u
 
 Reutilice el elemento de conversación varias veces debajo de un encabezado con un enlace de "Ver todas".
 
-![Imagen](Lab1Block3.png "frame60")
+![Imagen](Lab1Block1.png "frame60")
 
 ## 2. Ensamblando la pantalla de perfil
 
