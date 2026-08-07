@@ -45,9 +45,9 @@
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lessonE1.md | Navegación entre Pantallas | 0034
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lessonE2.md | Navegación Avanzada | 0035
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lessonE3.md | Navegación con BottomNavigationBar | 0036
-[t] Laboratorio 2
+[t] Laboratorio 2 · SEMANA 2
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lab2concepts.md | Conceptos iniciales | 0037
-[lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lab2.md | Laboratorio 2: Componetizando Icesi Music | 0038
+[lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lab2.md | Laboratorio 2: Icesi Beats | 0038
 [t] Render de Listas · SEMANA 3
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lessonF1.md | Introducción a las Listas y ListView | 0039
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lessonF2.md | Listas Dinámicas y ListView.builder | 0040
