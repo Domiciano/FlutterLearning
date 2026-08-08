@@ -142,6 +142,15 @@ const LessonParser = ({ content }) => {
         const scale = frameMatch[1] ? Number(frameMatch[1]) / 100 : 1;
         return <FramedImageBlock src={resolved} alt={alt} scale={scale} />;
       }
+      // `scaleNN` solo reduce el ancho al NN%, sin marco: para capturas que ya
+      // traen su propio fondo.
+      const scaleMatch = /^scale(\d{1,3})?$/.exec(title || "");
+      if (scaleMatch) {
+        const scale = scaleMatch[1] ? Number(scaleMatch[1]) / 100 : 1;
+        return (
+          <FramedImageBlock src={resolved} alt={alt} scale={scale} card={false} />
+        );
+      }
       return title === "icon" ? (
         <IconBlock src={resolved} alt={alt} />
       ) : (

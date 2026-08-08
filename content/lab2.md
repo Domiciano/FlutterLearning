@@ -22,8 +22,6 @@ Esta es la idea que organiza todo el laboratorio y es obligatoria.
 | ¿Cómo aparece? | `Navigator.pushNamed(...)` | Cambiando un índice con `setState` |
 | Carpeta | `lib/screens/` | `lib/pages/` |
 
-Analogía Android: **Screen ≈ Activity**, **Page ≈ Fragment**.
-
 En esta aplicación la convención aparece **dos veces**:
 
 - La `OnboardingScreen` hostea los tres pasos y el resumen.
@@ -45,6 +43,158 @@ lib/
 ├── components/            // los 13 componentes, ya hechos
 ├── screens/               // las 4 Screens
 └── pages/                 // las 7 Pages
+```
+
+## El grafo de navegación
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="100%"
+     role="img" aria-labelledby="navttl navdsc"
+     font-family="ui-sans-serif, -apple-system, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif">
+  <title id="navttl">Grafo de navegación de Icesi Beats</title>
+  <desc id="navdsc">LoginScreen lleva a OnboardingScreen, que hostea Step1Page, Step2Page, Step3Page y SummaryPage. Desde el resumen se entra a MainScreen, que hostea HomePage, PlaylistPage y ProfilePage, y desde ahí se abre EditProfileScreen o se cierra sesión volviendo al login.</desc>
+
+  <defs>
+    <style>
+      .scr-box  { fill:#EEF1FF; stroke:#A9B4F2; stroke-width:1.5; }
+      .scr-cont { fill:#EEF1FF; fill-opacity:.55; stroke:#A9B4F2; stroke-width:1.5; stroke-dasharray:7 5; }
+      .pg-box   { fill:#E3F6F3; stroke:#86D3CA; stroke-width:1.5; }
+      .chip     { fill:#F7F8FC; stroke:#D9DEE8; stroke-width:1; }
+      .t-scr    { fill:#3B49B8; font-size:14px; font-weight:700; }
+      .t-pg     { fill:#0F8478; font-size:14px; font-weight:700; }
+      .body     { fill:#454C61; font-size:11.5px; }
+      .lbl      { fill:#454C61; font-size:11px; font-weight:600; }
+      .note     { fill:#5B6377; font-size:11px; }
+      .mono     { font-family:ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; }
+      .link     { fill:none; stroke:#8A93A6; stroke-width:1.75; marker-end:url(#ar); }
+      .link2    { fill:none; stroke:#8A93A6; stroke-width:1.75; marker-end:url(#ar); marker-start:url(#ar); }
+      .dash     { stroke-dasharray:6 5; }
+    </style>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            markerUnits="strokeWidth" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 L2.4,5 Z" fill="context-stroke"/>
+    </marker>
+  </defs>
+
+  <!-- Leyenda -->
+  <g>
+    <rect class="chip" x="840" y="56" width="304" height="76" rx="10"/>
+    <rect x="856" y="74" width="14" height="14" rx="3" fill="#EEF1FF" stroke="#A9B4F2" stroke-width="1.5"/>
+    <text class="note" x="880" y="85" data-fit="248">Screen · tiene Scaffold</text>
+    <rect x="856" y="102" width="14" height="14" rx="3" fill="#E3F6F3" stroke="#86D3CA" stroke-width="1.5"/>
+    <text class="note" x="880" y="113" data-fit="248">Page · va dentro de una Screen</text>
+  </g>
+
+  <!-- LoginScreen -->
+  <g>
+    <rect class="scr-box" x="104" y="64" width="232" height="72" rx="12"/>
+    <text class="t-scr mono" x="120" y="94" data-fit="200">LoginScreen</text>
+    <text class="body" x="120" y="115" data-fit="200">pide correo y contraseña</text>
+  </g>
+
+  <!-- Login -> Onboarding -->
+  <path class="link" d="M220,136 L220,208"/>
+  <g>
+    <rect class="chip" x="236" y="161" width="196" height="22" rx="6"/>
+    <text class="lbl mono" x="246" y="176" data-fit="176">pushNamed('/onboarding')</text>
+  </g>
+
+  <!-- OnboardingScreen -->
+  <rect class="scr-cont" x="104" y="216" width="1032" height="208" rx="16"/>
+  <text class="t-scr mono" x="128" y="250" data-fit="400">OnboardingScreen</text>
+
+  <g>
+    <rect class="pg-box" x="152" y="272" width="204" height="104" rx="12"/>
+    <text class="t-pg mono" x="168" y="302" data-fit="172">Step1Page</text>
+    <text class="body" x="168" y="324" data-fit="172">nombre y usuario</text>
+    <text class="note" x="168" y="344" data-fit="172">viene resuelta</text>
+  </g>
+  <path class="link" d="M364,324 L388,324"/>
+
+  <g>
+    <rect class="pg-box" x="396" y="272" width="204" height="104" rx="12"/>
+    <text class="t-pg mono" x="412" y="302" data-fit="172">Step2Page</text>
+    <text class="body" x="412" y="324" data-fit="172">artista y mood</text>
+  </g>
+  <path class="link" d="M608,324 L632,324"/>
+
+  <g>
+    <rect class="pg-box" x="640" y="272" width="204" height="104" rx="12"/>
+    <text class="t-pg mono" x="656" y="302" data-fit="172">Step3Page</text>
+    <text class="body" x="656" y="324" data-fit="172">playlist y portada</text>
+  </g>
+  <path class="link" d="M852,324 L876,324"/>
+
+  <g>
+    <rect class="pg-box" x="884" y="272" width="204" height="104" rx="12"/>
+    <text class="t-pg mono" x="900" y="302" data-fit="172">SummaryPage</text>
+    <text class="body" x="900" y="324" data-fit="172">resumen de todo</text>
+  </g>
+
+  <text class="note" x="152" y="404" data-fit="900">onContinue(profile) y setState cambian el índice — entre pasos NO hay Navigator</text>
+
+  <!-- Summary -> MainScreen -->
+  <path class="link" d="M986,376 L986,452 L452,452 L452,488"/>
+  <g>
+    <rect class="chip" x="556" y="441" width="326" height="22" rx="6"/>
+    <text class="lbl mono" x="566" y="456" data-fit="306">pushNamedAndRemoveUntil('/main')</text>
+  </g>
+
+  <!-- MainScreen -->
+  <rect class="scr-cont" x="104" y="496" width="696" height="208" rx="16"/>
+  <text class="t-scr mono" x="128" y="530" data-fit="400">MainScreen</text>
+
+  <g>
+    <rect class="pg-box" x="130" y="552" width="188" height="104" rx="12"/>
+    <text class="t-pg mono" x="146" y="582" data-fit="156">HomePage</text>
+    <text class="body" x="146" y="604" data-fit="156">saludo y playlist</text>
+    <text class="note" x="146" y="624" data-fit="156">viene resuelta</text>
+  </g>
+  <path class="link2" d="M326,604 L350,604"/>
+
+  <g>
+    <rect class="pg-box" x="358" y="552" width="188" height="104" rx="12"/>
+    <text class="t-pg mono" x="374" y="582" data-fit="156">PlaylistPage</text>
+    <text class="body" x="374" y="604" data-fit="156">portada y datos</text>
+  </g>
+  <path class="link2" d="M554,604 L578,604"/>
+
+  <g>
+    <rect class="pg-box" x="586" y="552" width="188" height="104" rx="12"/>
+    <text class="t-pg mono" x="602" y="582" data-fit="156">ProfilePage</text>
+    <text class="body" x="602" y="604" data-fit="156">perfil y botones</text>
+  </g>
+
+  <text class="note" x="130" y="684" data-fit="640">BottomNavigationBar cambia el índice — tampoco hay Navigator</text>
+
+  <!-- MainScreen -> EditProfileScreen -->
+  <path class="link" d="M808,604 L896,604"/>
+  <g>
+    <rect class="chip" x="807" y="565" width="90" height="22" rx="6"/>
+    <text class="lbl mono" x="817" y="580" data-fit="70">pushNamed</text>
+  </g>
+
+  <g>
+    <rect class="scr-box" x="904" y="552" width="232" height="104" rx="12"/>
+    <text class="t-scr mono" x="920" y="582" data-fit="200">EditProfileScreen</text>
+    <text class="body" x="920" y="604" data-fit="200">edita nombre y usuario</text>
+    <text class="note" x="920" y="624" data-fit="200">es la única que devuelve</text>
+  </g>
+
+  <!-- pop de vuelta -->
+  <path class="link dash" d="M1020,656 L1020,744 L700,744 L700,712"/>
+  <g>
+    <rect class="chip" x="768" y="733" width="184" height="22" rx="6"/>
+    <text class="lbl mono" x="778" y="748" data-fit="164">pop(context, perfil)</text>
+  </g>
+
+  <!-- cerrar sesión -->
+  <path class="link" d="M500,704 L500,800 L68,800 L68,100 L96,100"/>
+  <g>
+    <rect class="chip" x="146" y="789" width="294" height="22" rx="6"/>
+    <text class="lbl" x="156" y="804" data-fit="274">cerrar sesión · pushNamedAndRemoveUntil('/')</text>
+  </g>
+</svg>
 ```
 
 ## Punto de partida
@@ -102,7 +252,7 @@ Son solo cuatro rutas porque los tres pasos y el resumen son `Page`, no `Screen`
 Mientras no haga esto, el botón `Entrar` del login falla: está navegando a una ruta
 que todavía no existe.
 
-![Imagen](lab2Login.png "frame60")
+![Imagen](lab2Login.png "scale60")
 
 # Parte 2: el paso 2 del onboarding
 
@@ -112,11 +262,11 @@ resuelto.
 El patrón de todos los pasos es el mismo: **RECIBIR → COMPLETAR → REPORTAR**. Así se
 ve el Paso 1, que ya viene resuelto:
 
-![Imagen](lab2Step1.png "frame60")
+![Imagen](lab2Step1.png "scale60")
 
 Y esto es lo que usted tiene que construir:
 
-![Imagen](lab2Step2.png "frame60")
+![Imagen](lab2Step2.png "scale60")
 
 1. Un `StepHeader` con `step: 2`, título `¿Qué te mueve?` y subtítulo
    `Con esto armamos tus recomendaciones`.
@@ -141,7 +291,7 @@ Archivo: `lib/pages/step3_page.dart`
 Es una `Page` y su raíz es un `SingleChildScrollView`, porque el contenido no cabe en
 un celular.
 
-![Imagen](lab2Step3.png "frame60")
+![Imagen](lab2Step3.png "scale60")
 
 1. Un `StepHeader` con `step: 3`, título `Tu primera playlist` y subtítulo
    `Dale un nombre y una portada`.
@@ -163,7 +313,7 @@ Archivo: `lib/pages/summary_page.dart`
 
 Puede ser un `StatelessWidget`: no tiene nada que recordar.
 
-![Imagen](lab2Summary.png "frame60")
+![Imagen](lab2Summary.png "scale60")
 
 1. Un círculo verde de 64 con un check negro, el título `Así te vamos a conocer` y el
    subtítulo `Puedes cambiar esto después en tu perfil`.
@@ -192,7 +342,7 @@ flecha de retroceso, porque ya no hay nada debajo en la pila.
 Archivo: `lib/screens/main_screen.dart` — use como molde `onboarding_screen.dart`,
 que hace exactamente lo mismo con sus cuatro Pages.
 
-![Imagen](lab2Home.png "frame60")
+![Imagen](lab2Home.png "scale60")
 
 1. Un `StatefulWidget` con `int _currentIndex = 0`.
 2. Reciba el `MusicProfile` con
@@ -218,7 +368,7 @@ Molde: `home_page.dart`. Las dos son Pages: **sin `Scaffold`**.
 
 ### `PlaylistPage`
 
-![Imagen](lab2Playlist.png "frame60")
+![Imagen](lab2Playlist.png "scale60")
 
 1. Un `PlaylistHero` con `profile.playlistName`, `profile.mood` y `profile.coverUrl`.
    Ya dibuja la portada grande, el nombre y la línea `Playlist · mood`.
@@ -229,7 +379,7 @@ Sin título: el `AppTopBar` de la `MainScreen` ya muestra `Tu playlist`.
 
 ### `ProfilePage`
 
-![Imagen](lab2Profile.png "frame60")
+![Imagen](lab2Profile.png "scale60")
 
 1. Un `ProfileHeader` con `profile.name` y `profile.username`.
 2. Cuatro `InfoRow`: `Correo`, `Artista favorito`, `Mood` y `Playlist`.
@@ -247,7 +397,7 @@ Archivo: `lib/screens/edit_profile_screen.dart`, más el `await` en `MainScreen`
 
 Es la única pantalla que **devuelve** un valor.
 
-![Imagen](lab2EditProfile.png "frame60")
+![Imagen](lab2EditProfile.png "scale60")
 
 1. Reciba el `MusicProfile` actual con `ModalRoute`.
 2. Dos `LabeledTextField`: `Nombre completo` y `Nombre de usuario`, usando los valores
@@ -336,13 +486,55 @@ Responda en máximo 10 líneas dentro del `README.md` de su entrega:
   pila de navegación.
 - Los datos viven en memoria. No hay backend ni persistencia.
 
-## Autoevaluación
+## Checklist de entrega
 
-El proyecto trae un test que recorre el flujo completo:
+Marque cada punto solo cuando lo haya visto funcionando en la app corriendo.
 
-```plain
-flutter test
-```
+**Rutas y arranque**
 
-Al empezar **falla**, y eso está bien: va llegando cada vez más lejos a medida que
-usted avanza. Úselo como semáforo. Cuando pase, terminó el laboratorio.
+- [ ] `main.dart` usa `initialRoute` y `routes`, y ya no declara `home`.
+- [ ] Las 4 rutas están registradas: `/`, `/onboarding`, `/main`, `/edit-profile`.
+- [ ] El botón `Entrar` del login lleva al Paso 1.
+
+**Onboarding**
+
+- [ ] `Step2Page` muestra el campo de artista y los tres `MoodButton`.
+- [ ] Solo un mood queda seleccionado a la vez.
+- [ ] `Step3Page` muestra los dos campos y el botón `Previsualizar`.
+- [ ] `Previsualizar` cambia la portada que se ve en pantalla.
+- [ ] Los tres pasos completan el perfil con `copyWith` y lo entregan por `onContinue`.
+- [ ] `SummaryPage` muestra los seis datos que el usuario respondió.
+- [ ] Al pulsar `Empezar a escuchar` se llega a la pantalla principal **sin flecha de retroceso**.
+
+**Pantalla principal**
+
+- [ ] `MainScreen` tiene un `AppTopBar` cuyo título cambia con el tab activo.
+- [ ] El `BottomNavigationBar` tiene 3 items y cambia de Page al tocarlos.
+- [ ] Las etiquetas de los tres items se ven siempre (`BottomNavigationBarType.fixed`).
+- [ ] `PlaylistPage` muestra el `PlaylistHero` y las dos filas de datos.
+- [ ] `ProfilePage` muestra la cabecera, las cuatro filas y los dos botones.
+
+**Ida y vuelta**
+
+- [ ] `Editar perfil` abre `EditProfileScreen`.
+- [ ] Al guardar, el nombre nuevo se ve en el tab de Perfil **y** en el de Inicio.
+- [ ] Si se devuelve con la flecha en vez de guardar, no se pierde ni se rompe nada.
+- [ ] `Cerrar sesión` vuelve al login **sin flecha de retroceso**.
+
+**El arreglo**
+
+- [ ] `LabeledTextField` es un `StatefulWidget`.
+- [ ] Su `TextEditingController` vive en el `State`, no dentro de `build`.
+- [ ] Tiene `dispose()` liberando el controller.
+- [ ] Elegir un mood ya **no** borra el artista escrito.
+
+**Estructura**
+
+- [ ] El proyecto tiene exactamente 4 `Scaffold`.
+- [ ] No hay ningún `Scaffold` en `lib/pages/`.
+- [ ] No se usó `ListView` ni ningún recorrido sobre colecciones.
+
+**Entrega**
+
+- [ ] El `README.md` tiene una captura de cada pantalla.
+- [ ] El `README.md` tiene la reflexión respondida.

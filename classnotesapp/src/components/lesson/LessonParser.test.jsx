@@ -108,7 +108,13 @@ describe('LessonParser — block constructs', () => {
   it('renders a framed image for a frameNN image title', () => {
     const { elements } = parse('![Captura](image1.png "frame60")');
     renderElements(elements);
-    expect(screen.getByAltText('Captura')).toBeTruthy();
+    const img = screen.getByAltText('Captura');
+    expect(img).toBeTruthy();
+    // frameNN sí pinta la tarjeta: es lo que hace visibles las capturas
+    // exportadas sobre fondo transparente.
+    expect(getComputedStyle(img.parentElement).backgroundColor).toBe(
+      'rgb(246, 247, 250)',
+    );
   });
 
   it('renders a GFM table with visible borders on its cells', () => {
@@ -129,6 +135,18 @@ describe('LessonParser — block constructs', () => {
     // este test cubre.
     const celda = container.querySelector('td');
     expect(getComputedStyle(celda).borderStyle).toBe('solid');
+  });
+
+  it('renders a scaleNN image without the white card', () => {
+    const { elements } = parse('![Captura](image1.png "scale60")');
+    const { container } = renderElements(elements);
+    const img = screen.getByAltText('Captura');
+    expect(img).toBeTruthy();
+    // El contenedor del marco no debe pintar fondo cuando es scaleNN.
+    // jsdom normaliza `transparent` a rgba(0, 0, 0, 0).
+    expect(getComputedStyle(img.parentElement).backgroundColor).toBe(
+      'rgba(0, 0, 0, 0)',
+    );
   });
 
   it('renders a dartpad tab when a code fence has trycode= meta', () => {
