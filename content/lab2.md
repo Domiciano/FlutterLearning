@@ -211,34 +211,13 @@ y tres pantallas resueltas que le sirven de molde:
 
 El resto de archivos trae un `TODO` con el número de la parte que le corresponde.
 
-## El flujo
-
-```plain
-Login ──pushNamed('/onboarding', arguments: correo)──►  un String simple
-  │
-  ├─ OnboardingScreen   (una Screen, cuatro Pages)
-  │     Step1Page ──onContinue(profile.copyWith(...))──► Step2Page
-  │     Step2Page ──onContinue(profile.copyWith(...))──► Step3Page
-  │     Step3Page ──onContinue(profile.copyWith(...))──► SummaryPage
-  │     SummaryPage ──pushNamedAndRemoveUntil('/main', (route) => false)──►
-  │
-  └─ MainScreen         (una Screen, tres Pages)
-        BottomNavigationBar: Inicio · Playlist · Perfil
-        ProfilePage ──await pushNamed('/edit-profile')──►  pop(context, perfilNuevo)
-```
-
-El `MusicProfile` es **un solo objeto que se va llenando**. Cada paso lo recibe, le
-agrega lo suyo con `copyWith` y lo reporta hacia arriba. Cuando llega a la
-`MainScreen`, ya trae todo lo que el usuario respondió.
-
----
 
 # Parte 1: las rutas
 
 Archivo: `lib/main.dart`
 
-Reemplace `home:` por `initialRoute:` y `routes:`. Recuerde que cuando se usa
-`routes`, **no** se declara `home`, y la ruta `'/'` es la pantalla inicial.
+Registre las cuatro rutas de la aplicación. Son solo cuatro porque los tres pasos y el
+resumen son `Page`, no `Screen`: viven dentro de la `OnboardingScreen`.
 
 ```plain
 '/'             -> LoginScreen()
@@ -247,83 +226,79 @@ Reemplace `home:` por `initialRoute:` y `routes:`. Recuerde que cuando se usa
 '/edit-profile' -> EditProfileScreen()
 ```
 
-Son solo cuatro rutas porque los tres pasos y el resumen son `Page`, no `Screen`.
+![Imagen](lab2Login.png "scale35")
 
-Mientras no haga esto, el botón `Entrar` del login falla: está navegando a una ruta
-que todavía no existe.
-
-![Imagen](lab2Login.png "scale60")
+- [ ] `main.dart` usa `initialRoute` y `routes`, y ya no declara `home`.
+- [ ] Las cuatro rutas están registradas.
+- [ ] El botón `Entrar` del login lleva al Paso 1.
 
 # Parte 2: el paso 2 del onboarding
 
-Archivo: `lib/pages/step2_page.dart` — use como molde `step1_page.dart`, que ya está
-resuelto.
+Archivo: `lib/pages/step2_page.dart` — molde: `step1_page.dart`.
 
-El patrón de todos los pasos es el mismo: **RECIBIR → COMPLETAR → REPORTAR**. Así se
-ve el Paso 1, que ya viene resuelto:
+El segundo paso pregunta por el artista favorito y el mood. El mood se elige entre tres
+botones y solo uno puede quedar activo a la vez, así que esta Page necesita estado.
 
-![Imagen](lab2Step1.png "scale60")
+Todos los pasos siguen el mismo patrón: **reciben** el perfil, lo **completan** con
+`copyWith` y lo **reportan** por `onContinue`. Así se ve el Paso 1, que ya viene
+resuelto:
 
-Y esto es lo que usted tiene que construir:
+![Imagen](lab2Step1.png "scale35")
 
-![Imagen](lab2Step2.png "scale60")
+Y esto es lo que tiene que construir, con `StepHeader`, `LabeledTextField` y tres
+`MoodButton`:
 
-1. Un `StepHeader` con `step: 2`, título `¿Qué te mueve?` y subtítulo
-   `Con esto armamos tus recomendaciones`.
-2. Un `LabeledTextField` con label `Artista favorito` y hint `Bad Bunny`.
-3. Debajo, un `Wrap` con `spacing: 12` y tres `MoodButton`: `Chill`, `Fiesta` y
-   `Enfoque`. Solo uno puede estar seleccionado a la vez: guarde cuál en un campo del
-   `State` y actualícelo con `setState`.
-4. Un `PrimaryButton` `Continuar` que agregue el artista y el mood a
-   `widget.profile` con `copyWith`, y entregue el resultado a `widget.onContinue`.
+![Imagen](lab2Step2.png "scale35")
 
-> Un `Row` también funciona para los moods, pero en pantallas angostas los tres
-> botones no caben en una línea y se desborda. Por eso `Wrap`.
+- [ ] Se ven el encabezado del paso, el campo de artista y los tres botones de mood.
+- [ ] Al tocar un mood, solo ese queda marcado.
+- [ ] `Continuar` agrega el artista y el mood al perfil, y lo entrega por `onContinue`.
 
-**Aviso importante.** Al tocar un botón de mood va a ver que **se borra el artista
-que acababa de escribir**. No es culpa suya y **no lo arregle todavía**. Anote en qué
+> Ponga los tres botones en un `Wrap`, no en un `Row`: en pantallas angostas no caben
+> en una línea y se desbordan.
+
+**Aviso importante.** Al tocar un botón de mood va a ver que **se borra el artista que
+acababa de escribir**. No es culpa suya y **no lo arregle todavía**. Anote en qué
 momento exacto pasa. Lo resolvemos en la Parte 8.
 
 # Parte 3: el paso 3 del onboarding
 
 Archivo: `lib/pages/step3_page.dart`
 
-Es una `Page` y su raíz es un `SingleChildScrollView`, porque el contenido no cabe en
-un celular.
+El tercer paso pide el nombre de la playlist y la URL de su portada. El botón
+`Previsualizar` muestra esa imagen sin salir de la página, así que también necesita
+estado. Use `StepHeader`, dos `LabeledTextField`, un `SecondaryButton` y un
+`PlaylistCover`.
 
-![Imagen](lab2Step3.png "scale60")
+Como el contenido no cabe en un celular, la raíz de esta Page es un
+`SingleChildScrollView`.
 
-1. Un `StepHeader` con `step: 3`, título `Tu primera playlist` y subtítulo
-   `Dale un nombre y una portada`.
-2. Un `LabeledTextField` `Nombre de la playlist` (hint `Chill Vibes Songs`).
-3. Un `LabeledTextField` `URL de la portada` (hint `https://picsum.photos/300`,
-   `icon: Icons.link`).
-4. Un `SecondaryButton` `Previsualizar` que muestre esa imagen en un `PlaylistCover`
-   de `size: 180`, centrado. Para que la portada cambie tiene que guardar la URL en un
-   campo del `State` y llamar `setState`.
-5. Un `PrimaryButton` `Continuar` que agregue el nombre y la portada con `copyWith`,
-   y entregue el resultado a `widget.onContinue`.
+![Imagen](lab2Step3.png "scale35")
 
-Si la URL no carga, `PlaylistCover` ya muestra un icono de nota musical en vez de
-reventar: usted no tiene que manejar ese error.
+- [ ] Se ven los dos campos y el botón `Previsualizar`.
+- [ ] `Previsualizar` cambia la portada que aparece en pantalla.
+- [ ] `Continuar` agrega el nombre y la portada al perfil, y lo entrega por `onContinue`.
+
+> Si la URL no carga, `PlaylistCover` ya muestra un icono en vez de reventar: usted no
+> tiene que manejar ese error.
 
 # Parte 4: el resumen
 
 Archivo: `lib/pages/summary_page.dart`
 
-Puede ser un `StatelessWidget`: no tiene nada que recordar.
+La última página del onboarding le muestra al usuario todo lo que respondió, con un
+`InfoRow` por dato, y lo deja entrar a la aplicación. No tiene nada que recordar, así
+que puede ser un `StatelessWidget`.
 
-![Imagen](lab2Summary.png "scale60")
+![Imagen](lab2Summary.png "scale35")
 
-1. Un círculo verde de 64 con un check negro, el título `Así te vamos a conocer` y el
-   subtítulo `Puedes cambiar esto después en tu perfil`.
-2. Seis `InfoRow`, uno por campo del perfil: Correo, Nombre, Usuario, Artista
-   favorito, Mood y Playlist.
-3. Un `PrimaryButton` `Empezar a escuchar` cuyo `onPressed` sea `onStart`.
+- [ ] Se ven los seis datos que el usuario respondió.
+- [ ] `Empezar a escuchar` lleva a la pantalla principal.
+- [ ] Al llegar allá **no** hay flecha de retroceso.
 
-**Esta Page no navega.** Mire quién lo hace: el método `_start` de
-`onboarding_screen.dart`. El onboarding terminó y el usuario no debe poder
-devolverse, así que se borra todo el historial:
+Esa última casilla es la importante. La Page no navega: quien lo hace es el método
+`_start` de `onboarding_screen.dart`. El onboarding terminó y el usuario no debe poder
+devolverse, así que se borra todo el historial.
 
 ```dart
 Navigator.pushNamedAndRemoveUntil(
@@ -334,84 +309,65 @@ Navigator.pushNamedAndRemoveUntil(
 );
 ```
 
-Cómo comprueba que quedó bien: al llegar a la pantalla principal **no** debe haber
-flecha de retroceso, porque ya no hay nada debajo en la pila.
-
 # Parte 5: la pantalla principal
 
-Archivo: `lib/screens/main_screen.dart` — use como molde `onboarding_screen.dart`,
-que hace exactamente lo mismo con sus cuatro Pages.
+Archivo: `lib/screens/main_screen.dart` — molde: `onboarding_screen.dart`, que hace lo
+mismo con sus cuatro Pages.
 
-![Imagen](lab2Home.png "scale60")
+La pantalla principal recibe el perfil, guarda cuál tab está activo y muestra la Page
+que corresponda. Lleva un `AppTopBar` arriba y un `BottomNavigationBar` abajo.
 
-1. Un `StatefulWidget` con `int _currentIndex = 0`.
-2. Reciba el `MusicProfile` con
-   `ModalRoute.of(context)!.settings.arguments as MusicProfile`.
-3. En el `body`, muestre la Page del índice: 0 → `HomePage`, 1 → `PlaylistPage`,
-   2 → `ProfilePage`. A las tres les pasa el perfil por el constructor.
-4. Un `AppTopBar` en el `appBar` del `Scaffold`, con el título del tab activo:
-   `Inicio`, `Tu playlist` o `Perfil`.
-5. Un `BottomNavigationBar` con **exactamente 3 items**: `Inicio` (`Icons.home`),
-   `Playlist` (`Icons.music_note`) y `Perfil` (`Icons.person`), con
-   `currentIndex: _currentIndex` y un `onTap` que llame `setState`.
+![Imagen](lab2Home.png "scale35")
 
-Use `type: BottomNavigationBarType.fixed`, si no Flutter esconde las etiquetas de los
-items inactivos.
+- [ ] El `BottomNavigationBar` tiene tres items y cambia de Page al tocarlos.
+- [ ] Las etiquetas de los tres items se ven siempre.
+- [ ] El título del `AppTopBar` cambia con el tab activo.
+- [ ] El saludo muestra el nombre que el usuario escribió en el onboarding.
 
-Note que el título es de la Screen, no de las Pages: por eso la barra superior se
-queda quieta mientras el `body` cambia.
+> Use `type: BottomNavigationBarType.fixed`, si no Flutter esconde las etiquetas de los
+> items inactivos.
+
+El título es de la Screen, no de las Pages: por eso la barra superior se queda quieta
+mientras el `body` cambia.
 
 # Parte 6: las otras dos Pages
 
 Archivos: `lib/pages/playlist_page.dart` y `lib/pages/profile_page.dart`.
 Molde: `home_page.dart`. Las dos son Pages: **sin `Scaffold`**.
 
-### `PlaylistPage`
+La de playlist muestra la portada en grande con `PlaylistHero` y dos `InfoRow`. No
+lleva título propio, porque el `AppTopBar` ya muestra `Tu playlist`.
 
-![Imagen](lab2Playlist.png "scale60")
+![Imagen](lab2Playlist.png "scale35")
 
-1. Un `PlaylistHero` con `profile.playlistName`, `profile.mood` y `profile.coverUrl`.
-   Ya dibuja la portada grande, el nombre y la línea `Playlist · mood`.
-2. Dos `InfoRow`: `Creada por` → `'@${profile.username}'` e `Inspirada en` →
-   `profile.favoriteArtist`.
+La de perfil muestra un `ProfileHeader`, cuatro `InfoRow` y dos `SecondaryButton`:
+`Editar perfil` y `Cerrar sesión`.
 
-Sin título: el `AppTopBar` de la `MainScreen` ya muestra `Tu playlist`.
+![Imagen](lab2Profile.png "scale35")
 
-### `ProfilePage`
+- [ ] `PlaylistPage` muestra la portada, el nombre y las dos filas de datos.
+- [ ] `ProfilePage` muestra la cabecera, las cuatro filas y los dos botones.
+- [ ] Ninguna de las dos tiene `Scaffold`.
 
-![Imagen](lab2Profile.png "scale60")
-
-1. Un `ProfileHeader` con `profile.name` y `profile.username`.
-2. Cuatro `InfoRow`: `Correo`, `Artista favorito`, `Mood` y `Playlist`.
-3. Un `SecondaryButton` `Editar perfil` con `fullWidth: true`, cuyo `onPressed` sea
-   `onEdit`.
-4. Debajo, otro `SecondaryButton` `Cerrar sesión` con `fullWidth: true`, cuyo
-   `onPressed` sea `onSignOut`.
-
-Fíjese en que esta Page tampoco navega: recibe `onEdit` y `onSignOut` y los llama.
-Quien navega es la `MainScreen`.
+> Estas Pages no navegan: reciben `onEdit` y `onSignOut` y los llaman. Quien navega es
+> la `MainScreen`.
 
 # Parte 7: devolver un dato
 
 Archivo: `lib/screens/edit_profile_screen.dart`, más el `await` en `MainScreen`.
 
-Es la única pantalla que **devuelve** un valor.
+Es la única pantalla que **devuelve** un valor. Deja cambiar el nombre y el usuario, y
+al guardar se cierra entregándole el perfil actualizado a quien la abrió.
 
-![Imagen](lab2EditProfile.png "scale60")
+![Imagen](lab2EditProfile.png "scale35")
 
-1. Reciba el `MusicProfile` actual con `ModalRoute`.
-2. Dos `LabeledTextField`: `Nombre completo` y `Nombre de usuario`, usando los valores
-   actuales como hint.
-3. Un `PrimaryButton` `Guardar` que arme el perfil actualizado con `copyWith` y lo
-   devuelva:
+- [ ] `Editar perfil` abre la pantalla de edición.
+- [ ] Al guardar, el nombre nuevo se ve en el tab de Perfil **y** en el de Inicio.
+- [ ] Si se devuelve con la flecha en vez de guardar, no se rompe nada.
+- [ ] `Cerrar sesión` vuelve al login, y allá **no** hay flecha de retroceso.
 
-```dart
-Navigator.pop(context, updatedProfile);
-```
-
-El segundo argumento de `pop` es el valor de retorno. Del otro lado, la `MainScreen`
-lo espera con `await`. Para guardarlo necesita un campo que empieza en `null` y le
-gana al argumento original cuando se llena:
+Para guardar lo que vuelve, la `MainScreen` necesita un campo que empieza en `null` y
+le gana al argumento original cuando se llena:
 
 ```dart
 MusicProfile? _editedProfile;
@@ -437,34 +393,26 @@ Future<void> _editProfile(MusicProfile profile) async {
 Dos trampas de ese método:
 
 - **No** puede escribir `pushNamed<MusicProfile>(...)`. Las rutas de la tabla `routes`
-  de `MaterialApp` producen un `MaterialPageRoute<dynamic>`, y ese tipo no se deja
-  convertir. Se pide sin tipo y se le hace cast al resultado, igual que con
-  `arguments`.
-- Si el usuario se devuelve con la flecha en vez de guardar, llega `null`. Por eso se
-  pregunta antes de tocar el estado.
-
-La `MainScreen` también le pasa a la `ProfilePage` un `onSignOut`, que vuelve al login
-borrando todo el historial — el mismo `pushNamedAndRemoveUntil` del resumen, pero en
-sentido contrario:
-
-```dart
-void _signOut() {
-  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-}
-```
+  producen un `MaterialPageRoute<dynamic>`, y ese tipo no se deja convertir. Se pide sin
+  tipo y se le hace cast al resultado, igual que con `arguments`.
+- Si el usuario se devuelve con la flecha, llega `null`. Por eso se pregunta antes de
+  tocar el estado.
 
 # Parte 8: el arreglo
 
 Archivo: `lib/components/labeled_text_field.dart`
 
-En el Paso 3 el botón `Previsualizar` le mostró el mismo problema del Paso 2: el
-campo de texto se borra.
+En el Paso 3 el botón `Previsualizar` le mostró el mismo problema del Paso 2: el campo
+de texto se borra.
 
-Arregle el componente **una sola vez**, y con eso quedan bien todas las pantallas que
-piden datos. La pista: mire **dónde** está creado el `TextEditingController` y **qué
-tipo de widget** es `LabeledTextField` hoy.
+Arréglelo **una sola vez** y quedan bien todas las pantallas que piden datos. La pista:
+mire **dónde** está creado el `TextEditingController` y **qué tipo de widget** es
+`LabeledTextField` hoy.
 
-Cuando lo arregle, agregue también el `dispose()` que libera el controller.
+- [ ] `LabeledTextField` es un `StatefulWidget`.
+- [ ] Su `TextEditingController` vive en el `State`, no dentro de `build`.
+- [ ] Tiene `dispose()` liberando el controller.
+- [ ] Elegir un mood ya **no** borra el artista escrito.
 
 ## Reflexión
 
@@ -486,55 +434,10 @@ Responda en máximo 10 líneas dentro del `README.md` de su entrega:
   pila de navegación.
 - Los datos viven en memoria. No hay backend ni persistencia.
 
-## Checklist de entrega
+## Antes de entregar
 
-Marque cada punto solo cuando lo haya visto funcionando en la app corriendo.
-
-**Rutas y arranque**
-
-- [ ] `main.dart` usa `initialRoute` y `routes`, y ya no declara `home`.
-- [ ] Las 4 rutas están registradas: `/`, `/onboarding`, `/main`, `/edit-profile`.
-- [ ] El botón `Entrar` del login lleva al Paso 1.
-
-**Onboarding**
-
-- [ ] `Step2Page` muestra el campo de artista y los tres `MoodButton`.
-- [ ] Solo un mood queda seleccionado a la vez.
-- [ ] `Step3Page` muestra los dos campos y el botón `Previsualizar`.
-- [ ] `Previsualizar` cambia la portada que se ve en pantalla.
-- [ ] Los tres pasos completan el perfil con `copyWith` y lo entregan por `onContinue`.
-- [ ] `SummaryPage` muestra los seis datos que el usuario respondió.
-- [ ] Al pulsar `Empezar a escuchar` se llega a la pantalla principal **sin flecha de retroceso**.
-
-**Pantalla principal**
-
-- [ ] `MainScreen` tiene un `AppTopBar` cuyo título cambia con el tab activo.
-- [ ] El `BottomNavigationBar` tiene 3 items y cambia de Page al tocarlos.
-- [ ] Las etiquetas de los tres items se ven siempre (`BottomNavigationBarType.fixed`).
-- [ ] `PlaylistPage` muestra el `PlaylistHero` y las dos filas de datos.
-- [ ] `ProfilePage` muestra la cabecera, las cuatro filas y los dos botones.
-
-**Ida y vuelta**
-
-- [ ] `Editar perfil` abre `EditProfileScreen`.
-- [ ] Al guardar, el nombre nuevo se ve en el tab de Perfil **y** en el de Inicio.
-- [ ] Si se devuelve con la flecha en vez de guardar, no se pierde ni se rompe nada.
-- [ ] `Cerrar sesión` vuelve al login **sin flecha de retroceso**.
-
-**El arreglo**
-
-- [ ] `LabeledTextField` es un `StatefulWidget`.
-- [ ] Su `TextEditingController` vive en el `State`, no dentro de `build`.
-- [ ] Tiene `dispose()` liberando el controller.
-- [ ] Elegir un mood ya **no** borra el artista escrito.
-
-**Estructura**
-
-- [ ] El proyecto tiene exactamente 4 `Scaffold`.
+- [ ] El proyecto tiene exactamente cuatro `Scaffold`.
 - [ ] No hay ningún `Scaffold` en `lib/pages/`.
 - [ ] No se usó `ListView` ni ningún recorrido sobre colecciones.
-
-**Entrega**
-
 - [ ] El `README.md` tiene una captura de cada pantalla.
 - [ ] El `README.md` tiene la reflexión respondida.
