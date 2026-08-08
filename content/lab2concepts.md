@@ -1,29 +1,27 @@
 # Conceptos iniciales
 <!-- tags: super.key, super-parámetros, constructor const, required this,
      Function(), funciones de orden superior, funciones como parámetro, callback,
-     clausura, StatelessWidget, props, onPressed no se ejecuta -->
+     clausura, StatelessWidget, props, modificar estado del padre,
+     onPressed no se ejecuta -->
 
-## Creando Componentes en Flutter
+## Creando componentes en Flutter
 
-En Flutter, la interfaz de usuario se construye a partir de pequeños bloques de construcción llamados `Widgets`. Piensa en ellos como si fueran piezas de Lego: puedes combinar varios widgets simples para crear interfaces complejas y reutilizables. A este proceso lo llamamos "componetizar".
+En Flutter la interfaz se construye con pequeños bloques llamados `Widgets`. Piensa en
+ellos como piezas de Lego: combinas varios simples para armar interfaces complejas y
+reutilizables. A eso lo llamamos "componetizar".
 
-## Definiendo un Componente (Widget)
-
-Un widget es simplemente una clase de Dart que hereda de `StatelessWidget` o `StatefulWidget`. Para empezar, nos enfocaremos en los `StatelessWidget`, que son componentes simples sin estado interno.
-
-Crear un widget es tan fácil como crear una clase y definir su apariencia en el método `build`.
+Un widget es simplemente una clase de Dart que hereda de `StatelessWidget` o
+`StatefulWidget`. Empezaremos por los `StatelessWidget`, que no guardan estado interno.
+Crear uno es crear una clase y definir su apariencia en el método `build`.
 
 ```dart
 import 'package:flutter/material.dart';
 
-// Definimos nuestro nuevo widget llamado SaludoWidget
 class SaludoWidget extends StatelessWidget {
-  // El constructor
   const SaludoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // El método build devuelve el widget que se mostrará en pantalla
     return const Text(
       '¡Hola, desde nuestro primer componente!',
       style: TextStyle(fontSize: 20, color: Colors.white),
@@ -32,91 +30,49 @@ class SaludoWidget extends StatelessWidget {
 }
 ```
 
-## El constructor de un componente y `super`
+### El constructor
 
-Todo componente hereda de `StatelessWidget` o `StatefulWidget`. Esas clases padre ya
-tienen su propio constructor, que recibe un parámetro llamado `key`. Cuando usted
-escribe el constructor de su componente, tiene que **pasarle ese `key` al padre**.
-
-### Qué es `key`
-
-La `Key` es un identificador que Flutter usa para diferenciar un widget de otro.
-
-Imagine que tiene varios widgets iguales en pantalla. Si uno cambia, se elimina o se
-mueve, Flutter necesita saber exactamente cuál fue para actualizar solo esa parte. La
-`Key` le da esa información y le ahorra trabajo.
-
-### La forma larga
-
-Antes de Dart 2.17 había que recibir el `key` y reenviarlo a mano al constructor del
-padre, después de los dos puntos:
-
-```dart
-class MiComponente extends StatelessWidget {
-  final String texto;
-
-  const MiComponente({Key? key, required this.texto}) : super(key: key);
-  //                  └── lo recibo ──┘                  └── se lo paso al padre ──┘
-
-  @override
-  Widget build(BuildContext context) => Text(texto);
-}
-```
-
-Lea la línea completa: "recibo un `Key?` opcional llamado `key`, recibo un `texto`
-obligatorio, y **llamo al constructor de mi superclase** pasándole ese `key`".
-
-### La forma corta: `super.key`
-
-Desde Dart 2.17 existen los **super-parámetros**. Escribir `super.key` en la lista de
-parámetros hace las dos cosas de una vez: declara el parámetro y lo reenvía al padre.
-
-```dart
-class MiComponente extends StatelessWidget {
-  final String texto;
-
-  const MiComponente({super.key, required this.texto});
-
-  @override
-  Widget build(BuildContext context) => Text(texto);
-}
-```
-
-Las dos versiones hacen exactamente lo mismo. La segunda es la que vamos a usar.
-
-### Las tres cosas que hace un constructor de componente
+Fíjate en el constructor, porque tiene tres cosas que se repiten en todo componente:
 
 ```dart
 class MoodButton extends StatelessWidget {
   final String text;
   final bool isSelected;
-  final Function() onPressed;
+  final double margin;
 
   const MoodButton({
-    super.key,                    // 1. reenvía la key al padre
-    required this.text,           // 2. inicializa el campo `text`
+    super.key,             // 1. la key
+    required this.text,    // 2. parámetros obligatorios
     required this.isSelected,
-    required this.onPressed,
-    this.margin = 8,              // 3. o le da un valor por defecto
+    this.margin = 8,       // 3. parámetros con valor por defecto
   });
 
-  final double margin;
-  ...
+  @override
+  Widget build(BuildContext context) => Text(text);
 }
 ```
 
-1. `super.key` — reenvía la `key` a `StatelessWidget`.
-2. `required this.text` — el `this.` significa "guarde este parámetro directamente en
-   el campo con ese nombre". Sin el `this.` tendría que asignarlo usted a mano.
-3. `this.margin = 8` — parámetro opcional con valor por defecto. Como no lleva
-   `required`, quien use el componente puede omitirlo.
+**1. `super.key`.** Todo componente hereda de `StatelessWidget` o `StatefulWidget`, y
+esas clases padre reciben un parámetro `key`. Escribir `super.key` declara ese
+parámetro y **se lo reenvía al padre** de una vez.
+
+La `Key` es un identificador que Flutter usa para diferenciar un widget de otro. Si
+tienes varios widgets iguales en pantalla y uno cambia, se elimina o se mueve, Flutter
+necesita saber cuál fue para actualizar solo esa parte.
+
+**2. `required this.text`.** El `this.` significa "guarda este parámetro directamente
+en el campo con ese nombre". Sin él tendrías que asignarlo a mano. Como lleva
+`required`, quien use el componente está obligado a pasarlo.
+
+**3. `this.margin = 8`.** Parámetro opcional con valor por defecto. Al no llevar
+`required`, se puede omitir.
 
 ### ¿Por qué `const`?
 
-Fíjese en que el constructor es `const`. Eso solo es posible si **todos** los campos
-son `final`. A cambio, Flutter puede reutilizar la misma instancia del widget cuando
-nada cambió, en vez de crear una nueva en cada `build`. Es gratis y ayuda al
-rendimiento: declare siempre los campos como `final` y el constructor como `const`.
+El constructor es `const`, y eso solo es posible si **todos** los campos son `final`. A
+cambio, Flutter puede reutilizar la misma instancia del widget cuando nada cambió, en
+vez de crear una nueva en cada `build`. Es gratis: declara siempre los campos como
+`final` y el constructor como `const`.
 
 ## Usando Variables como Propiedades (Props)
 
@@ -302,6 +258,43 @@ MoodButton(
 La función anónima `() => _elegirMood('Chill')` sí cumple el tipo `Function()`, y por
 dentro se acuerda del valor `'Chill'`. A eso se le llama **clausura** (*closure*): la
 función "se lleva" las variables del lugar donde fue escrita.
+
+### Modificar el estado del padre desde el hijo
+
+Fíjate en lo que acaba de pasar en ese ejemplo: `_elegirMood` hace `setState` sobre una
+variable que vive en la **pantalla**, no en el botón. Y sin embargo quien decide cuándo
+ejecutarla es el `MoodButton`.
+
+Ese es el uso más importante de pasar funciones como parámetro: **un componente hijo
+puede modificar una variable de estado del padre**, si el padre le entrega la función
+que la modifica.
+
+```dart
+class _MiPantallaState extends State<MiPantalla> {
+  int _contador = 0;   // el estado vive aquí
+
+  void _sumar() {
+    setState(() => _contador++);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Van $_contador'),
+        BotonPersonalizado(
+          texto: 'Sumar',
+          onPressed: _sumar,   // le entrego la función que modifica mi estado
+        ),
+      ],
+    );
+  }
+}
+```
+
+El `BotonPersonalizado` no sabe que existe `_contador`, ni llama a `setState`. Solo
+ejecuta la función que le dieron cuando el usuario lo toca. El padre es el que tiene el
+estado y el que decide qué se puede hacer con él.
 
 ### Devolver una función
 
