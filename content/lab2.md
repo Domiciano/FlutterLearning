@@ -102,7 +102,7 @@ Son solo cuatro rutas porque los tres pasos y el resumen son `Page`, no `Screen`
 Mientras no haga esto, el botón `Entrar` del login falla: está navegando a una ruta
 que todavía no existe.
 
-![Imagen](lab2Login.png "icon")
+![Imagen](lab2Login.png "frame60")
 
 # Parte 2: el paso 2 del onboarding
 
@@ -112,11 +112,11 @@ resuelto.
 El patrón de todos los pasos es el mismo: **RECIBIR → COMPLETAR → REPORTAR**. Así se
 ve el Paso 1, que ya viene resuelto:
 
-![Imagen](lab2Step1.png "icon")
+![Imagen](lab2Step1.png "frame60")
 
 Y esto es lo que usted tiene que construir:
 
-![Imagen](lab2Step2.png "icon")
+![Imagen](lab2Step2.png "frame60")
 
 1. Un `StepHeader` con `step: 2`, título `¿Qué te mueve?` y subtítulo
    `Con esto armamos tus recomendaciones`.
@@ -141,7 +141,7 @@ Archivo: `lib/pages/step3_page.dart`
 Es una `Page` y su raíz es un `SingleChildScrollView`, porque el contenido no cabe en
 un celular.
 
-![Imagen](lab2Step3.png "icon")
+![Imagen](lab2Step3.png "frame60")
 
 1. Un `StepHeader` con `step: 3`, título `Tu primera playlist` y subtítulo
    `Dale un nombre y una portada`.
@@ -163,7 +163,7 @@ Archivo: `lib/pages/summary_page.dart`
 
 Puede ser un `StatelessWidget`: no tiene nada que recordar.
 
-![Imagen](lab2Summary.png "icon")
+![Imagen](lab2Summary.png "frame60")
 
 1. Un círculo verde de 64 con un check negro, el título `Así te vamos a conocer` y el
    subtítulo `Puedes cambiar esto después en tu perfil`.
@@ -192,7 +192,7 @@ flecha de retroceso, porque ya no hay nada debajo en la pila.
 Archivo: `lib/screens/main_screen.dart` — use como molde `onboarding_screen.dart`,
 que hace exactamente lo mismo con sus cuatro Pages.
 
-![Imagen](lab2Home.png "icon")
+![Imagen](lab2Home.png "frame60")
 
 1. Un `StatefulWidget` con `int _currentIndex = 0`.
 2. Reciba el `MusicProfile` con
@@ -218,7 +218,7 @@ Molde: `home_page.dart`. Las dos son Pages: **sin `Scaffold`**.
 
 ### `PlaylistPage`
 
-![Imagen](lab2Playlist.png "icon")
+![Imagen](lab2Playlist.png "frame60")
 
 1. Un `PlaylistHero` con `profile.playlistName`, `profile.mood` y `profile.coverUrl`.
    Ya dibuja la portada grande, el nombre y la línea `Playlist · mood`.
@@ -229,7 +229,7 @@ Sin título: el `AppTopBar` de la `MainScreen` ya muestra `Tu playlist`.
 
 ### `ProfilePage`
 
-![Imagen](lab2Profile.png "icon")
+![Imagen](lab2Profile.png "frame60")
 
 1. Un `ProfileHeader` con `profile.name` y `profile.username`.
 2. Cuatro `InfoRow`: `Correo`, `Artista favorito`, `Mood` y `Playlist`.
@@ -247,7 +247,7 @@ Archivo: `lib/screens/edit_profile_screen.dart`, más el `await` en `MainScreen`
 
 Es la única pantalla que **devuelve** un valor.
 
-![Imagen](lab2EditProfile.png "icon")
+![Imagen](lab2EditProfile.png "frame60")
 
 1. Reciba el `MusicProfile` actual con `ModalRoute`.
 2. Dos `LabeledTextField`: `Nombre completo` y `Nombre de usuario`, usando los valores

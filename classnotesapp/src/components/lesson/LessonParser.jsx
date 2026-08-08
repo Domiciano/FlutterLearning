@@ -20,6 +20,12 @@ import Typography from "@mui/material/Typography";
 import BeanVisualizer from "@/components/BeanVisualizer/BeanVisualizer";
 import MermaidBlock from "@/components/lesson/MermaidBlock";
 import remarkStripComments from "@/utils/remarkStripComments";
+import {
+  LessonTable,
+  LessonTableHead,
+  LessonTableHeaderCell,
+  LessonTableCell,
+} from "@/components/lesson/LessonTable";
 
 // Reused across calls — plugins are registered once at freeze() time.
 const headingProcessor = unified().use(remarkParse).use(remarkGfm);
@@ -149,6 +155,10 @@ const LessonParser = ({ content }) => {
       <ol style={{ margin: "0px 0 0px 0px", ...listTextStyle }}>{children}</ol>
     ),
     li: ListItem,
+    table: LessonTable,
+    thead: LessonTableHead,
+    th: LessonTableHeaderCell,
+    td: LessonTableCell,
     // Fenced code blocks always declare a language in this project's content,
     // so `className` presence distinguishes block code from inline `code`.
     code: ({ node, className, children }) => {

@@ -111,6 +111,26 @@ describe('LessonParser — block constructs', () => {
     expect(screen.getByAltText('Captura')).toBeTruthy();
   });
 
+  it('renders a GFM table with visible borders on its cells', () => {
+    const content = [
+      '| Widget | Carpeta |',
+      '|---|---|',
+      '| Screen | lib/screens/ |',
+      '| Page | lib/pages/ |',
+    ].join('\n');
+    const { elements } = parse(content);
+    const { container } = renderElements(elements);
+
+    expect(container.querySelector('table')).toBeTruthy();
+    expect(screen.getByText('Widget')).toBeTruthy();
+    expect(screen.getByText('lib/pages/')).toBeTruthy();
+
+    // Sin estos renderers la tabla sale sin bordes, que es el defecto que
+    // este test cubre.
+    const celda = container.querySelector('td');
+    expect(getComputedStyle(celda).borderStyle).toBe('solid');
+  });
+
   it('renders a dartpad tab when a code fence has trycode= meta', () => {
     const content = '```dart trycode=abc123\nint x = 1;\n```';
     const { elements } = parse(content);
