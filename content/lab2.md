@@ -1,6 +1,6 @@
 # Laboratorio 2: Icesi Beats
 <!-- tags: Navigator.pushNamed, pushNamedAndRemoveUntil, Navigator.pop, ModalRoute,
-     arguments, rutas nombradas, BottomNavigationBar, Screen vs Page, copyWith,
+     arguments, rutas nombradas, BottomNavigationBar, Screen vs Page, callback,
      TextEditingController, el campo de texto se borra, dispose -->
 
 En este laboratorio va a construir el flujo completo de una aplicación de música:
@@ -200,6 +200,11 @@ Clone el repositorio base del laboratorio.
 git clone https://github.com/Domiciano/Apps262Lab2
 ```
 
+Al correrlo por primera vez va a ver una **galería de componentes**: una pantalla con
+los 13 componentes que trae el proyecto, uno debajo del otro, funcionando. Recórrala
+antes de empezar, para saber con qué cuenta. Deja de ser la pantalla inicial en cuanto
+registre las rutas en la Parte 1.
+
 # Parte 1: las rutas
 
 Registre las cuatro rutas en el `MaterialApp` de la aplicación. Son solo cuatro porque
@@ -219,25 +224,18 @@ los tres pasos y el resumen son `Page`, no `Screen`: viven dentro de la
 - [ ] Registrar las cuatro rutas de la aplicación.
 - [ ] Comprobar que el botón `Entrar` del login lleva al Paso 1.
 
-# Parte 2: los dos primeros pasos del onboarding
+# Parte 2: el modelo, la Screen del onboarding y sus dos primeros pasos
 
-Diseñe el `MusicProfile` y construya la `Step1Page` y la `Step2Page`.
+Construya una clase `MusicProfile` que modele todo lo que se llena en los tres pasos
+del onboarding. El correo llega del login.
 
-Los tres pasos van llenando **un mismo** `MusicProfile`, y el resumen lo muestra
-completo al final. Ese objeto no vive en las Pages: lo sostiene la `OnboardingScreen`,
-que es lo común a todos los pasos y sí viene resuelta. Léala para ver cómo les llega el
-perfil a los pasos y cómo espera que le devuelvan lo que el usuario escribió.
+Construya también la `OnboardingScreen`, que es la Screen que hostea las cuatro Pages:
+guarda en qué paso va y el perfil que se está llenando, muestra la Page que corresponda
+y le pasa a cada una lo que necesita. Las Pages le reportan de vuelta lo que el usuario
+escribió, y al terminar el resumen es ella la que entra a la app.
 
-El modelo tiene que guardar siete datos: correo, nombre, usuario, artista favorito,
-mood, nombre de la playlist y URL de la portada. **Cómo lo modele es decisión suya**:
-inmutable con un `copyWith`, o mutable y editado en sitio. Lo que se evalúa es que el
-dato llegue completo al resumen.
-
-El correo llega del login, así que es la `Step1Page` la que crea el perfil; los pasos
-siguientes lo reciben ya creado.
-
-El primer paso pide el nombre completo y el nombre de usuario, con `StepHeader` y dos
-`LabeledTextField`.
+Y construya los dos primeros pasos. El primero pide el nombre completo y el nombre de
+usuario, con `StepHeader` y dos `LabeledTextField`.
 
 ![Imagen](lab2Step1.png "scale35")
 
@@ -246,7 +244,8 @@ El segundo pregunta por el artista favorito y el mood. El mood se elige entre tr
 
 ![Imagen](lab2Step2.png "scale35")
 
-- [ ] Diseñar el `MusicProfile` con los siete datos que hay que guardar.
+- [ ] Construir la clase `MusicProfile` que modele los datos de los tres pasos.
+- [ ] Armar la `OnboardingScreen` para que muestre un paso a la vez y guarde el perfil.
 - [ ] Armar la `Step1Page` con los dos campos de nombre.
 - [ ] Armar la `Step2Page` con el campo de artista y los tres botones de mood.
 - [ ] Guardar el mood elegido en el `State` para que solo uno quede marcado.
@@ -310,8 +309,8 @@ Navigator.pushNamedAndRemoveUntil(
 
 # Parte 5: la pantalla principal
 
-Construya la `MainScreen`. Use la `OnboardingScreen` como molde: hace exactamente lo
-mismo con sus cuatro Pages.
+Construya la `MainScreen`. Es el mismo patrón de la `OnboardingScreen` que ya hizo:
+una Screen que guarda un índice y muestra la Page que corresponda.
 
 La pantalla principal recibe el perfil, guarda cuál tab está activo y muestra la Page
 que corresponda. Lleva un `AppTopBar` arriba y un `BottomNavigationBar` abajo.
