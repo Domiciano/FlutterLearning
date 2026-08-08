@@ -36,7 +36,7 @@ datos por constructor y reportan hacia arriba con un callback.
 lib/
 ├── main.dart              // MaterialApp + tabla de rutas
 ├── theme/app_theme.dart   // AppColors + buildTheme()
-├── models/                // MusicProfile, con copyWith
+├── models/                // MusicProfile, lo diseña usted
 ├── components/            // los 13 componentes, ya hechos
 ├── screens/               // las 4 Screens
 └── pages/                 // las 7 Pages
@@ -144,7 +144,6 @@ lib/
     <rect class="pg-box" x="130" y="552" width="188" height="104" rx="12"/>
     <text class="t-pg mono" x="146" y="582" data-fit="156">HomePage</text>
     <text class="body" x="146" y="604" data-fit="156">saludo y playlist</text>
-    <text class="note" x="146" y="624" data-fit="156">viene resuelta</text>
   </g>
   <path class="link2" d="M326,604 L350,604"/>
 
@@ -222,14 +221,20 @@ los tres pasos y el resumen son `Page`, no `Screen`: viven dentro de la
 
 # Parte 2: los dos primeros pasos del onboarding
 
-Construya la `Step1Page` y la `Step2Page`.
+Diseñe el `MusicProfile` y construya la `Step1Page` y la `Step2Page`.
 
 Los tres pasos van llenando **un mismo** `MusicProfile`, y el resumen lo muestra
 completo al final. Ese objeto no vive en las Pages: lo sostiene la `OnboardingScreen`,
 que es lo común a todos los pasos y sí viene resuelta. Léala para ver cómo les llega el
 perfil a los pasos y cómo espera que le devuelvan lo que el usuario escribió.
 
-Cómo lo resuelva por dentro es decisión suya: lo que se evalúa es que el dato llegue.
+El modelo tiene que guardar siete datos: correo, nombre, usuario, artista favorito,
+mood, nombre de la playlist y URL de la portada. **Cómo lo modele es decisión suya**:
+inmutable con un `copyWith`, o mutable y editado en sitio. Lo que se evalúa es que el
+dato llegue completo al resumen.
+
+El correo llega del login, así que es la `Step1Page` la que crea el perfil; los pasos
+siguientes lo reciben ya creado.
 
 El primer paso pide el nombre completo y el nombre de usuario, con `StepHeader` y dos
 `LabeledTextField`.
@@ -241,6 +246,7 @@ El segundo pregunta por el artista favorito y el mood. El mood se elige entre tr
 
 ![Imagen](lab2Step2.png "scale35")
 
+- [ ] Diseñar el `MusicProfile` con los siete datos que hay que guardar.
 - [ ] Armar la `Step1Page` con los dos campos de nombre.
 - [ ] Armar la `Step2Page` con el campo de artista y los tres botones de mood.
 - [ ] Guardar el mood elegido en el `State` para que solo uno quede marcado.
@@ -324,10 +330,15 @@ que corresponda. Lleva un `AppTopBar` arriba y un `BottomNavigationBar` abajo.
 El título es de la Screen, no de las Pages: por eso la barra superior se queda quieta
 mientras el `body` cambia.
 
-# Parte 6: las otras dos Pages
+# Parte 6: las tres Pages de los tabs
 
-Construya la `PlaylistPage` y la `ProfilePage`, usando la `HomePage` como molde.
-Las dos son Pages: **sin `Scaffold`**.
+Construya la `HomePage`, la `PlaylistPage` y la `ProfilePage`. Las tres son Pages:
+**sin `Scaffold`**.
+
+La de inicio saluda al usuario por su nombre y muestra su playlist con una
+`PlaylistCard` y un `HighlightCard`.
+
+![Imagen](lab2Home.png "scale35")
 
 La de playlist muestra la portada en grande con `PlaylistHero` y dos `InfoRow`. No
 lleva título propio, porque el `AppTopBar` ya muestra `Tu playlist`.
@@ -339,9 +350,10 @@ La de perfil muestra un `ProfileHeader`, cuatro `InfoRow` y dos `SecondaryButton
 
 ![Imagen](lab2Profile.png "scale35")
 
+- [ ] Armar la `HomePage` con el saludo y las dos tarjetas.
 - [ ] Armar la `PlaylistPage` con la portada, el nombre y las dos filas de datos.
 - [ ] Armar la `ProfilePage` con la cabecera, las cuatro filas y los dos botones.
-- [ ] Dejar las dos sin `Scaffold`.
+- [ ] Dejar las tres sin `Scaffold`.
 
 > Estas Pages no navegan: reciben `onEdit` y `onSignOut` y los llaman. Quien navega es
 > la `MainScreen`.
