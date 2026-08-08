@@ -224,10 +224,12 @@ los tres pasos y el resumen son `Page`, no `Screen`: viven dentro de la
 
 Construya la `Step1Page` y la `Step2Page`.
 
-Todos los pasos siguen el mismo patrón: **reciben** el perfil por constructor, lo
-**completan** con `copyWith` y lo **reportan** por `onContinue`. La `OnboardingScreen`
-—que sí viene resuelta— le muestra el otro extremo de ese contrato: quién los llama y
-qué hace con lo que le devuelven.
+Los tres pasos van llenando **un mismo** `MusicProfile`, y el resumen lo muestra
+completo al final. Ese objeto no vive en las Pages: lo sostiene la `OnboardingScreen`,
+que es lo común a todos los pasos y sí viene resuelta. Léala para ver cómo les llega el
+perfil a los pasos y cómo espera que le devuelvan lo que el usuario escribió.
+
+Cómo lo resuelva por dentro es decisión suya: lo que se evalúa es que el dato llegue.
 
 El primer paso pide el nombre completo y el nombre de usuario, con `StepHeader` y dos
 `LabeledTextField`.
@@ -242,8 +244,7 @@ El segundo pregunta por el artista favorito y el mood. El mood se elige entre tr
 - [ ] Armar la `Step1Page` con los dos campos de nombre.
 - [ ] Armar la `Step2Page` con el campo de artista y los tres botones de mood.
 - [ ] Guardar el mood elegido en el `State` para que solo uno quede marcado.
-- [ ] Completar el perfil con `copyWith` en cada paso, y entregarlo por `onContinue`
-      al pulsar `Continuar`.
+- [ ] Hacer que lo que el usuario escriba en cada paso quede guardado en el perfil.
 
 > Ponga los tres botones en un `Wrap`, no en un `Row`: en pantallas angostas no caben
 > en una línea y se desbordan.
@@ -268,7 +269,7 @@ Como el contenido no cabe en un celular, la raíz de esta Page es un
 
 - [ ] Armar la página con los dos campos y el botón `Previsualizar`.
 - [ ] Hacer que `Previsualizar` muestre en pantalla la imagen de la URL escrita.
-- [ ] Agregar el nombre y la portada al perfil, y entregarlo por `onContinue`.
+- [ ] Hacer que el nombre y la portada queden guardados en el perfil.
 
 > Si la URL no carga, `PlaylistCover` ya muestra un icono en vez de reventar: usted no
 > tiene que manejar ese error.
@@ -283,7 +284,7 @@ que puede ser un `StatelessWidget`.
 
 ![Imagen](lab2Summary.png "scale35")
 
-- [ ] Mostrar los seis datos que el usuario respondió.
+- [ ] Mostrar los seis datos que el usuario respondió en los pasos anteriores.
 - [ ] Llevar a la pantalla principal al pulsar `Empezar a escuchar`.
 - [ ] Borrar el historial al entrar, de modo que allá **no** quede flecha de
       retroceso.
