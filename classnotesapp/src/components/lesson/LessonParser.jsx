@@ -67,7 +67,11 @@ const extractHeadings = (content) => {
   return { lessonTitle, subtitles };
 };
 
-const ListItem = ({ children }) => (
+// Los items de una lista de tareas (`- [ ] ...`) ya traen su propio checkbox;
+// dibujarles además la viñeta deja dos marcas por línea.
+const ListItem = ({ children, className }) => {
+  const esTarea = (className || "").includes("task-list-item");
+  return (
   <li
     style={{
       padding: 0,
@@ -77,7 +81,7 @@ const ListItem = ({ children }) => (
       alignItems: "baseline",
     }}
   >
-    <span
+    {!esTarea && <span
       style={{
         display: "inline-block",
         width: 4,
@@ -89,7 +93,7 @@ const ListItem = ({ children }) => (
         verticalAlign: "middle",
         marginTop: 0,
       }}
-    />
+    />}
     {/* component="div" — a "loose" markdown list (blank line between items,
         e.g. numbered prose like "1. foo") wraps item content in its own
         paragraph node; the default <p> tag can't legally nest another block. */}
@@ -106,7 +110,8 @@ const ListItem = ({ children }) => (
       {children}
     </Typography>
   </li>
-);
+  );
+};
 
 const resolveImageSrc = (src) => {
   const isWebImage = /^https?:\/\//.test(src || "");

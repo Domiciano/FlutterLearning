@@ -217,9 +217,9 @@ los tres pasos y el resumen son `Page`, no `Screen`: viven dentro de la
 
 ![Imagen](lab2Login.png "scale35")
 
-- [ ] El `MaterialApp` usa `initialRoute` y `routes`, y ya no declara `home`.
-- [ ] Las cuatro rutas están registradas.
-- [ ] El botón `Entrar` del login lleva al Paso 1.
+- [ ] Reemplazar `home` por `initialRoute` y `routes` en el `MaterialApp`.
+- [ ] Registrar las cuatro rutas de la aplicación.
+- [ ] Comprobar que el botón `Entrar` del login lleva al Paso 1.
 
 # Parte 2: el paso 2 del onboarding
 
@@ -239,9 +239,11 @@ Y esto es lo que tiene que construir, con `StepHeader`, `LabeledTextField` y tre
 
 ![Imagen](lab2Step2.png "scale35")
 
-- [ ] Se ven el encabezado del paso, el campo de artista y los tres botones de mood.
-- [ ] Al tocar un mood, solo ese queda marcado.
-- [ ] `Continuar` agrega el artista y el mood al perfil, y lo entrega por `onContinue`.
+- [ ] Armar la página con el encabezado del paso, el campo de artista y los tres
+      botones de mood.
+- [ ] Guardar el mood elegido en el `State` para que solo uno quede marcado.
+- [ ] Agregar el artista y el mood al perfil con `copyWith`, y entregarlo por
+      `onContinue` al pulsar `Continuar`.
 
 > Ponga los tres botones en un `Wrap`, no en un `Row`: en pantallas angostas no caben
 > en una línea y se desbordan.
@@ -264,9 +266,9 @@ Como el contenido no cabe en un celular, la raíz de esta Page es un
 
 ![Imagen](lab2Step3.png "scale35")
 
-- [ ] Se ven los dos campos y el botón `Previsualizar`.
-- [ ] `Previsualizar` cambia la portada que aparece en pantalla.
-- [ ] `Continuar` agrega el nombre y la portada al perfil, y lo entrega por `onContinue`.
+- [ ] Armar la página con los dos campos y el botón `Previsualizar`.
+- [ ] Hacer que `Previsualizar` muestre en pantalla la imagen de la URL escrita.
+- [ ] Agregar el nombre y la portada al perfil, y entregarlo por `onContinue`.
 
 > Si la URL no carga, `PlaylistCover` ya muestra un icono en vez de reventar: usted no
 > tiene que manejar ese error.
@@ -281,9 +283,10 @@ que puede ser un `StatelessWidget`.
 
 ![Imagen](lab2Summary.png "scale35")
 
-- [ ] Se ven los seis datos que el usuario respondió.
-- [ ] `Empezar a escuchar` lleva a la pantalla principal.
-- [ ] Al llegar allá **no** hay flecha de retroceso.
+- [ ] Mostrar los seis datos que el usuario respondió.
+- [ ] Llevar a la pantalla principal al pulsar `Empezar a escuchar`.
+- [ ] Borrar el historial al entrar, de modo que allá **no** quede flecha de
+      retroceso.
 
 Esa última casilla es la importante. La Page no navega: quien lo hace es el método
 `_start` de la `OnboardingScreen`. El onboarding terminó y el usuario no debe poder
@@ -308,10 +311,11 @@ que corresponda. Lleva un `AppTopBar` arriba y un `BottomNavigationBar` abajo.
 
 ![Imagen](lab2Home.png "scale35")
 
-- [ ] El `BottomNavigationBar` tiene tres items y cambia de Page al tocarlos.
-- [ ] Las etiquetas de los tres items se ven siempre.
-- [ ] El título del `AppTopBar` cambia con el tab activo.
-- [ ] El saludo muestra el nombre que el usuario escribió en el onboarding.
+- [ ] Montar el `BottomNavigationBar` con tres items que cambien de Page al tocarlos.
+- [ ] Dejar visibles las etiquetas de los tres items, incluso las de los inactivos.
+- [ ] Poner el `AppTopBar` y hacer que su título cambie con el tab activo.
+- [ ] Recibir el perfil y pasárselo a las tres Pages, de modo que el saludo muestre
+      el nombre del usuario.
 
 > Use `type: BottomNavigationBarType.fixed`, si no Flutter esconde las etiquetas de los
 > items inactivos.
@@ -334,9 +338,9 @@ La de perfil muestra un `ProfileHeader`, cuatro `InfoRow` y dos `SecondaryButton
 
 ![Imagen](lab2Profile.png "scale35")
 
-- [ ] `PlaylistPage` muestra la portada, el nombre y las dos filas de datos.
-- [ ] `ProfilePage` muestra la cabecera, las cuatro filas y los dos botones.
-- [ ] Ninguna de las dos tiene `Scaffold`.
+- [ ] Armar la `PlaylistPage` con la portada, el nombre y las dos filas de datos.
+- [ ] Armar la `ProfilePage` con la cabecera, las cuatro filas y los dos botones.
+- [ ] Dejar las dos sin `Scaffold`.
 
 > Estas Pages no navegan: reciben `onEdit` y `onSignOut` y los llaman. Quien navega es
 > la `MainScreen`.
@@ -350,10 +354,11 @@ al guardar se cierra entregándole el perfil actualizado a quien la abrió.
 
 ![Imagen](lab2EditProfile.png "scale35")
 
-- [ ] `Editar perfil` abre la pantalla de edición.
-- [ ] Al guardar, el nombre nuevo se ve en el tab de Perfil **y** en el de Inicio.
-- [ ] Si se devuelve con la flecha en vez de guardar, no se rompe nada.
-- [ ] `Cerrar sesión` vuelve al login, y allá **no** hay flecha de retroceso.
+- [ ] Abrir la pantalla de edición desde el botón `Editar perfil`.
+- [ ] Devolver el perfil actualizado con `pop` y guardarlo, de modo que el nombre
+      nuevo se vea en el tab de Perfil **y** en el de Inicio.
+- [ ] Contemplar que el usuario se devuelva con la flecha en vez de guardar.
+- [ ] Programar `Cerrar sesión` para volver al login borrando el historial.
 
 Para guardar lo que vuelve, la `MainScreen` necesita un campo que empieza en `null` y
 le gana al argumento original cuando se llena:
@@ -398,10 +403,10 @@ Arréglelo **una sola vez** y quedan bien todas las pantallas que piden datos. L
 mire **dónde** está creado el `TextEditingController` y **qué tipo de widget** es
 `LabeledTextField` hoy.
 
-- [ ] `LabeledTextField` es un `StatefulWidget`.
-- [ ] Su `TextEditingController` vive en el `State`, no dentro de `build`.
-- [ ] Tiene `dispose()` liberando el controller.
-- [ ] Elegir un mood ya **no** borra el artista escrito.
+- [ ] Convertir `LabeledTextField` en un `StatefulWidget`.
+- [ ] Mover el `TextEditingController` al `State`, fuera de `build`.
+- [ ] Agregar el `dispose()` que libera el controller.
+- [ ] Comprobar que elegir un mood ya **no** borra el artista escrito.
 
 ## Reflexión
 

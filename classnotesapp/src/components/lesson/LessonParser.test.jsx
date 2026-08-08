@@ -137,6 +137,20 @@ describe('LessonParser — block constructs', () => {
     expect(getComputedStyle(celda).borderStyle).toBe('solid');
   });
 
+  it('renders task list items with a checkbox and without the bullet', () => {
+    const { elements } = parse('- [ ] Registrar las rutas\n- Elemento normal\n');
+    const { container } = renderElements(elements);
+
+    const items = container.querySelectorAll('li');
+    expect(items).toHaveLength(2);
+    expect(container.querySelectorAll('input[type=checkbox]')).toHaveLength(1);
+
+    // El item de tarea ya trae su checkbox: dibujarle además la viñeta dejaría
+    // dos marcas por línea.
+    expect(items[0].querySelector('span')).toBeNull();
+    expect(items[1].querySelector('span')).toBeTruthy();
+  });
+
   it('renders a scaleNN image without the white card', () => {
     const { elements } = parse('![Captura](image1.png "scale60")');
     const { container } = renderElements(elements);
