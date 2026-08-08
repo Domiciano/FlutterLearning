@@ -30,9 +30,6 @@ En esta aplicación la convención aparece **dos veces**:
 En los dos casos el estado vive en la Screen anfitriona, y las Pages solo reciben
 datos por constructor y reportan hacia arriba con un callback.
 
-Al terminar, el proyecto debe tener **exactamente 4 `Scaffold`**: `LoginScreen`,
-`OnboardingScreen`, `MainScreen` y `EditProfileScreen`. Ninguno en `lib/pages/`.
-
 ## Estructura del proyecto
 
 ```plain
@@ -199,25 +196,17 @@ lib/
 
 ## Punto de partida
 
-Clone el repositorio base del laboratorio. Trae **todos los componentes construidos**
-y tres pantallas resueltas que le sirven de molde:
+Clone el repositorio base del laboratorio.
 
-- `lib/screens/login_screen.dart` — cómo una Screen guarda lo que escribe el usuario
-  y manda un dato a la siguiente pantalla.
-- `lib/screens/onboarding_screen.dart` — **el molde de Screen anfitriona**: hostea
-  cuatro Pages, guarda el índice y el perfil, y las Pages le reportan con un callback.
-- `lib/pages/step1_page.dart` — **el molde de paso**.
-- `lib/pages/home_page.dart` — el molde de una Page de contenido.
-
-El resto de archivos trae un `TODO` con el número de la parte que le corresponde.
-
+```plain
+git clone https://github.com/Domiciano/Apps262Lab2
+```
 
 # Parte 1: las rutas
 
-Archivo: `lib/main.dart`
-
-Registre las cuatro rutas de la aplicación. Son solo cuatro porque los tres pasos y el
-resumen son `Page`, no `Screen`: viven dentro de la `OnboardingScreen`.
+Registre las cuatro rutas en el `MaterialApp` de la aplicación. Son solo cuatro porque
+los tres pasos y el resumen son `Page`, no `Screen`: viven dentro de la
+`OnboardingScreen`.
 
 ```plain
 '/'             -> LoginScreen()
@@ -228,13 +217,13 @@ resumen son `Page`, no `Screen`: viven dentro de la `OnboardingScreen`.
 
 ![Imagen](lab2Login.png "scale35")
 
-- [ ] `main.dart` usa `initialRoute` y `routes`, y ya no declara `home`.
+- [ ] El `MaterialApp` usa `initialRoute` y `routes`, y ya no declara `home`.
 - [ ] Las cuatro rutas están registradas.
 - [ ] El botón `Entrar` del login lleva al Paso 1.
 
 # Parte 2: el paso 2 del onboarding
 
-Archivo: `lib/pages/step2_page.dart` — molde: `step1_page.dart`.
+Construya la `Step2Page`. Use la `Step1Page` como molde: ya viene resuelta.
 
 El segundo paso pregunta por el artista favorito y el mood. El mood se elige entre tres
 botones y solo uno puede quedar activo a la vez, así que esta Page necesita estado.
@@ -263,7 +252,7 @@ momento exacto pasa. Lo resolvemos en la Parte 8.
 
 # Parte 3: el paso 3 del onboarding
 
-Archivo: `lib/pages/step3_page.dart`
+Construya la `Step3Page`.
 
 El tercer paso pide el nombre de la playlist y la URL de su portada. El botón
 `Previsualizar` muestra esa imagen sin salir de la página, así que también necesita
@@ -284,7 +273,7 @@ Como el contenido no cabe en un celular, la raíz de esta Page es un
 
 # Parte 4: el resumen
 
-Archivo: `lib/pages/summary_page.dart`
+Construya la `SummaryPage`.
 
 La última página del onboarding le muestra al usuario todo lo que respondió, con un
 `InfoRow` por dato, y lo deja entrar a la aplicación. No tiene nada que recordar, así
@@ -297,7 +286,7 @@ que puede ser un `StatelessWidget`.
 - [ ] Al llegar allá **no** hay flecha de retroceso.
 
 Esa última casilla es la importante. La Page no navega: quien lo hace es el método
-`_start` de `onboarding_screen.dart`. El onboarding terminó y el usuario no debe poder
+`_start` de la `OnboardingScreen`. El onboarding terminó y el usuario no debe poder
 devolverse, así que se borra todo el historial.
 
 ```dart
@@ -311,7 +300,7 @@ Navigator.pushNamedAndRemoveUntil(
 
 # Parte 5: la pantalla principal
 
-Archivo: `lib/screens/main_screen.dart` — molde: `onboarding_screen.dart`, que hace lo
+Construya la `MainScreen`. Use la `OnboardingScreen` como molde: hace exactamente lo
 mismo con sus cuatro Pages.
 
 La pantalla principal recibe el perfil, guarda cuál tab está activo y muestra la Page
@@ -332,8 +321,8 @@ mientras el `body` cambia.
 
 # Parte 6: las otras dos Pages
 
-Archivos: `lib/pages/playlist_page.dart` y `lib/pages/profile_page.dart`.
-Molde: `home_page.dart`. Las dos son Pages: **sin `Scaffold`**.
+Construya la `PlaylistPage` y la `ProfilePage`, usando la `HomePage` como molde.
+Las dos son Pages: **sin `Scaffold`**.
 
 La de playlist muestra la portada en grande con `PlaylistHero` y dos `InfoRow`. No
 lleva título propio, porque el `AppTopBar` ya muestra `Tu playlist`.
@@ -354,7 +343,7 @@ La de perfil muestra un `ProfileHeader`, cuatro `InfoRow` y dos `SecondaryButton
 
 # Parte 7: devolver un dato
 
-Archivo: `lib/screens/edit_profile_screen.dart`, más el `await` en `MainScreen`.
+Construya la `EditProfileScreen`, y agregue el `await` en la `MainScreen`.
 
 Es la única pantalla que **devuelve** un valor. Deja cambiar el nombre y el usuario, y
 al guardar se cierra entregándole el perfil actualizado a quien la abrió.
@@ -400,7 +389,7 @@ Dos trampas de ese método:
 
 # Parte 8: el arreglo
 
-Archivo: `lib/components/labeled_text_field.dart`
+El componente que hay que arreglar es `LabeledTextField`.
 
 En el Paso 3 el botón `Previsualizar` le mostró el mismo problema del Paso 2: el campo
 de texto se borra.
@@ -434,10 +423,3 @@ Responda en máximo 10 líneas dentro del `README.md` de su entrega:
   pila de navegación.
 - Los datos viven en memoria. No hay backend ni persistencia.
 
-## Antes de entregar
-
-- [ ] El proyecto tiene exactamente cuatro `Scaffold`.
-- [ ] No hay ningún `Scaffold` en `lib/pages/`.
-- [ ] No se usó `ListView` ni ningún recorrido sobre colecciones.
-- [ ] El `README.md` tiene una captura de cada pantalla.
-- [ ] El `README.md` tiene la reflexión respondida.
