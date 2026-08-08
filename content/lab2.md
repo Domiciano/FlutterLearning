@@ -104,7 +104,6 @@ lib/
     <rect class="pg-box" x="152" y="272" width="204" height="104" rx="12"/>
     <text class="t-pg mono" x="168" y="302" data-fit="172">Step1Page</text>
     <text class="body" x="168" y="324" data-fit="172">nombre y usuario</text>
-    <text class="note" x="168" y="344" data-fit="172">viene resuelta</text>
   </g>
   <path class="link" d="M364,324 L388,324"/>
 
@@ -221,29 +220,30 @@ los tres pasos y el resumen son `Page`, no `Screen`: viven dentro de la
 - [ ] Registrar las cuatro rutas de la aplicación.
 - [ ] Comprobar que el botón `Entrar` del login lleva al Paso 1.
 
-# Parte 2: el paso 2 del onboarding
+# Parte 2: los dos primeros pasos del onboarding
 
-Construya la `Step2Page`. Use la `Step1Page` como molde: ya viene resuelta.
+Construya la `Step1Page` y la `Step2Page`.
 
-El segundo paso pregunta por el artista favorito y el mood. El mood se elige entre tres
-botones y solo uno puede quedar activo a la vez, así que esta Page necesita estado.
+Todos los pasos siguen el mismo patrón: **reciben** el perfil por constructor, lo
+**completan** con `copyWith` y lo **reportan** por `onContinue`. La `OnboardingScreen`
+—que sí viene resuelta— le muestra el otro extremo de ese contrato: quién los llama y
+qué hace con lo que le devuelven.
 
-Todos los pasos siguen el mismo patrón: **reciben** el perfil, lo **completan** con
-`copyWith` y lo **reportan** por `onContinue`. Así se ve el Paso 1, que ya viene
-resuelto:
+El primer paso pide el nombre completo y el nombre de usuario, con `StepHeader` y dos
+`LabeledTextField`.
 
 ![Imagen](lab2Step1.png "scale35")
 
-Y esto es lo que tiene que construir, con `StepHeader`, `LabeledTextField` y tres
-`MoodButton`:
+El segundo pregunta por el artista favorito y el mood. El mood se elige entre tres
+`MoodButton` y solo uno puede quedar activo a la vez, así que esa Page necesita estado.
 
 ![Imagen](lab2Step2.png "scale35")
 
-- [ ] Armar la página con el encabezado del paso, el campo de artista y los tres
-      botones de mood.
+- [ ] Armar la `Step1Page` con los dos campos de nombre.
+- [ ] Armar la `Step2Page` con el campo de artista y los tres botones de mood.
 - [ ] Guardar el mood elegido en el `State` para que solo uno quede marcado.
-- [ ] Agregar el artista y el mood al perfil con `copyWith`, y entregarlo por
-      `onContinue` al pulsar `Continuar`.
+- [ ] Completar el perfil con `copyWith` en cada paso, y entregarlo por `onContinue`
+      al pulsar `Continuar`.
 
 > Ponga los tres botones en un `Wrap`, no en un `Row`: en pantallas angostas no caben
 > en una línea y se desbordan.
