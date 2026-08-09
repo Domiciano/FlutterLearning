@@ -127,7 +127,7 @@ lib/
     <text class="body" x="900" y="324" data-fit="172">resumen de todo</text>
   </g>
 
-  <text class="note" x="152" y="404" data-fit="900">onContinue(profile) y setState cambian el índice — entre pasos NO hay Navigator</text>
+  <text class="note" x="152" y="404" data-fit="900">la Screen guarda el perfil y cambia el índice — entre pasos NO hay Navigator</text>
 
   <!-- Summary -> MainScreen -->
   <path class="link" d="M986,376 L986,452 L452,452 L452,488"/>
@@ -354,8 +354,8 @@ La de perfil muestra un `ProfileHeader`, cuatro `InfoRow` y dos `SecondaryButton
 - [ ] Armar la `ProfilePage` con la cabecera, las cuatro filas y los dos botones.
 - [ ] Dejar las tres sin `Scaffold`.
 
-> Estas Pages no navegan: reciben `onEdit` y `onSignOut` y los llaman. Quien navega es
-> la `MainScreen`.
+> Estas Pages no navegan: solo avisan que se pulsó cada botón. Quien navega es la
+> `MainScreen`.
 
 # Parte 7: devolver un dato
 
