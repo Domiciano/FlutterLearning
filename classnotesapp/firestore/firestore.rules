@@ -6,7 +6,7 @@ rules_version = '2';
 // exportaciones y no reconciliar dos modelos.
 //
 // Principio: el estudiante escribe lo suyo y solo lee lo suyo; el profesor lee
-// todo pero no escribe nada de nadie. Sin estas reglas, cualquier estudiante
+// todo y solo escribe la lista de clase (`rosters/`). Sin estas reglas, cualquier estudiante
 // autenticado puede leer las preguntas, los intentos de examen y la traza de uso
 // de sus compañeros.
 //
@@ -69,6 +69,14 @@ service cloud.firestore {
       allow read:   if isOwner(resource.data.uid) || isProfesor();
       allow create: if isOwner(request.resource.data.uid);
       allow update, delete: if false;
+    }
+
+    // Lista de clase del curso (la que entrega la universidad: código + nombre).
+    // Es el único documento que el profesor sí escribe, y el único dato personal
+    // de terceros que no aportó su propio dueño — por eso vive aquí y no en el
+    // bundle ni en el repo de contenido: el sitio es público, esto no.
+    match /rosters/{rosterId} {
+      allow read, write: if isProfesor();
     }
 
     // Todo lo demás, cerrado. Una colección nueva sin regla explícita no debe

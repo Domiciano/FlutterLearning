@@ -10,6 +10,7 @@ import AiFab from '@/ai/AiFab';
 import { useCurrentLesson } from '@/ai/CurrentLessonContext';
 import { buildCourseOutline } from '@/ai/buildContext';
 import AppBarGlobal from '@/components/AppBarGlobal';
+import AdminPage from '@/admin/AdminPage';
 
 function App() {
   const [sections, setSections] = useState([]);
@@ -52,17 +53,25 @@ function App() {
   }, [sections, setCourseOutline]);
 
   // Deep-link redirect: GitHub Pages 404.html appends ?p=<path>
+  // El `?p=` se resuelve sin esperar al temario: /admin no depende de él, y si
+  // toc.md falla, un enlace profundo dejaría de resolverse por una razón ajena.
   useEffect(() => {
-    if (!loading && sections.length > 0) {
-      const params = new URLSearchParams(location.search);
-      const deepPath = params.get('p');
-      if (deepPath) {
-        navigate(deepPath, { replace: true });
-      } else if (location.pathname === '/' && firstLessonId) {
-        navigate(`/lesson/${firstLessonId}`, { replace: true });
-      }
+    const deepPath = new URLSearchParams(location.search).get('p');
+    if (deepPath) {
+      navigate(deepPath, { replace: true });
+      return;
+    }
+    if (!loading && sections.length > 0 && location.pathname === '/' && firstLessonId) {
+      navigate(`/lesson/${firstLessonId}`, { replace: true });
     }
   }, [loading, sections, location.search, firstLessonId, navigate, location.pathname]);
+
+  // La vista de administrador es pantalla completa y no pertenece al temario:
+  // va antes de la carga del toc para que siga siendo alcanzable aunque el
+  // contenido no cargue — justo cuando el profesor necesita mirar los datos.
+  if (location.pathname.replace(/\/+$/, '') === '/admin') {
+    return <AdminPage />;
+  }
 
   if (loading) {
     return (

@@ -22,6 +22,14 @@ const courseConfig = {
   // Para que H3 sea evaluable en Móviles hay que añadir la semana a esos títulos.
   courseStartDate: '2026-07-27',
 
+  // Semestre en curso, con el mismo código con el que la universidad nombra el
+  // archivo de la lista de clase (`students/262.md` → `'262'`). Empareja este
+  // calendario con el documento `rosters/{courseId}-{courseTerm}` de Firestore:
+  // el panel de actividad solo abre para el semestre al que pertenece
+  // `courseStartDate`, porque para cualquier otro la ventana "desde el inicio"
+  // mediría contra un semestre que no es el suyo.
+  courseTerm: '262',
+
   // Cortes evaluativos, en orden. Cada uno { id, label, date } con `date` en AAAA-MM-DD.
   // Definen las "48 h previas" de `crammingRatio` (H2) y son la clave para unir con
   // `gradeMidterm{n}` de datadict.md § 4.

@@ -201,6 +201,27 @@ repo. El valor por defecto de `vite.config.js` solo aplica en `npm run dev`. No 
 fijarlo a mano: como este repo se publica desde dos remotos y cada uno sirve bajo su
 propio nombre, un valor fijo rompe la copia del otro.
 
+### Vista de administrador (`/admin`)
+
+`src/admin/` cruza la **lista de clase** que entrega la universidad
+(`students/262.md`: una línea por estudiante, `código nombre completo`, sin encabezado)
+con los perfiles de Firestore, para responder quién ya entró al visor, con qué correo y
+con qué usuario de GitHub, y **quién falta**. Un botón exporta todo a un `.md`. Se llega
+desde el menú de cuenta → *Estudiantes*.
+
+Portado desde Compunet2 el 2026-08-25, y **byte a byte idéntico** al de ese repo —
+mismos componentes, mismo `adminData.js`, mismo `studentActivity.js`. Solo cambian, como
+en el resto de la app, `courseId` (`moviles`) y `courseTerm` (`'262'`, en
+`content/config.js`). La documentación completa de cómo funciona el cruce de listas
+(las cuatro pasadas de `matchRoster.js`), el panel de actividad por estudiante y sus
+invariantes está en el `CLAUDE.md` de Compunet2 — no se duplica aquí porque el código y
+el comportamiento son el mismo.
+
+La llave es el custom claim `profesor: true` sobre la cuenta de Firebase (proyecto
+`facelogprueba`) — el mismo que exigen las reglas de Firestore. **Pendiente**: asignarlo
+a la cuenta del profesor de este curso (ver `classnotesapp/firestore/README.md` → *Marcar
+al profesor*) y cargar `students/262.md` desde la propia vista la primera vez que se use.
+
 ### Tema
 
 `src/theme/ThemeContext.jsx` con los tokens en `src/theme/colors.js` (azul en este

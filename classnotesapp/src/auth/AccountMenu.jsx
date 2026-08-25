@@ -13,13 +13,16 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import LogoutIcon from '@mui/icons-material/Logout';
 import GavelIcon from '@mui/icons-material/Gavel';
+import GroupsIcon from '@mui/icons-material/Groups';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useThemeMode } from '@/theme/ThemeContext';
 import TermsDialog from './TermsDialog';
 
 const AccountMenu = () => {
-  const { configured, user, profile, signOutUser } = useAuth();
+  const { configured, user, profile, isTeacher, signOutUser } = useAuth();
   const { theme } = useThemeMode();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [termsOpen, setTermsOpen] = useState(false);
 
@@ -51,6 +54,18 @@ const AccountMenu = () => {
             <Typography sx={{ fontSize: '0.78rem', color: 'text.secondary' }} noWrap>{profile.github}</Typography>
           )}
         </Box>
+        <Divider />
+        {/* Solo con el custom claim, no con `profile.role`: el rol lo escribe el
+            propio usuario en el formulario de perfil, así que declararse profesor
+            no puede ni siquiera revelar que la vista existe. Esconderla es
+            cosmético —el acceso real lo deciden el claim y las reglas de
+            Firestore—, pero mantiene el menú del estudiante limpio. */}
+        {isTeacher && (
+          <MenuItem onClick={() => { setAnchorEl(null); navigate('/admin'); }}>
+            <GroupsIcon fontSize="small" sx={{ mr: 1 }} />
+            <Typography sx={{ fontSize: '0.9rem' }}>Estudiantes</Typography>
+          </MenuItem>
+        )}
         <Divider />
         {/* Consulta del documento aceptado y única vía de retiro del
             consentimiento (requisito ético de analitics/plan.md). */}

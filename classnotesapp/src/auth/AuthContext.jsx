@@ -42,6 +42,11 @@ const statusFor = (p) => {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  // Acceso de profesor. Sale del *custom claim* del token, no de `profile.role`:
+  // el rol lo escribe el propio usuario en el formulario, así que declararse
+  // profesor no puede conceder nada. Es el mismo claim que exigen las reglas de
+  // Firestore, de modo que la interfaz y el servidor deciden con el mismo dato.
+  const [isTeacher, setIsTeacher] = useState(false);
   // If Firebase isn't set up, skip straight to 'ready' (ungated app).
   const [status, setStatus] = useState(isFirebaseConfigured ? 'loading' : 'ready');
   const [authError, setAuthError] = useState(null);
@@ -54,11 +59,19 @@ export function AuthProvider({ children }) {
       if (!fbUser) {
         setUser(null);
         setProfile(null);
+        setIsTeacher(false);
         setStatus('signed-out');
         return;
       }
       setUser(fbUser);
       setStatus('loading');
+      try {
+        const token = await fbUser.getIdTokenResult();
+        setIsTeacher(token?.claims?.profesor === true);
+      } catch (err) {
+        console.error('[Auth] No se pudo leer el token:', err);
+        setIsTeacher(false);
+      }
       try {
         const snap = await getDoc(doc(db, 'students', fbUser.uid));
         const data = snap.exists() ? snap.data() : null;
@@ -214,6 +227,7 @@ export function AuthProvider({ children }) {
     status,
     user,
     profile,
+    isTeacher,
     authError,
     signInWithGoogle,
     saveProfile,
