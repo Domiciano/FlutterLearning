@@ -56,6 +56,7 @@
 [t] Laboratorio 3
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lab3concepts.md | Laboratorio 3: Utilidades | 0043
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lab3.md | Laboratorio 3: Manejo de listas | 0044
+[lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lab3audio.md | Laboratorio 3: Reproducción de audio | 0084
 [t] BloC
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lessonG1.md | Cubit y estados | 0045
 [lesson:url] https://raw.githubusercontent.com/DomicianoRincon/FlutterApps/refs/heads/main/content/lessonG2.md | Objeto como estado en Cubit | 0046
